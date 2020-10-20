@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Resources on Tan Ho</title>
+    <link>/tags/resources/</link>
+    <description>Recent content in Resources on Tan Ho</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    
+	<atom:link href="/tags/resources/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Coxie Cheatsheet</title>
+      <link>/posts/rowing/2018-07-04-coxie/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/rowing/2018-07-04-coxie/</guid>
+      <description>The ORC Rec Guide to Being a Coxswain on the Ottawa River Created by: Peter Aubin with contributions from Lauren E and myself
+[Download PDF Version Here]({{ site.baseurl}}/files/coxie.pdf) Congratulations, you&amp;rsquo;re in charge. Your rowers expect you to be clear, prepared, and commanding - speak up!
+Responsibilities  Provide clear, loud, and commanding instructions to rowers Navigate and steer the boat  Required Items  Cox box and headset - found in upstairs office, make sure cox box turns on and headset fits into cox box Life jacket (Bay 2), whistle and lights (your own)  Delivering Instructions General Principle: Make sure your rowers understand the instruction before doing the action!</description>
+    </item>
+    
+    <item>
+      <title>Regatta Cheatsheet</title>
+      <link>/posts/rowing/2019-07-05-regatta/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/rowing/2019-07-05-regatta/</guid>
+      <description>The ORC Rec Guide to Regattas A guide to everything regattas: a packing list, approximate scheduling, de-rigging and re-rigging, trailer loading, rules of racing, race plans, and more.
+Contents  Equipment List Scheduling De-Rigging and Rigging Trailer Loading Rules of Racing Race Plans  Equipment List A list of gear to pack in your regatta bag.
+  Three wrenches: 10mm, 7/16&amp;rdquo;, and an adjustable - you will need all three!</description>
+    </item>
+    
+  </channel>
+</rss>

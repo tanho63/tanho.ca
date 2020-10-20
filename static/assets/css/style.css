@@ -1,0 +1,8 @@
+
+#home .background {
+  filter: brightness(0.5) blur(1px);
+}
+
+body {
+  font-family: "Saira Semi Condensed";
+}

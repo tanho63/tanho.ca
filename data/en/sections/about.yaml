@@ -1,0 +1,70 @@
+# section information
+section:
+  name: About
+  id: about
+  enable: true
+  weight: 1
+  showOnNavbar: false
+  template: sections/about.html
+
+# your designation
+designation: Data Analyst & Developer
+# your company information
+company:
+  name: ABIC Builds
+  url: "https://www.abicbuilds.com"
+
+# your resume. this file path should be relative to you "static" directory
+# resume: "files/resume.pdf"
+
+# a summary about you
+summary: "I'm a data enthusiast who loves R/Shiny 🤩, DynastyFF and rowing. By day, I'm a data analyst and developer for ABIC in Ottawa, Canada. I started DynastyProcess.com and contribute at DLF and R4DS Slack Community. Away from my keyboard, I'm a rower and a lead coach for the Ottawa Rowing Club."
+
+# your social links
+# give as many as you want. use font-awesome for the icons.
+socialLinks:
+- name: Email
+  icon: "fas fa-envelope"
+  url: "mailto:tan@tanho.ca"
+
+- name: Github
+  icon: "fab fa-github"
+  url: "https://www.github.com/tanho63"
+
+- name: Twitter
+  icon: "fab fa-twitter"
+  url: "https://twitter.com/_tanho"
+
+- name: LinkedIn
+  icon: "fab fa-linkedin"
+  url: "https://www.linkedin.com/tan-ho"
+
+# your soft skills
+# give the percentage between 50 to 100 with 5 intervals.
+# currently supported colors: blue, yellow, pink, green, sky, orange
+# softSkills:
+# - name: Leadership
+#   percentage: 85
+#   color: blue
+# - name: Team Work
+#   percentage: 90
+#   color: yellow
+# - name: Communication
+#   percentage: 85
+#   color: pink
+# - name: Hard Working
+#   percentage: 85
+#   color: green
+# - name: Fast Learner
+#   percentage: 85
+#   color: sky
+# - name: Problem Solving
+#   percentage: 85
+#   color: orange
+# you can also provide color code instead of pre-defined color name
+# - name: Example 1
+#   percentage: 75
+#   color: "#00adb5"
+# - name: Example 2
+#   percentage: 65
+#   color: "#8b8383"

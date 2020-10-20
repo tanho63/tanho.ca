@@ -1,0 +1,51 @@
+# section information
+section:
+  name: Projects
+  id: projects
+  enable: true
+  weight: 4
+  showOnNavbar: false
+  # Can optionally hide the title in sections
+  # hideTitle: true
+
+# filter buttons
+buttons:
+- name: All
+  filter: "all"
+- name: DynastyProcess
+  filter: "dp"
+- name: R4DS Slack Community
+  filter: "r4ds"
+- name: DynastyLeagueFootball
+  filter: "dlf"
+- name: Ottawa Rowing Club
+  filter: "orc"
+
+# your projects
+projects:
+- name: "Open Data Repository"
+  logo:
+  timeline: "January 2019 - Present"
+  repo: https://github.com/dynastyprocess/data
+  summary: High quality open data to support dynasty FF analysis and development.
+  tags: ["dp","open data", "fantasy football"]
+
+- name: "Trade Calculator"
+  logo:
+  timeline: "March 2019 - Present"
+  url: https://apps.dynastyprocess.com/calculator
+  summary: The flagship Trade Calculator app features unparalleled control of trade values built on FantasyPros Dynasty Ranks, and is used by over 40,000 unique monthly users.
+  tags: ["dp","trade calculator", "shiny app", "fantasy football analysis"]
+
+- name: "Other DynastyProcess Apps"
+  logo:
+  timeline: "March 2019 - Present"
+  url: https://dynastyprocess.com/apps
+  summary: Other Shiny apps created under the DynastyProcess label, including Crystal Ball and Expected Points applications.
+  tags: ["dp", "shiny app", "fantasy football analysis"]
+
+- name: DLF Auction App
+  timeline: "Jan 2020"
+  url: "https://data.dynastyleaguefootball.com/auction-app"
+  summary: A Shiny app built on DLF trade values that calculates custom auction pricing guidelines.
+  tags: ["dlf","dynasty league football", 'fantasy football analysis']
