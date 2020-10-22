@@ -23,7 +23,8 @@ buttons:
 
 # your projects
 projects:
-- name: "Open Data Repository"
+- name: "DP Data"
+  role: Open Database
   logo:
   timeline: "January 2019 - Present"
   repo: https://github.com/dynastyprocess/data
@@ -32,20 +33,38 @@ projects:
 
 - name: "Trade Calculator"
   logo:
+  role: Shiny App (mobile optimised!)
   timeline: "March 2019 - Present"
   url: https://apps.dynastyprocess.com/calculator
   summary: The flagship Trade Calculator app features unparalleled control of trade values built on FantasyPros Dynasty Ranks, and is used by over 40,000 unique monthly users.
   tags: ["dp","trade calculator", "shiny app", "fantasy football analysis"]
 
+- name: "ffscrapr"
+  logo:
+  role: "R Package"
+  timeline: "August 2019 - Present"
+  repo: https://github.com/dynastyprocess/ffscrapr
+  summary: An R client for fantasy football league APIs - v1.0.0 on CRAN!
+  tags: ["dp","open data", "fantasy football"]
+
+- name: R4DS Book Clubs
+  role: Maintainer
+  timeline: April 2020 - Present
+  repo: https://github.com/r4ds/bookclub-advanced_r
+  summary: Support and coordinate reading through advanced R programming books such as Advanced R, R Packages, and more.
+  tags: ["r4ds"]
+
 - name: "Other DynastyProcess Apps"
   logo:
+  role: Shiny Apps
   timeline: "March 2019 - Present"
   url: https://dynastyprocess.com/apps
   summary: Other Shiny apps created under the DynastyProcess label, including Crystal Ball and Expected Points applications.
   tags: ["dp", "shiny app", "fantasy football analysis"]
 
 - name: DLF Auction App
-  timeline: "Jan 2020"
+  timeline: "Jan 2020 - Present"
+  role: Shiny Apps
   url: "https://data.dynastyleaguefootball.com/auction-app"
   summary: A Shiny app built on DLF trade values that calculates custom auction pricing guidelines.
   tags: ["dlf","dynasty league football", 'fantasy football analysis']

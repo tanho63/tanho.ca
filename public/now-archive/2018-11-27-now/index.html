@@ -29,6 +29,7 @@
   href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/atom-one-dark.min.css"
 />
 <link rel="stylesheet" href="/assets/css/layouts/single.css" />
+<link rel="stylesheet" href="/assets/css/navigators/sidebar.css">
 
 
     
@@ -86,11 +87,158 @@ if (!doNotTrack) {
 
 
       
-       
+      
+  <section class="sidebar-section" id="sidebar-section">
+    <div class="sidebar-holder">
+      <div class="sidebar" id="sidebar">
+        <input type="text" value="" placeholder="Search" data-search="" id="search-box" />
+        <div class="sidebar-tree">
+          <ul class="tree" id="tree">
+            <li id="list-heading"><a href="/posts" data-filter="all">Posts</a></li>
+            <div class="subtree">
+                
+  
+  
+  
+  
+  
+    
+    <li><a class="" href="/posts/rowing/">Rowing</a></li>
+  
+
+  
+  
+  
+  
+    
+    
+  
+  
+    
+    <li>
+      <i class="fas fa-minus-circle"></i><a class="active" href="/now-archive/">Now</a>
+      
+      <ul class="active">
+        
+  
+  
+  
+  
+    
+    
+  
+  
+    
+    <li><a class="active" href="/now-archive/2018-11-27-now/">Now - 2018-11</a></li>
+  
+
+  
+  
+  
+  
+  
+    
+    <li><a class="" href="/now-archive/2019-02-02-now/">Now - 2019-02</a></li>
+  
+
+  
+  
+  
+  
+  
+    
+    <li><a class="" href="/now-archive/2019-03-01-now/">Now - 2019-03</a></li>
+  
+
+  
+  
+  
+  
+  
+    
+    <li><a class="" href="/now-archive/2019-05-18-now/">Now - 2019-05</a></li>
+  
+
+  
+  
+  
+  
+  
+    
+    <li><a class="" href="/now-archive/2019-06-09-now/">Now - 2019-06</a></li>
+  
+
+  
+  
+  
+  
+  
+    
+    <li><a class="" href="/now-archive/2019-10-29-now/">Now - 2019-11</a></li>
+  
+
+  
+  
+  
+  
+  
+    
+    <li><a class="" href="/now-archive/2020-02-17-now/">Now - 2020-02</a></li>
+  
+
+  
+  
+  
+  
+  
+    
+    <li><a class="" href="/now-archive/2020-06-25-now/">Now - 2020-06</a></li>
+  
+
+  
+  
+  
+  
+  
+    
+    <li><a class="" href="/now-archive/2020-07-30-now/">Now - 2020-07</a></li>
+  
+
+  
+  
+  
+  
+  
+    
+    <li><a class="" href="/now-archive/2020-09-09-now/">Now - 2020-09</a></li>
+  
+
+  
+  
+  
+  
+  
+    
+    <li><a class="" href="/now/">Now - 2020-10</a></li>
+  
+
+
+      </ul>
+    </li>
+  
+
+
+            </div>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
 
       
       
-<section class="content-section align-self-center" id="content-section">
+<section class="content-section" id="content-section">
   <div class="content">
     <div class="container p-0 read-area">
       
@@ -99,10 +247,10 @@ if (!doNotTrack) {
 
       
       <div class="page-content">
-        <div class="author-profile ml-auto align-self-center justify-content-center">
-          <img class="rounded-circle" src='/assets/images/default-avatar.png'/>
+        <div class="author-profile ml-auto align-self-lg-center">
+          <img class="rounded-circle" src='/images/avatar.png'/>
           <h5 class="author-name">Tan Ho</h5>
-          <p>November 27, 2018</p>
+          <p>2018 Nov 27</p>
         </div>
 
         <div class="title">
@@ -131,33 +279,21 @@ if (!doNotTrack) {
 <h2 id="things-that-are-on-the-backburner">Things That Are On The Backburner</h2>
 <p>I had ambitions to build more tools for my DynastyDashboard.com project, but that&rsquo;s been placed on the backburner while I get after my physical goals. I&rsquo;m thinking about how I want to grow the site - it&rsquo;ll always include the Excel tools and Google Sheets but I&rsquo;m starting to consider writing about dynasty game theory, process-based team management, and building better/more competitive leagues.</p>
 <p>I&rsquo;m still actively managing my dynasty teams [pushing the playoffs in three of four leagues] and updating player values on the site monthly. It&rsquo;s just the R&amp;D that is on hold&hellip;unless inspiration strikes!</p>
-<h4 id="why-the-heck-is-this-page-here"><em>Why the heck is this page here?</em></h4>
-<p><em>The inspiration for a “now” page originally comes from Derek Sivers - <a href="https://nownownow.com/about">if you have your own site, you should make one too!</a></em></p>
 
         </div>
 
-        
-        
-          <div class="btn-improve-page">
-              <a href="https://github.com/tanho63/tanho-hugo/edit/master/content/now-archive%5c2018-11-27-now.md">
-                <i class="fas fa-code-branch"></i>
-                Improve This Page
-              </a>
+        <div class="card">
+            <h5 class="card-header">Why is this page here?</h5>
+          <div class="card-body">
+            <p class="card-text">The inspiration for a "now" page originally comes from Derek Sivers - if you have your own site, you should make one too!</p>
+            <a href="https://nownownow.com/about" class="btn btn-dark">More</a>
           </div>
-        
+        </div>
 
         
       <hr />
         <div class="row next-prev-navigator">
 
-
-  
-
-  
-
-  
-
-  
 
   
     
@@ -188,6 +324,14 @@ if (!doNotTrack) {
 
   
 
+  
+
+  
+
+  
+
+  
+
 </div>
 
       <hr />
@@ -201,7 +345,11 @@ if (!doNotTrack) {
 
 
       
-       
+      
+  <section class="toc-section" id="toc-section">
+    
+  </section>
+
     </div>
 
     
