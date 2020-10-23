@@ -8,13 +8,10 @@
   {{ $sections = (index .Site.Data .Site.Language.Lang).sections }}
 {{ end }}
 
-{{ $copyrightNotice := "© 2020 Copyright."}}
-{{ if (index .Site.Data .Site.Language.Lang).site }}
-  {{ $siteConfig := (index .Site.Data .Site.Language.Lang).site }}
-  {{ if $siteConfig.copyright }}
-    {{ $copyrightNotice = $siteConfig.copyright }}
-  {{ end }}
-{{ end }}
+{{ $siteConfig := (index .Site.Data .Site.Language.Lang).site }}
+{{ $copyrightNotice := $siteConfig.copyright }}
+{{ $license := $siteConfig.license }}
+
 
 <footer class="container-fluid text-center align-content-center footer pb-2">
   <div class="container pt-5">
@@ -75,6 +72,8 @@
   <div class="container">
     <div class="row text-center">
       <div class="col-md-12 text-center">{{ $copyrightNotice }}</div>
+      <br>
+      <div class="col-md-12 text-center">{{ $license }}</div>
       </div>
     </div>
   </div>
