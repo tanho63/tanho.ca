@@ -1,31 +1,31 @@
 <div class="row next-prev-navigator">
 {{ $currentPage := . }}
-{{ range (where site.RegularPages.ByDate "Type" "in" site.Params.mainSections )}}
+{{ range (where site.RegularPages.ByDate.Reverse "Type" "in" site.Params.mainSections )}}
   {{ if eq .RelPermalink  $currentPage.RelPermalink }}
-    {{ if .Next }}
+    {{ if .NextInSection }}
       {{ if (in site.Params.mainSections .Next.Type) }}
       <div class="col-md-6 previous-article">
-        <a href="{{.Next.RelPermalink}}" class="btn btn-outline-info">
+        <a href="{{.NextInSection.RelPermalink}}" class="btn btn-outline-info">
           <span><i class="fas fa-chevron-circle-left"></i> Prev</span>
           <br />
-          <span>{{ .Next.Title }}</span>
+          <span>{{ .NextInSection.Title }}</span>
         </a>
       </div>
       {{ end }}
     {{ end }}
-    {{ if .Prev }}
-      {{ if (in site.Params.mainSections .Prev.Type)  }}
+    {{ if .PrevInSection }}
+      {{ if (in site.Params.mainSections .PrevInSection.Type)  }}
         {{ $columnWidth:="col-md-12" }}
-        {{ if .Next }}
-          {{ if (in site.Params.mainSections .Next.Type) }}
+        {{ if .NextInSection }}
+          {{ if (in site.Params.mainSections .NextInSection.Type) }}
               {{ $columnWidth = "col-md-6" }}
           {{ end }}
         {{ end}}
         <div class="{{ $columnWidth }} next-article">
-          <a href="{{ .Prev.RelPermalink }}" class="btn btn-outline-info">
+          <a href="{{ .PrevInSection.RelPermalink }}" class="btn btn-outline-info">
             <span>Next <i class="fas fa-chevron-circle-right"></i></span>
             <br />
-            <span>{{ .Prev.Title }}</span>
+            <span>{{ .PrevInSection.Title }}</span>
           </a>
         </div>
       {{ end }}

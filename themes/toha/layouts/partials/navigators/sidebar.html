@@ -12,7 +12,7 @@
       <i class="fas {{ $icon }}"></i><a class="{{$class}}" href="{{ .URL }}">{{.Name}}</a>
       <!-- Add sub-tree -->
       <ul class="{{ $class }}">
-        {{ partial "navigators/sidebar.html" (dict "menus" .Children "ctx" $.ctx) }}
+        {{ partial "navigators/sidebar.html" (dict "menus" .Children.Reverse "ctx" $.ctx) }}
       </ul>
     </li>
   {{ else }}
