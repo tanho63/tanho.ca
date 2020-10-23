@@ -4,5 +4,5 @@ menu:
   sidebar:
     name: Now
     identifier: now-archives
-    weight: 20
+    weight: 30
 ---

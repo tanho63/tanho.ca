@@ -4,5 +4,5 @@ menu:
   sidebar:
     name: Rowing
     identifier: rowing
-    weight: 10
+    weight: 20
 ---

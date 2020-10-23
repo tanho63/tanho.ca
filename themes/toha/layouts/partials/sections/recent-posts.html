@@ -5,11 +5,26 @@
 
 <div class="container-fluid anchor pb-5 recent-posts-section" id="{{ $sectionID }}">
   {{ if not (.section.hideTitle) }}
-    <h1 class="text-center">{{ .section.name }}</h1>
+    <h1 class="text-center">Recent R Posts</h1>
   {{ end }}
   <div class="container">
     <div class="row" id="recent-post-cards">
-      {{ range first 3 (where site.RegularPages.ByDate.Reverse "Section" "posts" )}}
+      {{ range first 3 (where site.RegularPages.ByDate.Reverse "Section" "R" )}}
+        {{ partial "cards/recent-post.html" . }}
+      {{ end }}
+    </div>
+  </div>
+</div>
+
+<br>
+
+<div class="container-fluid anchor pb-5 recent-posts-section" id="{{ $sectionID }}">
+  {{ if not (.section.hideTitle) }}
+    <h1 class="text-center"> Recent Rowing Posts </h1>
+  {{ end }}
+  <div class="container">
+    <div class="row" id="recent-post-cards">
+      {{ range first 3 (where site.RegularPages.ByDate.Reverse "Section" "rowing" )}}
         {{ partial "cards/recent-post.html" . }}
       {{ end }}
     </div>
