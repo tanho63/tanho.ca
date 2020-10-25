@@ -1,0 +1,51 @@
+---
+layout: single
+title: "Q & A: Changing Window Titles in Shiny"
+date:   2020-10-20
+summary: "Pairing a snippet of JavaScript with Shiny reactivity to dynamically change the window title"
+type: rshiny
+menu:
+  sidebar:
+    name: Shiny Window Titles
+    identifier: shinywindowtitles
+    parent: rshiny
+url: /shinywindowtitles
+hero: /images/rshiny/discussing.jpg
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>I greatly enjoy the R4DS Slack Community (found at <a href="r4ds.io/join">r4ds.io/join</a>!) - and spend a fair bit of time answering questions, especially about Shiny! This is another in a series of posts where I curate some of the more interesting questions and answers I’ve found (and sometimes answered).</p>
+<hr>
+<p>User <code>Dhiraj</code> asks:</p>
+<blockquote>
+<p>I have a shiny application which uses the navbarPage() layout. The app has multiple tabPanels with their own titles. Is it possible to have the windowTitle of the navbarPage dynamic to show the titles of the tabPanels ?</p>
+</blockquote>
+<p>Here’s a minimal example of the Shiny and JS code you’ll need:</p>
+<pre class="r"><code>library(shiny)
+library(tidyverse)
+
+custom_js &lt;- &#39;Shiny.addCustomMessageHandler(&quot;handler_windowtitle&quot;, switch_window_title );
+function switch_window_title(message){
+  document.title = message;
+}&#39;
+
+ui &lt;- navbarPage(
+  title = &#39;navbarpage&#39;,
+  id = &#39;displayed_tab&#39;,
+  tags$head(tags$script(custom_js)),
+  tabPanel(title = &quot;StrangePlanet&quot;),
+  tabPanel(title = &quot;DarthVader&quot;)
+)
+
+server &lt;- function(input, output, session) {
+  observeEvent(
+    input$displayed_tab,
+    session$sendCustomMessage(&quot;handler_windowtitle&quot;,input$displayed_tab)
+  )
+}
+
+shinyApp(ui, server)</code></pre>
+<p>If you give navbarPage an ID, it’ll create an <code>input</code> variable that can be accessed as <code>input${id}</code>, returning the value argument of the tabPanel. In this case, tabPanel returns the <code>title</code> argument as the default value - you can specify something else if you prefer.</p>
+<p>In a production app, I’d also move the JS into a separate JS file (stored in www) and use <code>includeJS()</code> instead of using the <code>tags$script</code> method.</p>

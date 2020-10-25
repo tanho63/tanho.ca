@@ -16,8 +16,8 @@ body {
 }
 
 .content-section {
-  flex: 60%;
-  max-width: 60%;
+  flex: 80%;
+  max-width: 80%;
   order: 2;
   /* background-color: lightseagreen; */
   padding: 0;
@@ -29,7 +29,7 @@ body {
   background: #e5e9f2;
 }
 .toc-section {
-  flex: 20%;
+  flex: 10%;
   order: 3;
   max-width: 20%;
   /* background-color: lightpink; */
@@ -310,8 +310,8 @@ mark {
 /* Large screens such as TV */
 @media only screen and (min-width: 1824px) {
   .content-section {
-    flex: 65%;
-    max-width: 65%;
+  flex: 80%;
+  max-width: 80%;
   }
   .content-section .container {
     max-width: 100%;
