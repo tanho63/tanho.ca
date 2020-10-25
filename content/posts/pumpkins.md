@@ -10,4 +10,4 @@ menu:
     identifier: pumpkins
 ---
 {{< load-photoswipe >}}
-{{< gallery dir="images/pumpkin-carves" >}}
+{{< gallery dir="/images/pumpkin-carves" >}}
