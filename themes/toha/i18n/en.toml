@@ -15,10 +15,10 @@ other = "My resume"
 other = "Navigation"
 
 [contact_me]
-other = "Contact me:"
+other = "Contact Me"
 
 [newsletter_text]
-other = "Stay up to date with email notification"
+other = "Stay up to date with email notifications"
 
 [newsletter_input_placeholder]
 other = "Enter email"
