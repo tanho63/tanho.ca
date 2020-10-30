@@ -17,7 +17,7 @@ I greatly enjoy the R4DS Slack Community (found at [r4ds.io/join](r4ds.io/join)!
 
 <hr>
 
-User `Dhiraj` asks:
+`Dhiraj` asks:
 
 > I have a shiny application which uses the navbarPage() layout. The app has multiple tabPanels with their own titles. Is it possible to have the windowTitle of the navbarPage dynamic to show the titles of the tabPanels ?
 
