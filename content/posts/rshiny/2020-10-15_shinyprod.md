@@ -18,7 +18,7 @@ I greatly enjoy the R4DS Slack Community (found at [r4ds.io/join](r4ds.io/join)!
 
 <hr>
 
-User `Piranha` asks:
+`Piranha` asks:
 
 > Hello,\
 > This might be bit of a stretch.... I could use a bit of help in prepping for some upcoming conversations with the head of my company's IT/Security. 
