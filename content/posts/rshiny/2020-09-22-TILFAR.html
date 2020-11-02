@@ -1,0 +1,64 @@
+---
+title: "Things I Learned From Advanced R"
+date: 2020-09-22
+summary: A non-exhaustive list of things I learned from each of the sections of Advanced R while participating in AdvRBookclub.
+type: rshiny
+menu:
+  sidebar:
+    name: Things I Learned From Advanced R
+    identifier: tilfar
+    parent: rshiny
+url: /tilfar
+hero: /images/rshiny/video-call.jpg
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>I set out reading this book hoping to understand the metaprogramming chapter, and ended up learning a bunch of other stuff along the way!
+Here’s a non-exhaustive list of things I learned from each of the sections of Advanced R:</p>
+<div id="i---foundations" class="section level3">
+<h3>I - Foundations:</h3>
+<ul>
+<li>I notice that I use the switch function a ton now, where previously I used if-else nests.</li>
+<li>I use condition-handling to pass errors back to the user of my Shiny apps now.</li>
+<li>I now know what an Environment is and where and why R would look for something. (This helps both in function-writing and debugging!)</li>
+<li>I write a heck of a lot of functions (this ties into II: Functional Programming, of course)</li>
+</ul>
+</div>
+<div id="ii---functional-programming" class="section level3">
+<h3>II - Functional Programming</h3>
+<ul>
+<li>I map the crap out of everything now (if I didn’t before, it’s way worse now!), and have learned to use functions in a ton of different ways.</li>
+<li>I now understand what a function factory is, and what to do if a function somehow returns me a function instead (as opposed to panicking about it!)</li>
+<li>I now know about a series of modifiers to help adjust function behaviours (memoise, quietly, safely, possibly) - although I use tryCatch as much as I do these.</li>
+</ul>
+</div>
+<div id="iii---oop" class="section level3">
+<h3>III - OOP</h3>
+<ul>
+<li>I wrote a package that uses S3! It’s cool to minimize the user interface for multiple platforms and the mental load accompanying.</li>
+<li>I still lean to using the explicit “switch” function a lot instead of writing out a useMethod call. May be a habit/pattern worth breaking in the future.</li>
+<li>I’m now comfortable USING an R6 package - I don’t know that I’d reach for an R6 system now but the whole “function$method” thing doesn’t scare me anymore</li>
+<li>S4? wot that</li>
+</ul>
+</div>
+<div id="iv-metaprogramming" class="section level3">
+<h3>IV Metaprogramming</h3>
+<ul>
+<li>I now know how to pass expressions to tidyverse stuff!</li>
+<li>I now know where to look in the Metaprogramming and how to intepret the text.</li>
+</ul>
+</div>
+<div id="v-techniques" class="section level3">
+<h3>V Techniques</h3>
+<ul>
+<li>Debugging: I now know how to use browser, and love it! Also debug()!</li>
+<li>Performance measure/improve: still don’t do a ton of this, even though I’m a shiny dev. I feel like I should care more but I mostly work with smaller data (sub 1,000,000 rows) right now.</li>
+<li>I … still don’t know C++ or Rcpp. 🤷</li>
+</ul>
+</div>
+<div id="toy-code" class="section level2">
+<h2>Toy Code</h2>
+<p>Metaprogramming - how to pass expressions into select statements. Also example of switch.</p>
+</div>
