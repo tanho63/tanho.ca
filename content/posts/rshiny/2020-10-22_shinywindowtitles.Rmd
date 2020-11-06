@@ -10,7 +10,7 @@ menu:
     identifier: shinywindowtitles
     parent: rshiny
 url: /shinywindowtitles
-hero: /images/rshiny/question.jpeg
+hero: /images/rshiny/question.jpg
 ---
 
 I greatly enjoy the R4DS Slack Community (found at [r4ds.io/join](r4ds.io/join)!) - and spend a fair bit of time answering questions, especially about Shiny! This is another in a series of posts where I curate some of the more interesting questions and answers I've found (and sometimes answered).

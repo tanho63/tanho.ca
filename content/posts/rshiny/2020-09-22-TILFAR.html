@@ -60,5 +60,21 @@ Here’s a non-exhaustive list of things I learned from each of the sections of 
 </div>
 <div id="toy-code" class="section level2">
 <h2>Toy Code</h2>
+<pre class="r"><code>library(dplyr)
+library(rlang)
+
+grouping_variables &lt;- switch(
+  params$group_type,
+  &quot;S&quot; = exprs(CraftCode, starts_with(&quot;Product&quot;), ModelCode, Elevation),
+  &quot;B&quot; = exprs(starts_with(&quot;Rate&quot;)),
+  &quot;P&quot; = exprs(starts_with(&quot;Part&quot;))
+)
+  
+null_bids &lt;- bids %&gt;%
+  group_by(SupplierID, ProjectID, !!!grouping_variables) %&gt;%
+  slice_max(LastModDate) %&gt;%
+  ungroup() %&gt;%
+  select(!!!grouping_variables, ProjectID, SupplierAID, SupplierName, UnitPrice) %&gt;%
+  left_join(lowest_bids, by = as.character(grouping_variables))</code></pre>
 <p>Metaprogramming - how to pass expressions into select statements. Also example of switch.</p>
 </div>

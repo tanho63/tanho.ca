@@ -47,7 +47,7 @@ Here's a non-exhaustive list of things I learned from each of the sections of Ad
 - I ... still don't know C++ or Rcpp. `r emo::ji('shrug')`
 
 ## Toy Code
-```{r groupvars, eval = FALSE, echo = FALSE}
+```{r groupvars, eval = FALSE}
 library(dplyr)
 library(rlang)
 
@@ -68,11 +68,3 @@ null_bids <- bids %>%
 ```
 
 Metaprogramming - how to pass expressions into select statements. Also example of switch. 
-```{r echo = FALSE}
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(flair)})
-
-flair::decorate_chunk("groupvars",eval = FALSE) %>% flair("grouping_variables")
-```
-
