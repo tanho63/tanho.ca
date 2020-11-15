@@ -6,3 +6,6 @@
 body {
   font-family: "Saira Semi Condensed";
 }
+
+@supports (-webkit-overflow-scrolling: touch) {
+  body *: { 		background-attachment: scroll; 	} }

@@ -33,7 +33,7 @@ projects:
 
 - name: "Trade Calculator"
   logo: "images/projects/analyze.svg"
-  role: Shiny App (mobile optimised!)
+  role: Shiny (mobile) App
   timeline: "March 2019 - Present"
   url: https://apps.dynastyprocess.com/calculator
   summary: The flagship Trade Calculator app features unparalleled control of trade values built on FantasyPros Dynasty Ranks, and is used by over 40,000 unique monthly users.
@@ -41,7 +41,7 @@ projects:
 
 - name: "ffscrapr"
   logo: "images/projects/ffscrapr.svg"
-  role: "R Package"
+  role: "R CRAN Package"
   timeline: "August 2019 - Present"
   repo: https://github.com/dynastyprocess/ffscrapr
   summary: An R client for fantasy football league APIs - v1.0.0 on CRAN!
@@ -52,7 +52,7 @@ projects:
   logo: "images/projects/book.svg"
   timeline: April 2020 - Present
   repo: https://github.com/r4ds/bookclub-advanced_r
-  summary: Discuss, present, and coordinate readthroughs advanced R programming books such as Wickham's Advanced R, R Packages, and more.
+  summary: Discuss, present, and coordinate readthroughs of advanced R programming books such as Wickham's Advanced R, R Packages, and more.
   tags: ["r4ds"]
 
 - name: "Other DynastyProcess Apps"
