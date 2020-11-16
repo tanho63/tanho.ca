@@ -44,7 +44,7 @@ projects:
   role: "R CRAN Package"
   timeline: "August 2019 - Present"
   repo: https://github.com/dynastyprocess/ffscrapr
-  summary: An R client for fantasy football league APIs - v1.0.0 on CRAN!
+  summary: An R client for fantasy football league APIs - v1.1.0 now on CRAN!
   tags: ["dp","open data", "fantasy football"]
 
 - name: R4DS Book Clubs
