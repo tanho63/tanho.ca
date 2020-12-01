@@ -10,9 +10,8 @@ menu:
     identifier: adventcode2020-1
     parent: rshiny
 url: /adventcode-2020-01
-hero: /images/rshiny/question.jpg
+hero: /images/rshiny/advent.jpg
 ---
-
 
 ```{r setup}
 knitr::opts_chunk$set(echo = TRUE)
