@@ -1,0 +1,119 @@
+---
+layout: single
+title: "Advent of Code, Day 1"
+date:   2020-12-01
+summary: "Tackling day one of Advent of Code"
+type: rshiny
+menu:
+  sidebar:
+    name: AdventofCode-01
+    identifier: adventcode2020-1
+    parent: rshiny
+url: /adventcode-2020-01
+hero: /images/rshiny/question.jpg
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+<link href="/rmarkdown-libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/anchor-sections/anchor-sections.js"></script>
+
+
+<pre class="r"><code>knitr::opts_chunk$set(echo = TRUE)
+
+suppressPackageStartupMessages(library(tidyverse))</code></pre>
+<div id="day-1-report-repair" class="section level3">
+<h3>— Day 1: Report Repair —</h3>
+<p><a href="https://adventofcode.com/2020/day/1" class="uri">https://adventofcode.com/2020/day/1</a></p>
+<blockquote>
+<p>After saving Christmas <a href="https://adventofcode.com/events">five years in a row</a>, you’ve decided to take a vacation at a nice resort on a tropical island. Surely, Christmas will go on without you.</p>
+<p>The tropical island has its own currency and is entirely cash-only. The gold coins used there have a little picture of a starfish; the locals just call them <em>stars</em>. None of the currency exchanges seem to have heard of them, but somehow, you’ll need to find fifty of these coins by the time you arrive so you can pay the deposit on your room.</p>
+<p>To save your vacation, you need to get all <em>fifty stars</em> by December 25th.</p>
+<p>Collect stars by solving puzzles. Two puzzles will be made available on each day in the Advent calendar; the second puzzle is unlocked when you complete the first. Each puzzle grants <em>one star</em>. Good luck!</p>
+<p>Before you leave, the Elves in accounting just need you to fix your <em>expense report</em> (your puzzle input); apparently, something isn’t quite adding up.</p>
+<p>Specifically, they need you to <em>find the two entries that sum to <code>2020</code></em> and then multiply those two numbers together.</p>
+<p>For example, suppose your expense report contained the following:</p>
+<pre><code>1721
+979
+366
+299
+675
+1456</code></pre>
+<p>In this list, the two entries that sum to <code>2020</code> are <code>1721</code> and <code>299</code>. Multiplying them together produces <code>1721 * 299 = 514579</code>, so the correct answer is <em><code>514579</code></em>.</p>
+<p>Of course, your expense report is much larger. <em>Find the two entries that sum to <code>2020</code>; what do you get if you multiply them together?</em></p>
+</blockquote>
+</div>
+<div id="data" class="section level3">
+<h3>Data</h3>
+<p><a href="https://adventofcode.com/2020/day/1/input" class="uri">https://adventofcode.com/2020/day/1/input</a></p>
+<p>Copy-paste + datapasta’s Fiddle Selection. (Thank you, Miles!)</p>
+<pre class="r"><code>input_data &lt;- c(
+  1630, 1801, 1917, 1958, 1953, 1521, 1990, 1959, 1543, 1798, 
+  638, 1499, 1977, 1433, 1532, 1780, 1559, 1866, 1962, 1999, 
+  1623, 1772, 1730, 1670, 1791, 1947, 1961, 1523, 959, 1998, 
+  1693, 1490, 1712, 910, 1635, 1837, 586, 1590, 1741, 1739, 
+  1660, 1883, 1777, 1734, 1413, 1456, 1511, 1957, 1738, 1685, 
+  1677, 1419, 1566, 1639, 1578, 1922, 1856, 1946, 1965, 1649, 
+  1854, 1610, 1806, 1424, 1616, 218, 1678, 1992, 1985, 903, 
+  1626, 1412, 1964, 671, 1692, 1571, 1690, 1587, 1933, 1367, 
+  1585, 1575, 498, 1601, 2005, 1711, 1948, 1991, 1580, 1704, 
+  207, 1560, 1867, 1600, 1594, 1930, 1541, 1832, 1613, 1599, 
+  1757, 71, 1534, 1940, 1982, 1960, 1530, 1908, 1857, 1410, 
+  1987, 1526, 1546, 2002, 1923, 1972, 1752, 1984, 1754, 1916, 
+  1942, 1980, 1608, 1398, 1438, 1955, 1968, 1799, 1976, 1847, 
+  1775, 1904, 1983, 1945, 1554, 1486, 1527, 1884, 1553, 1736, 
+  1561, 1513, 1695, 1431, 1997, 1405, 1872, 1434, 1679, 1609, 
+  105, 1582, 1795, 1826, 1886, 1472, 2007, 1617, 1978, 1669, 
+  1764, 1865, 1773, 1993, 1666, 1583, 2009, 1969, 2001, 1659, 
+  1833, 1713, 1893, 2000, 1520, 1652, 1437, 1556, 1633, 1386, 
+  1819, 1973, 1426, 1975, 2010, 1863, 1593, 1996, 1796, 1986, 
+  1995, 657, 1784, 1644, 1941, 1596, 1849, 1065, 1927, 1525)</code></pre>
+</div>
+<div id="part-one-find-a-solution-where-the-sum-of-two-entries-equals-2020." class="section level3">
+<h3>Part One: Find a solution where the sum of two entries equals 2020.</h3>
+<p>The first solution that comes to mind is finding the difference each entry and 2020, and then left-joining the entries onto this difference.</p>
+<pre class="r"><code>pair_2020 &lt;- tibble(expense = input_data) %&gt;% 
+  mutate(difference = 2020 - expense) %&gt;% 
+  left_join(
+    x = .,
+    y = .,
+    by = c(&quot;expense&quot;=&quot;difference&quot;)
+  ) %&gt;% 
+  filter(!is.na(expense.y))
+
+pair_2020</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   expense difference expense.y
+##     &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;
+## 1     586       1434      1434
+## 2    1434        586       586</code></pre>
+<pre class="r"><code>pair_2020 %&gt;% 
+  mutate(multiply = expense * expense.y) %&gt;% 
+  distinct(multiply) %&gt;% 
+  pull()</code></pre>
+<pre><code>## [1] 840324</code></pre>
+</div>
+<div id="part-two-find-a-solution-where-the-sum-of-three-entries-equals-2020" class="section level3">
+<h3>Part Two: Find a solution where the sum of three entries equals 2020</h3>
+<p>Okay, I can’t use the first approach here, so now I’ll hit crossing to make a big dataframe, then sum it all afterwards and filter to where sum == 2020.</p>
+<pre class="r"><code>triple_2020 &lt;- crossing(first = input_data, 
+                        second = input_data, 
+                        third = input_data) %&gt;% 
+  mutate(total = first + second + third,
+         product = first * second * third) %&gt;% 
+  filter(total == 2020)
+
+triple_2020</code></pre>
+<pre><code>## # A tibble: 6 x 5
+##   first second third total   product
+##   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
+## 1   207    903   910  2020 170098110
+## 2   207    910   903  2020 170098110
+## 3   903    207   910  2020 170098110
+## 4   903    910   207  2020 170098110
+## 5   910    207   903  2020 170098110
+## 6   910    903   207  2020 170098110</code></pre>
+<pre class="r"><code>triple_2020 %&gt;% 
+  distinct(product) %&gt;% 
+  pull()</code></pre>
+<pre><code>## [1] 170098110</code></pre>
+</div>
