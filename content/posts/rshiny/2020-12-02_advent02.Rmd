@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "Advent of Code, Day 2"
-date:   2020-12-01
+date:   2020-12-02
 summary: "Tackling day two of Advent of Code"
 type: rshiny
 menu:
