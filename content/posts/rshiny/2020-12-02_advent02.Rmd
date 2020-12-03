@@ -2,7 +2,7 @@
 layout: single
 title: "Advent of Code, Day 2"
 date:   2020-12-02
-summary: "Tackling day two of Advent of Code"
+summary: "Tackling day two of Advent of Code - password cracking!"
 type: rshiny
 menu:
   sidebar:

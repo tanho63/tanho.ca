@@ -2,7 +2,7 @@
 layout: single
 title: "Advent of Code, Day 1"
 date:   2020-12-01
-summary: "Tackling day one of Advent of Code"
+summary: "Tackling day one of Advent of Code - report-fixing!"
 type: rshiny
 menu:
   sidebar:
