@@ -1,0 +1,122 @@
+---
+layout: single
+title: "Advent of Code, Day 4"
+date:   2020-12-04
+summary: "Tackling day four of Advent of Code - passport security!"
+type: rshiny
+menu:
+  sidebar:
+    name: AdventofCode-04
+    identifier: adventcode2020-4
+    parent: rshiny
+url: /adventcode-2020-04
+hero: /images/rshiny/advent.jpg
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>Day four!</p>
+<pre class="r"><code>library(tidyverse)
+library(here)
+
+knitr::opts_chunk$set(echo = TRUE)</code></pre>
+<div id="problem-description" class="section level3">
+<h3>Problem Description</h3>
+<blockquote>
+<p>The automatic passport scanners are slow because they’re having trouble detecting which passports have all required fields. The expected fields are as follows:</p>
+<pre><code>- byr (Birth Year)
+- iyr (Issue Year)
+- eyr (Expiration Year)
+- hgt (Height)
+- hcl (Hair Color)
+- ecl (Eye Color)
+- pid (Passport ID)
+- cid (Country ID)</code></pre>
+<p>Passport data is validated in batch files (your puzzle input). Each passport is represented as a sequence of key:value pairs separated by spaces or newlines. Passports are separated by blank lines.</p>
+</blockquote>
+<p>Count the number of valid passports - those that have <code>all required fields</code>. Treat cid as optional. In your batch file, how many passports are valid?</p>
+</div>
+<div id="input-data" class="section level3">
+<h3>Input Data</h3>
+<pre class="r"><code>input_data &lt;- read_lines(&quot;day-04.txt&quot;)
+
+head(input_data)</code></pre>
+<pre><code>## [1] &quot;iyr:2015 cid:189 ecl:oth byr:1947 hcl:#6c4ab1 eyr:2026&quot;                        
+## [2] &quot;hgt:174cm&quot;                                                                     
+## [3] &quot;pid:526744288&quot;                                                                 
+## [4] &quot;&quot;                                                                              
+## [5] &quot;pid:688706448 iyr:2017 hgt:162cm cid:174 ecl:grn byr:1943 hcl:#808e9e eyr:2025&quot;
+## [6] &quot;&quot;</code></pre>
+<p>Cleaning data into a tibble.</p>
+<pre class="r"><code>df_passports &lt;- tibble(data = input_data) %&gt;%
+  mutate(blank = ifelse(data == &quot;&quot;,1,0),
+         passport_id = cumsum(blank)+1) %&gt;% 
+  filter(!blank) %&gt;% 
+  select(-blank) %&gt;% 
+  separate_rows(data, sep = &quot; &quot;) %&gt;% 
+  separate(data, sep = &quot;:&quot;, into = c(&quot;key&quot;,&quot;value&quot;)) %&gt;% 
+  pivot_wider(names_from = key, values_from = value)
+
+head(df_passports)</code></pre>
+<pre><code>## # A tibble: 6 x 9
+##   passport_id iyr   cid   ecl   byr   hcl     eyr   hgt   pid      
+##         &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    
+## 1           1 2015  189   oth   1947  #6c4ab1 2026  174cm 526744288
+## 2           2 2017  174   grn   1943  #808e9e 2025  162cm 688706448
+## 3           3 2019  124   oth   1933  #733820 2001  159in 111220591
+## 4           4 2026  291   oth   1942  #fffffd 2024  159cm 812929897
+## 5           5 2013  83    amb   1974  #ceb3a1 2028  191cm 524032739
+## 6           6 &lt;NA&gt;  221   gry   1963  eefed5  2029  183cm 88405792</code></pre>
+</div>
+<div id="problem-1-how-many-completenon-missing-passports" class="section level3">
+<h3>Problem 1: How many complete/non-missing passports?</h3>
+<pre class="r"><code>valid_p1 &lt;- df_passports %&gt;% 
+  select(-cid) %&gt;% 
+  filter_all(~!is.na(.x))
+
+head(valid_p1)</code></pre>
+<pre><code>## # A tibble: 6 x 8
+##   passport_id iyr   ecl   byr   hcl     eyr   hgt   pid      
+##         &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    
+## 1           1 2015  oth   1947  #6c4ab1 2026  174cm 526744288
+## 2           2 2017  grn   1943  #808e9e 2025  162cm 688706448
+## 3           3 2019  oth   1933  #733820 2001  159in 111220591
+## 4           4 2026  oth   1942  #fffffd 2024  159cm 812929897
+## 5           5 2013  amb   1974  #ceb3a1 2028  191cm 524032739
+## 6           7 2018  grn   1923  #18171d 2021  181cm 777881168</code></pre>
+<pre class="r"><code>nrow(valid_p1)</code></pre>
+<pre><code>## [1] 264</code></pre>
+</div>
+<div id="problem-2-validate-columns" class="section level3">
+<h3>Problem 2: Validate columns</h3>
+<p>Time to add more validation beyond non-missing!</p>
+<pre class="r"><code>valid_p2 &lt;- valid_p1 %&gt;% 
+  mutate_at(c(&quot;byr&quot;,&quot;iyr&quot;,&quot;eyr&quot;),as.numeric) %&gt;% 
+  filter(
+    between(byr,1920,2002),
+    between(iyr,2010,2020),
+    between(eyr,2020,2030),
+    case_when(
+      str_ends(hgt,&quot;cm&quot;) &amp; between(parse_number(hgt),150,193) ~ TRUE,
+      str_ends(hgt,&quot;in&quot;) &amp; between(parse_number(hgt),59,76) ~ TRUE,
+      TRUE ~ FALSE
+      ),
+    str_detect(hcl,&quot;^#[A-z,0-9]{6}$&quot;),
+    ecl %in% c(&quot;amb&quot;,&quot;blu&quot;,&quot;brn&quot;,&quot;gry&quot;,&quot;grn&quot;,&quot;hzl&quot;,&quot;oth&quot;),
+    str_detect(pid,&quot;^[0-9]{9}$&quot;),
+  )
+
+head(valid_p2)</code></pre>
+<pre><code>## # A tibble: 6 x 8
+##   passport_id   iyr ecl     byr hcl       eyr hgt   pid      
+##         &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;    
+## 1           1  2015 oth    1947 #6c4ab1  2026 174cm 526744288
+## 2           2  2017 grn    1943 #808e9e  2025 162cm 688706448
+## 3           5  2013 amb    1974 #ceb3a1  2028 191cm 524032739
+## 4           7  2018 grn    1923 #18171d  2021 181cm 777881168
+## 5           8  2016 gry    1941 #a5e1b5  2027 178cm 062495008
+## 6          10  2020 blu    1925 #888785  2023 188cm 117915262</code></pre>
+<pre class="r"><code>nrow(valid_p2)</code></pre>
+<pre><code>## [1] 224</code></pre>
+</div>
