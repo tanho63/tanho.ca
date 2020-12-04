@@ -40,6 +40,8 @@ Count the number of valid passports - those that have `all required fields`. Tre
 
 ### Input Data
 
+https://github.com/tanho63/advent_of_code/blob/master/2020/day-04.txt
+
 ```{r}
 input_data <- read_lines("day-04.txt")
 

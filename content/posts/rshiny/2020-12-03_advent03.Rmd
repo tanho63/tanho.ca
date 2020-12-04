@@ -34,7 +34,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### Input Data
 
-(You can get a copy of my data at https://github.com/tanho63/advent-of-code-2020/blob/master/day/day-03.txt)
+(You can get a copy of my data at https://github.com/tanho63/advent_of_code/blob/master/2020/day-04.txt)
 
 Converting to a matrix of 1s and 0s, where "#" is 1 and "." is 0
 
