@@ -1,0 +1,96 @@
+---
+layout: single
+title: "Advent of Code, Day 5"
+date:   2020-12-05
+summary: "Tackling day five of Advent of Code - boarding passes!"
+type: rshiny
+menu:
+  sidebar:
+    name: AdventofCode-05
+    identifier: adventcode2020-5
+    parent: rshiny
+url: /adventcode-2020-05
+hero: /images/rshiny/advent.jpg
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>Day five!</p>
+<pre class="r"><code>library(tidyverse)
+library(here)
+
+knitr::opts_chunk$set(echo = TRUE)</code></pre>
+<blockquote>
+<p>Instead of zones or groups, this airline uses binary space partitioning to seat people. A seat might be specified like FBFBBFFRLR, where F means “front”, B means “back”, L means “left”, and R means “right”.</p>
+<p>The first 7 characters will either be F or B; these specify exactly one of the 128 rows on the plane (numbered 0 through 127). Each letter tells you which half of a region the given seat is in. Start with the whole list of rows; the first letter indicates whether the seat is in the front (0 through 63) or the back (64 through 127). The next letter indicates which half of that region the seat is in, and so on until you’re left with exactly one row.</p>
+<p>The last three characters will be either L or R; these specify exactly one of the 8 columns of seats on the plane (numbered 0 through 7). The same process as above proceeds again, this time with only three steps. L means to keep the lower half, while R means to keep the upper half.</p>
+<p>So, decoding FBFBBFFRLR reveals that it is the seat at row 44, column 5.</p>
+<p>Every seat also has a unique seat ID: multiply the row by 8, then add the column. In this example, the seat has ID 44 * 8 + 5 = 357.</p>
+</blockquote>
+<div id="data" class="section level3">
+<h3>Data</h3>
+<pre class="r"><code>input_05 &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-05.txt&quot;)</code></pre>
+</div>
+<div id="problem-1-highest-seat-id" class="section level3">
+<h3>Problem 1: highest seat ID?</h3>
+<p>A good time to dust off some recursive functions!</p>
+<pre class="r"><code>search_function &lt;- function(string,range){
+  
+  midpoint &lt;- length(range)%/%2
+  accessor &lt;- str_sub(string,1,1) 
+
+  new_range &lt;- switch(
+    accessor,
+    &quot;L&quot; = ,
+    &quot;F&quot; = range[1:midpoint],
+    &quot;R&quot; = ,
+    &quot;B&quot; = range[-(1:midpoint)])
+
+  if(length(new_range) == 1) return(new_range)
+  
+  new_string &lt;- str_remove(string,&quot;^.&quot;)
+  
+  search_function(new_string,new_range)
+}
+
+search_function(&quot;FBFBBFF&quot;,0:127)</code></pre>
+<pre><code>## [1] 44</code></pre>
+<pre class="r"><code>df_boardingpasses &lt;- tibble(input = input_05) %&gt;% 
+  mutate(row_string = str_sub(input,1,7),
+         seat_string = str_sub(input,-3,-1),
+         row = map_dbl(row_string,search_function,0:127),
+         seat = map_dbl(seat_string,search_function,0:7),
+         seat_id = row * 8 + seat)
+
+head(df_boardingpasses)</code></pre>
+<pre><code>## # A tibble: 6 x 6
+##   input      row_string seat_string   row  seat seat_id
+##   &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+## 1 FFBFBBBRLR FFBFBBB    RLR            23     5     189
+## 2 BBFFBFFRRR BBFFBFF    RRR           100     7     807
+## 3 BFFFFBBRRR BFFFFBB    RRR            67     7     543
+## 4 FFBFFBBLRR FFBFFBB    LRR            19     3     155
+## 5 FFBFBFBLLL FFBFBFB    LLL            21     0     168
+## 6 FFBFFBFLRR FFBFFBF    LRR            18     3     147</code></pre>
+<pre class="r"><code>max(df_boardingpasses$seat_id)</code></pre>
+<pre><code>## [1] 818</code></pre>
+</div>
+<div id="problem-2-your-seat" class="section level3">
+<h3>Problem 2: Your Seat</h3>
+<blockquote>
+<p>It’s a completely full flight, so your seat should be the only missing boarding pass in your list. However, there’s a catch: some of the seats at the very front and back of the plane don’t exist on this aircraft, so they’ll be missing from your list as well.</p>
+<p>Your seat wasn’t at the very front or back, though; the seats with IDs +1 and -1 from yours will be in your list.</p>
+</blockquote>
+<pre class="r"><code>actual_seats &lt;-  df_boardingpasses %&gt;% 
+  arrange(row,seat) %&gt;% 
+  filter(
+    row != min(row),
+    row != max(row)
+  )
+
+x &lt;- seq.int(min(actual_seats$seat_id),max(actual_seats$seat_id))
+
+x[!(x %in% actual_seats$seat_id)]</code></pre>
+<pre><code>## [1] 559</code></pre>
+</div>

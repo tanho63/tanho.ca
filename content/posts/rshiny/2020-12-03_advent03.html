@@ -32,7 +32,7 @@ knitr::opts_chunk$set(echo = TRUE)</code></pre>
 </div>
 <div id="input-data" class="section level3">
 <h3>Input Data</h3>
-<p>(You can get a copy of my data at <a href="https://github.com/tanho63/advent-of-code-2020/blob/master/day/day-03.txt" class="uri">https://github.com/tanho63/advent-of-code-2020/blob/master/day/day-03.txt</a>)</p>
+<p>(You can get a copy of my data at <a href="https://github.com/tanho63/advent_of_code/blob/master/2020/day-04.txt" class="uri">https://github.com/tanho63/advent_of_code/blob/master/2020/day-04.txt</a>)</p>
 <p>Converting to a matrix of 1s and 0s, where “#” is 1 and “.” is 0</p>
 <pre class="r"><code>input_matrix &lt;- read_table(&quot;day-03.txt&quot;,col_names = &quot;x&quot;) %&gt;% 
   mutate(x = str_split(x,&quot;&quot;)) %&gt;% 
