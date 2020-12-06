@@ -1,0 +1,80 @@
+---
+layout: single
+title: "Advent of Code, Day 6"
+date:   2020-12-06
+summary: "Tackling day six of Advent of Code - customs declarations!"
+type: rshiny
+menu:
+  sidebar:
+    name: AdventofCode-06
+    identifier: adventcode2020-6
+    parent: rshiny
+url: /adventcode-2020-06
+hero: /images/rshiny/advent.jpg
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>Day six!</p>
+<pre class="r"><code>library(tidyverse)
+library(here)
+
+knitr::opts_chunk$set(echo = TRUE)</code></pre>
+<blockquote>
+<p>The form asks a series of 26 yes-or-no questions marked a through z. All you need to do is identify the questions for which anyone in your group answers “yes”. Since your group is just you, this doesn’t take very long.</p>
+<p>However, the person sitting next to you seems to be experiencing a language barrier and asks if you can help. For each of the people in their group, you write down the questions for which they answer “yes”, one per line. For example:</p>
+<ul>
+<li>abcx</li>
+<li>abcy</li>
+<li>abcz</li>
+</ul>
+<p>In this group, there are 6 questions to which anyone answered “yes”: a, b, c, x, y, and z. (Duplicate answers to the same question don’t count extra; each question counts at most once.)</p>
+</blockquote>
+<div id="data" class="section level3">
+<h3>Data</h3>
+<pre class="r"><code>input_06 &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-06.txt&quot;)</code></pre>
+</div>
+<div id="cleaning" class="section level3">
+<h3>Cleaning</h3>
+<pre class="r"><code>df_surveys &lt;- tibble(data = input_06) %&gt;% 
+  mutate(group_id = ifelse(data == &quot;&quot;,1,0),
+         group_id = cumsum(group_id) + 1) %&gt;% 
+  filter(data!=&quot;&quot;) %&gt;% 
+  mutate(passenger_id = row_number(),
+         data = str_split(data,&quot;&quot;)) %&gt;% 
+  unnest_longer(data)</code></pre>
+</div>
+<div id="problem-1" class="section level3">
+<h3>Problem 1</h3>
+<p>For each group, count the number of questions to which anyone answered “yes”. What is the sum of those counts?</p>
+<pre class="r"><code>df_surveys %&gt;% 
+  group_by(group_id) %&gt;% 
+  summarise(count = length(unique(data))) %&gt;% 
+  summarise(sum(count))</code></pre>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   `sum(count)`
+##          &lt;int&gt;
+## 1         6310</code></pre>
+</div>
+<div id="problem-2" class="section level3">
+<h3>Problem 2</h3>
+<p>Now count only where everyone in the group answered ALL the same questions.</p>
+<pre class="r"><code>df_surveys %&gt;% 
+  group_by(group_id, data) %&gt;%
+  mutate(answer_count = n()) %&gt;% 
+  group_by(group_id) %&gt;%
+  mutate(group_count = length(unique(passenger_id))) %&gt;% 
+  ungroup() %&gt;% 
+  filter(answer_count == group_count) %&gt;% 
+  group_by(group_id) %&gt;% 
+  summarise(count = length(unique(data))) %&gt;% 
+  summarise(sum(count))</code></pre>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   `sum(count)`
+##          &lt;int&gt;
+## 1         3193</code></pre>
+<p>New time PB of fifteen minutes is pretty satisfying!</p>
+</div>
