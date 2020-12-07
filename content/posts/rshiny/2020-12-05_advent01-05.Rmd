@@ -1,0 +1,519 @@
+---
+layout: single
+title: "Advent of Code, Days 1-5"
+date:   2020-12-05
+summary: "Thoughts on the first five days of Advent of Code!"
+type: rshiny
+draft: true
+menu:
+  sidebar:
+    name: 'AdventofCode 2020, 1-5'
+    identifier: adventcode2020-1-5
+    parent: rshiny
+url: /adventcode-2020-01-05
+hero: /images/rshiny/advent.jpg
+---
+
+Each month of 2020 has seem to come with a hobby obsession, and December is no exception - this year I'm resolved to try [Advent of Code](https://adventofcode.com/2020) on each day. I've roped myself into "competing" against friends from the R4DS Slack group, which kind of sucks because a lot of them have a time zone advantage on me! 
+
+I'd been sharing my code a day at a time, but I think I'm going to re-wrap these posts into five-problem chunks and reflect on them as I go. Days 1-5 have been well within my wheelhouse so far - generalizing the problem to the second step being relatively achievable every time and total solves being under an hour for the most part. I'm currently still hammering everything into a tibble and cleaning it first, which really does help me grok the solutions. 
+
+## Some statistics on Days 1-5: 
+
+```{r echo = FALSE}
+x <- tibble::tribble(~day,       ~time_1,   ~rank_1,       ~time_2,   ~rank_2,
+        5  , "07:15:37"  ,26932  ,  "07:25:04"  ,25548,  
+        4  , "00:19:57"  , 3991  ,  "00:30:59"  , 1369,  
+        3  , "00:33:36"  , 6826  ,  "01:01:46"  , 8007,  
+        2  , "07:40:44"  ,35065  ,  "07:49:04"  ,33133,  
+        1  , "09:26:00"  ,34474  ,  "09:31:58"  ,31630)
+
+x <- dplyr::mutate(x,
+                   timediff_to_2 = (as.difftime(time_2) - as.difftime(time_1)),
+                   timediff_to_2 = round(timediff_to_2, 1))
+
+x
+```
+
+**Favourite solve**: hands down, Day 4 - I really liked how easy it was to solve after applying the usual set of data cleaning. 
+
+**Least favourite solve**: Day 5 - I'm jealous of the people who had the experience with binary enough to recognize you could just convert the string to 0s and 1s and thus receive seat numbers and row numbers. I appreciated the practice of writing recursive functions for later, though!
+
+## Packages used
+
+For the most part, I've used tidyverse pretty darn consistently thus far, even compared to the likes of David Robinson and Emil Hvidfeldt, who are doing these problems in R as well. 
+
+```{r setup, message = FALSE}
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(here)
+  library(lubridate)
+})
+```
+
+
+## Day One
+
+<details> <summary> This was a bit of stream of consciousness, and I hadn't had the experience with AoC enough to realize and be prepared to tackle a second extension problem immediately afterwards - I think you can see this change in my approach to solutions for later days. </summary>
+
+--- Day 1: Report Repair ---
+
+<https://adventofcode.com/2020/day/1>
+
+> After saving Christmas [five years in a row](https://adventofcode.com/events), you've decided to take a vacation at a nice resort on a tropical island. Surely, Christmas will go on without you.
+>
+> The tropical island has its own currency and is entirely cash-only. The gold coins used there have a little picture of a starfish; the locals just call them *stars*. None of the currency exchanges seem to have heard of them, but somehow, you'll need to find fifty of these coins by the time you arrive so you can pay the deposit on your room.
+>
+> To save your vacation, you need to get all *fifty stars* by December 25th.
+>
+> Collect stars by solving puzzles. Two puzzles will be made available on each day in the Advent calendar; the second puzzle is unlocked when you complete the first. Each puzzle grants *one star*. Good luck!
+>
+> Before you leave, the Elves in accounting just need you to fix your *expense report* (your puzzle input); apparently, something isn't quite adding up.
+>
+> Specifically, they need you to *find the two entries that sum to `2020`* and then multiply those two numbers together.
+>
+> For example, suppose your expense report contained the following:
+>
+>     1721
+>     979
+>     366
+>     299
+>     675
+>     1456
+>
+> In this list, the two entries that sum to `2020` are `1721` and `299`. Multiplying them together produces `1721 * 299 = 514579`, so the correct answer is *`514579`*.
+>
+> Of course, your expense report is much larger. *Find the two entries that sum to `2020`; what do you get if you multiply them together?*
+
+--- Data ---
+
+<https://adventofcode.com/2020/day/1/input>
+
+Copy-paste + datapasta's Fiddle Selection. (Thank you, Miles!)
+
+```{r}
+input_data <- c(
+  1630, 1801, 1917, 1958, 1953, 1521, 1990, 1959, 1543, 1798, 
+  638, 1499, 1977, 1433, 1532, 1780, 1559, 1866, 1962, 1999, 
+  1623, 1772, 1730, 1670, 1791, 1947, 1961, 1523, 959, 1998, 
+  1693, 1490, 1712, 910, 1635, 1837, 586, 1590, 1741, 1739, 
+  1660, 1883, 1777, 1734, 1413, 1456, 1511, 1957, 1738, 1685, 
+  1677, 1419, 1566, 1639, 1578, 1922, 1856, 1946, 1965, 1649, 
+  1854, 1610, 1806, 1424, 1616, 218, 1678, 1992, 1985, 903, 
+  1626, 1412, 1964, 671, 1692, 1571, 1690, 1587, 1933, 1367, 
+  1585, 1575, 498, 1601, 2005, 1711, 1948, 1991, 1580, 1704, 
+  207, 1560, 1867, 1600, 1594, 1930, 1541, 1832, 1613, 1599, 
+  1757, 71, 1534, 1940, 1982, 1960, 1530, 1908, 1857, 1410, 
+  1987, 1526, 1546, 2002, 1923, 1972, 1752, 1984, 1754, 1916, 
+  1942, 1980, 1608, 1398, 1438, 1955, 1968, 1799, 1976, 1847, 
+  1775, 1904, 1983, 1945, 1554, 1486, 1527, 1884, 1553, 1736, 
+  1561, 1513, 1695, 1431, 1997, 1405, 1872, 1434, 1679, 1609, 
+  105, 1582, 1795, 1826, 1886, 1472, 2007, 1617, 1978, 1669, 
+  1764, 1865, 1773, 1993, 1666, 1583, 2009, 1969, 2001, 1659, 
+  1833, 1713, 1893, 2000, 1520, 1652, 1437, 1556, 1633, 1386, 
+  1819, 1973, 1426, 1975, 2010, 1863, 1593, 1996, 1796, 1986, 
+  1995, 657, 1784, 1644, 1941, 1596, 1849, 1065, 1927, 1525)
+```
+
+--- Part One: Find a solution where the sum of two entries equals 2020. ---
+
+The first solution that comes to mind is finding the difference each entry and 2020, and then left-joining the entries onto this difference.
+
+```{r}
+
+pair_2020 <- tibble(expense = input_data) %>% 
+  mutate(difference = 2020 - expense) %>% 
+  left_join(
+    x = .,
+    y = .,
+    by = c("expense"="difference")
+  ) %>% 
+  filter(!is.na(expense.y))
+
+pair_2020
+
+pair_2020 %>% 
+  mutate(multiply = expense * expense.y) %>% 
+  distinct(multiply) %>% 
+  pull()
+```
+
+--- Part Two: Find a solution where the sum of three entries equals 2020 ---
+
+Okay, I can't use the first approach here, so now I'll hit crossing to make a big dataframe, then sum it all afterwards and filter to where sum == 2020.
+
+```{r}
+
+triple_2020 <- crossing(first = input_data, 
+                        second = input_data, 
+                        third = input_data) %>% 
+  mutate(total = first + second + third,
+         product = first * second * third) %>% 
+  filter(total == 2020)
+
+triple_2020
+
+triple_2020 %>% 
+  distinct(product) %>% 
+  pull()
+```
+
+</details>
+
+## Day Two
+
+<details>
+<summary> This was a bit of an exercise in parsing, cleaning, and mapping, which was pretty comfortable for me. </summary>
+
+--- Problem ---
+
+> To try to debug the problem, they have created a list (your puzzle input) of passwords (according to the corrupted database) and the corporate policy when that password was set.
+>
+> For example, suppose you have the following list:
+>
+> - 1-3 a: abcde
+> - 1-3 b: cdefg
+> - 2-9 c: ccccccccc
+>
+>Each line gives the password policy and then the password. The password policy indicates the lowest and highest number of times a given letter must appear for the password to be valid. For example, 1-3 a means that the password must contain a at least 1 time and at most 3 times.
+>
+>In the above example, 2 passwords are valid. The middle password, cdefg, is not; it contains no instances of b, but needs at least 1. The first and third passwords are valid: they contain one a or nine c, both within the limits of their respective policies.
+
+--- Input Data ---
+
+(You can get a copy of my data at https://github.com/tanho63/advent_of_code/blob/master/2020/day-02.txt)
+
+```{r}
+input_data <- read.delim("https://github.com/tanho63/advent_of_code/raw/master/2020/day-02.txt",header = FALSE)
+```
+
+--- How many passwords are valid?---
+
+```{r}
+password_table_one <- input_data %>% 
+  separate(1,into = c("qty","character","password"),sep = " ") %>% 
+  separate(qty, into = c("min","max"), sep = "-",convert = TRUE) %>% 
+  mutate(character = str_remove(character,":"),
+         password = str_split(password,""),
+         count = map2_dbl(password,character,~sum(.x %in% .y)),
+         valid = count <= max & count >=min)
+
+head(password_table_one)
+
+sum(password_table_one$valid)
+```
+
+--- Part Two: how many passwords are valid under the second policy?---
+
+>While it appears you validated the passwords correctly, they don't seem to be what the Official Toboggan Corporate Authentication System is expecting.
+>
+>The shopkeeper suddenly realizes that he just accidentally explained the password policy rules from his old job at the sled rental place down the street! The Official Toboggan Corporate Policy actually works a little differently.
+>
+>Each policy actually describes two positions in the password, where 1 means the first character, 2 means the second character, and so on. (Be careful; Toboggan Corporate Policies have no concept of "index zero"!) Exactly one of these positions must contain the given letter. Other occurrences of the letter are irrelevant for the purposes of policy enforcement.
+
+> Given the same example list from above:
+
+>    - 1-3 a: abcde is valid: position 1 contains a and position 3 does not.
+>    - 1-3 b: cdefg is invalid: neither position 1 nor position 3 contains b.
+>    - 2-9 c: ccccccccc is invalid: both position 2 and position 9 contain c.
+
+>How many passwords are valid according to the new interpretation of the policies?
+
+```{r}
+password_table_two <- input_data %>% 
+  separate(1,into = c("qty","character","password"),sep = " ") %>% 
+  separate(qty, into = c("pos1","pos2"), sep = "-",convert = TRUE) %>% 
+  mutate(character = str_remove(character,":"),
+         password = str_split(password,""),
+         password = pmap(list(password,pos1,pos2),~magrittr::extract(..1,c(..2,..3))),
+         count = map2_dbl(password,character, ~sum(.x %in% .y)),
+         valid = count == 1)
+
+head(password_table_two)
+
+sum(password_table_two$valid)
+```
+
+</details>
+
+## Day Three
+
+<details>
+
+<summary> I visualized this problem in a tibble format from the start, but instead of going back to the front I visualized binding more columns onto the table, which necessitated a while loop. Once there, it became a simpler subsetting problem. I did get tripped up forgetting to iterate from 1,1 instead of 0,0, and then there were some order of operations problems with going down two rows instead of one, but all in all not a terrible experience solving. </summary>
+
+Day three!
+
+--- Problem ---
+
+> You start on the open square (.) in the top-left corner and need to reach the bottom (below the bottom-most row on your map).
+> 
+> The toboggan can only follow a few specific slopes (you opted for a cheaper model that prefers rational numbers); start by counting all the trees you would encounter for the slope right 3, down 1:
+> 
+> From your starting position at the top-left, check the position that is right 3 and down 1. Then, check the position that is right 3 and down 1 from there, and so on until you go past the bottom of the map.
+>
+> Starting at the top-left corner of your map and following a slope of right 3 and down 1, how many trees would you encounter?
+
+--- Input Data ---
+
+Converting to a matrix of 1s and 0s, where "#" is 1 and "." is 0
+
+```{r}
+input_matrix <- read_table("https://github.com/tanho63/advent_of_code/raw/master/2020/day-03.txt",col_names = "x") %>% 
+  mutate(x = str_split(x,"")) %>% 
+  unnest_wider(x,names_sep = "_") %>% 
+  mutate_all(~case_when(.x == "#" ~ 1, .x == "." ~ 0)) %>% 
+  as.matrix()
+```
+
+--- Problem 1 ---
+
+> Starting at the top-left corner of your map and following a slope of right 3 and down 1, how many trees would you encounter?
+
+So the pattern repeats to the right until you get down to the bottom, i.e. until you access row 323 in this case.
+
+```{r}
+input_rows <- nrow(input_matrix)
+
+input_rows
+```
+
+323 is the goal rows, and that means we'll need ~ `r 323 * 3` columns. Tackling this via cbind + a while loop. 
+
+```{r}
+input_columns <- input_rows * 3
+
+wide_matrix <- input_matrix
+
+while(ncol(wide_matrix) < input_columns) wide_matrix <- cbind(wide_matrix,input_matrix)
+```
+
+Now building an accessor tibble with row numbers and column numbers
+
+```{r}
+row_accessor <- 2:input_rows # start at 1,1 so the next row is 2
+
+column_accessor <- 1:input_rows * 3 + 1 # start at 1,1 and move right three, so next column is 4
+
+column_accessor <- column_accessor[-323] # need the accessors to be same length
+
+indices <- tibble(
+  row = row_accessor,
+  column = column_accessor) %>%
+  mutate(path = map2_dbl(row,column,~wide_matrix[.x,.y]))
+  
+head(indices)
+
+sum(indices$path)
+```
+
+ --- Problem 2: Find this path for multiple slopes ---
+
+Find the path for
+
+- 1,1
+- 3,1
+- 5,1
+- 7,1
+- 1,2
+
+A good time to generalise the previous steps!
+
+```{r}
+fn_slope <- function(right,down,matrix){
+  
+  # Calculate number of columns
+  column_count <- (nrow(matrix) * right)
+  
+  # Create matrix
+  wide_matrix <- matrix
+  while(ncol(wide_matrix) < column_count) wide_matrix <- cbind(wide_matrix,matrix)
+  
+  # Create accessors
+  row_accessor <- (1:nrow(matrix) * down) + 1
+  row_accessor <- row_accessor[row_accessor <=nrow(matrix)]
+  
+  column_accessor <- (1:nrow(matrix) * right) + 1
+  column_accessor <- column_accessor[1:length(row_accessor)]
+  
+  x <- tibble(row = row_accessor,
+              column = column_accessor) %>% 
+    mutate(path = map2_dbl(row,column,~wide_matrix[.x,.y]))
+  
+  sum(x$path)
+}
+
+toboggan_paths <- tibble(right = c(1,3,5,7,1),
+                         down = c(1,1,1,1,2)) %>% 
+  mutate(paths = map2_dbl(right,down,fn_slope,input_matrix))
+
+toboggan_paths
+
+reduce(toboggan_paths$paths,`*`)
+```
+
+</details>
+
+## Day Four
+
+<details>
+<summary> This one was immensely satisfying to crack - after applying my tibble cleaning on it, it was super easy to create the filters and counts as necessary, and super fast too! I still don't consider myself a regex expert, but it turns out I know more than I think. </summary>
+
+--- Problem Description ---
+> The automatic passport scanners are slow because they're having trouble detecting which passports have all required fields. The  expected fields are as follows:
+> 
+>     - byr (Birth Year)
+>     - iyr (Issue Year)
+>     - eyr (Expiration Year)
+>     - hgt (Height)
+>     - hcl (Hair Color)
+>     - ecl (Eye Color)
+>     - pid (Passport ID)
+>     - cid (Country ID)
+> 
+> Passport data is validated in batch files (your puzzle input). Each passport is represented as a sequence of key:value pairs separated by spaces or newlines. Passports are separated by blank lines.
+
+Count the number of valid passports - those that have `all required fields`. Treat cid as optional. In your batch file, how many passports are valid?
+
+--- Input Data ---
+```{r}
+input_data <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-04.txt")
+
+head(input_data)
+```
+
+Cleaning data into a tibble.
+
+```{r}
+df_passports <- tibble(data = input_data) %>%
+  mutate(blank = ifelse(data == "",1,0),
+         passport_id = cumsum(blank)+1) %>% 
+  filter(!blank) %>% 
+  select(-blank) %>% 
+  separate_rows(data, sep = " ") %>% 
+  separate(data, sep = ":", into = c("key","value")) %>% 
+  pivot_wider(names_from = key, values_from = value)
+
+head(df_passports)
+```
+
+--- Problem 1: How many complete/non-missing passports? ---
+
+```{r}
+valid_p1 <- df_passports %>% 
+  select(-cid) %>% 
+  filter_all(~!is.na(.x))
+
+head(valid_p1)
+nrow(valid_p1)
+```
+
+--- Problem 2: Validate columns ---
+
+Time to add more validation beyond non-missing!
+
+```{r}
+valid_p2 <- valid_p1 %>% 
+  mutate_at(c("byr","iyr","eyr"),as.numeric) %>% 
+  filter(
+    between(byr,1920,2002),
+    between(iyr,2010,2020),
+    between(eyr,2020,2030),
+    case_when(
+      str_ends(hgt,"cm") & between(parse_number(hgt),150,193) ~ TRUE,
+      str_ends(hgt,"in") & between(parse_number(hgt),59,76) ~ TRUE,
+      TRUE ~ FALSE
+      ),
+    str_detect(hcl,"^#[A-z,0-9]{6}$"),
+    ecl %in% c("amb","blu","brn","gry","grn","hzl","oth"),
+    str_detect(pid,"^[0-9]{9}$"),
+  )
+
+head(valid_p2)
+nrow(valid_p2)
+```
+
+</details>
+
+## Day Five
+
+<details>
+<summary> As I said earlier, this one was not bad - I took my time to practice recursion, which came in handy later (on day seven, for example). I'm mostly just upset that I couldn't recognize you could just convert to binary. </summary>
+
+> Instead of zones or groups, this airline uses binary space partitioning to seat people. A seat might be specified like FBFBBFFRLR, where F means "front", B means "back", L means "left", and R means "right".
+>
+> The first 7 characters will either be F or B; these specify exactly one of the 128 rows on the plane (numbered 0 through 127). Each letter tells you which half of a region the given seat is in. Start with the whole list of rows; the first letter indicates whether the seat is in the front (0 through 63) or the back (64 through 127). The next letter indicates which half of that region the seat is in, and so on until you're left with exactly one row.
+> 
+> The last three characters will be either L or R; these specify exactly one of the 8 columns of seats on the plane (numbered 0 through 7). The same process as above proceeds again, this time with only three steps. L means to keep the lower half, while R means to keep the upper half.
+>      
+> So, decoding FBFBBFFRLR reveals that it is the seat at row 44, column 5.
+> 
+> Every seat also has a unique seat ID: multiply the row by 8, then add the column. In this example, the seat has ID 44 * 8 + 5 = 357.
+
+--- Data ---
+
+```{r}
+input_05 <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-05.txt")
+```
+
+--- Problem 1: highest seat ID? ---
+
+A good time to dust off some recursive functions!
+
+```{r}
+
+search_function <- function(string,range){
+  
+  midpoint <- length(range)%/%2
+  accessor <- str_sub(string,1,1) 
+
+  new_range <- switch(
+    accessor,
+    "L" = ,
+    "F" = range[1:midpoint],
+    "R" = ,
+    "B" = range[-(1:midpoint)])
+
+  if(length(new_range) == 1) return(new_range)
+  
+  new_string <- str_remove(string,"^.")
+  
+  search_function(new_string,new_range)
+}
+
+search_function("FBFBBFF",0:127)
+
+df_boardingpasses <- tibble(input = input_05) %>% 
+  mutate(row_string = str_sub(input,1,7),
+         seat_string = str_sub(input,-3,-1),
+         row = map_dbl(row_string,search_function,0:127),
+         seat = map_dbl(seat_string,search_function,0:7),
+         seat_id = row * 8 + seat)
+
+head(df_boardingpasses)
+
+max(df_boardingpasses$seat_id)
+```
+
+--- Problem 2: Your Seat ---
+
+> It's a completely full flight, so your seat should be the only missing boarding pass in your list. However, there's a catch: some of the seats at the very front and back of the plane don't exist on this aircraft, so they'll be missing from your list as well.
+>
+> Your seat wasn't at the very front or back, though; the seats with IDs +1 and -1 from yours will be in your list.
+
+```{r}
+actual_seats <-  df_boardingpasses %>% 
+  arrange(row,seat) %>% 
+  filter(
+    row != min(row),
+    row != max(row)
+  )
+
+x <- seq.int(min(actual_seats$seat_id),max(actual_seats$seat_id))
+
+x[!(x %in% actual_seats$seat_id)]
+
+```
+
+
+</details>
