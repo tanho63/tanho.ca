@@ -346,19 +346,19 @@ toboggan_paths</code></pre>
 <summary>
 This one was immensely satisfying to crack - after applying my tibble cleaning on it, it was super easy to create the filters and counts as necessary, and super fast too! I still don’t consider myself a regex expert, but it turns out I know more than I think.
 </summary>
-<p>— Problem Description —
-&gt; The automatic passport scanners are slow because they’re having trouble detecting which passports have all required fields. The expected fields are as follows:
-&gt;
-&gt; - byr (Birth Year)
-&gt; - iyr (Issue Year)
-&gt; - eyr (Expiration Year)
-&gt; - hgt (Height)
-&gt; - hcl (Hair Color)
-&gt; - ecl (Eye Color)
-&gt; - pid (Passport ID)
-&gt; - cid (Country ID)
-&gt;
-&gt; Passport data is validated in batch files (your puzzle input). Each passport is represented as a sequence of key:value pairs separated by spaces or newlines. Passports are separated by blank lines.</p>
+<p>— Problem Description —</p>
+<blockquote>
+<p>The automatic passport scanners are slow because they’re having trouble detecting which passports have all required fields. The expected fields are as follows:</p>
+<pre><code>- byr (Birth Year)
+- iyr (Issue Year)
+- eyr (Expiration Year)
+- hgt (Height)
+- hcl (Hair Color)
+- ecl (Eye Color)
+- pid (Passport ID)
+- cid (Country ID)</code></pre>
+<p>Passport data is validated in batch files (your puzzle input). Each passport is represented as a sequence of key:value pairs separated by spaces or newlines. Passports are separated by blank lines.</p>
+</blockquote>
 <p>Count the number of valid passports - those that have <code>all required fields</code>. Treat cid as optional. In your batch file, how many passports are valid?</p>
 <p>— Input Data —</p>
 <pre class="r"><code>input_data &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-04.txt&quot;)
