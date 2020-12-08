@@ -8,3 +8,6 @@ body {
   font-family: "Exo 2";
 }
 
+.initial-navbar .navbar-brand, .final-navbar .navbar-brand {
+  font-weight: 400;
+}
