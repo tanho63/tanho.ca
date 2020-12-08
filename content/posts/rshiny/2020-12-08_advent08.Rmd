@@ -1,0 +1,183 @@
+---
+layout: single
+title: "Advent of Code, Day 8"
+date:   2020-12-07
+summary: "Tackling day seven of Advent of Code - Handheld Halting!"
+type: rshiny
+menu:
+  sidebar:
+    name: AdventofCode-08
+    identifier: adventcode2020-8
+    parent: rshiny
+url: /adventcode-2020-08
+hero: /images/rshiny/advent.jpg
+---
+
+Day eight! "Handheld Halting"
+
+```{r setup, message = FALSE}
+library(tidyverse)
+library(here)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+> The boot code is represented as a text file with one instruction per line of text. Each instruction consists of an operation (acc, jmp, or nop) and an argument (a signed number like +4 or -20).
+>
+>  -  acc increases or decreases a single global value called the accumulator by the value given in the argument. For example, acc +7 would increase the accumulator by 7. The accumulator starts at 0. After an acc instruction, the instruction immediately below it is executed next.
+>  -  jmp jumps to a new instruction relative to itself. The next instruction to execute is found using the argument as an offset from the jmp instruction; for example, jmp +2 would skip the next instruction, jmp +1 would continue to the instruction immediately below it, and jmp -20 would cause the instruction 20 lines above to be executed next.
+>  -  nop stands for No OPeration - it does nothing. The instruction immediately below it is executed next.
+>
+>This is an infinite loop: with this sequence of jumps, the program will run forever. The moment the program tries to run any instruction a second time, you know it will never terminate.
+>
+>Immediately before the program would run an instruction a second time, the value in the accumulator is 5.
+>
+> Run your copy of the boot code. Immediately before any instruction is executed a second time, what value is in the accumulator?
+
+--- Data ---
+
+```{r eval = FALSE}
+input_08 <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-08.txt")
+```
+
+--- Cleaning ---
+
+```{r eval = FALSE}
+df_codes <- tibble(x = input_08) %>% 
+  separate(x,c("instruction","qty"),sep = " ", convert = TRUE) %>% 
+  mutate(instruction_id = row_number(),
+         next_instruction_id = case_when(instruction == "jmp" ~ instruction_id + qty,
+                                         TRUE ~ instruction_id + 1L)) %>% 
+  select(instruction_id,instruction,qty,next_instruction_id)
+```
+```{r include = FALSE}
+df_codes <- structure(list(instruction_id = 1:6, instruction = c("acc", "acc", 
+"acc", "jmp", "nop", "acc"), qty = c(17L, 37L, -13L, 173L, 100L, 
+-7L), next_instruction_id = c(2L, 3L, 4L, 177L, 6L, 7L)), row.names = c(NA, 
+-6L), class = c("tbl_df", "tbl", "data.frame"))
+```
+```{r}
+head(df_codes)
+```
+
+--- Problem 1: ---
+
+Immediately before any instruction is executed a second time, what value is in the accumulator?
+
+```{r eval = FALSE}
+current_id <- 1
+accumulator <- 0
+error_switch <- FALSE
+visited_codes <- tibble()
+
+while(!error_switch){
+  
+  current_instruction <- df_codes %>% 
+    filter(instruction_id == current_id)
+  
+  visited_codes <- bind_rows(visited_codes,current_instruction)
+  
+  if(current_instruction$instruction == "acc") accumulator <- accumulator + current_instruction$qty
+  
+  current_id <- current_instruction$next_instruction_id
+  
+  if(current_id %in% visited_codes$instruction_id) error_switch <- TRUE
+
+}
+```
+```{r}
+accumulator <- 1797
+```
+```{r}
+accumulator
+```
+
+### Problem 2: Fix the program
+
+The program has a bug where one of jmp or nop are wrong and should be the other way around, which will let the program run all of the rows. If the program exits correctly, what is the accumulator total?
+
+First, create function for the previous problem's accumulator.
+
+```{r eval = FALSE}
+run_accumulator <- function(df_codes){
+  
+  current_id <- 1
+  accumulator <- 0
+  error_switch <- FALSE
+  visited_codes <- tibble()
+  
+  while(!error_switch){
+    
+    current_instruction <- df_codes %>% 
+      filter(instruction_id == current_id)
+    
+    visited_codes <- bind_rows(visited_codes,current_instruction)
+    
+    if(current_instruction$instruction == "acc") accumulator <- accumulator + current_instruction$qty
+    
+    current_id <- current_instruction$next_instruction_id
+    
+    if(current_id == 626) error_switch <- TRUE
+    if(current_id %in% visited_codes$instruction_id) error_switch <- TRUE
+  }
+
+  status <- "FAIL"
+  
+  if(current_id == 626) status <- "SUCCESS"
+  
+  return( 
+    list(
+      status = status, 
+      accumulator = accumulator, 
+      next_id = current_id)
+  )
+}
+
+test_accumulator <- run_accumulator(df_codes)
+```
+```{r include = FALSE}
+test_accumulator <- structure(list(status = c("SUCCESS", "FAIL", "FAIL", "FAIL", 
+"FAIL", "FAIL"), accumulator = c(1036, 1818, 1797, 1797, 1797, 
+1797), next_id = c(626L, 448L, 606L, 606L, 606L, 606L)), row.names = c(NA, 
+-6L), class = c("tbl_df", "tbl", "data.frame"))
+```
+```{r}
+test_accumulator
+```
+
+Next, build function to switch jmp and nop, build list of dfs, run the accumulator on it and find the row with success.
+
+```{r eval = FALSE}
+library(furrr)
+
+plan(multisession)
+
+jmpnop_switcher <- function(id,df_codes){
+  
+  df_codes$instruction[id] <- switch(df_codes$instruction[id],
+                                     "jmp" = "nop",
+                                     "nop" = "jmp")
+  
+  df_codes <- df_codes %>% 
+    mutate(next_instruction_id = case_when(instruction == "jmp" ~ instruction_id + qty,
+                                           TRUE ~ instruction_id + 1L))
+  
+  df_codes
+}
+
+jmpnop_list <- df_codes$instruction_id[df_codes$instruction %in% c("jmp","nop")]
+
+df_codelist <- map(jmpnop_list,jmpnop_switcher,df_codes)
+
+x <- future_map_dfr(df_codelist,run_accumulator)
+```
+```{r include = FALSE}
+x <- structure(list(status = c("SUCCESS", "FAIL", "FAIL", "FAIL", 
+"FAIL", "FAIL"), accumulator = c(1036, 1818, 1797, 1797, 1797, 
+1797), next_id = c(626L, 448L, 606L, 606L, 606L, 606L)), row.names = c(NA, 
+-6L), class = c("tbl_df", "tbl", "data.frame"))
+```
+```{r}
+x %>% filter(status == "SUCCESS")
+```
+
