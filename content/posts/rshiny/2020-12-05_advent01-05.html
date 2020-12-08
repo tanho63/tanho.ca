@@ -1,8 +1,8 @@
 ---
 layout: single
-title: "Advent of Code, Days 1-5"
+title: "Advent of Code 2020, Days 1-5"
 date:   2020-12-05
-summary: "Thoughts on the first five days of Advent of Code!"
+summary: "Tackling the first five days of AdventOfCode2020: report repair, password philosophy, toboggan trajectory, passport processing, binary boarding!"
 type: rshiny
 menu:
   sidebar:
@@ -14,8 +14,6 @@ hero: /images/rshiny/advent.jpg
 ---
 
 <script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
-<link href="/rmarkdown-libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
-<script src="/rmarkdown-libs/anchor-sections/anchor-sections.js"></script>
 
 
 <p>Each month of 2020 has seem to come with a hobby obsession, and December is no exception - this year I’m resolved to try <a href="https://adventofcode.com/2020">Advent of Code</a> on each day. I’ve roped myself into “competing” against friends from the R4DS Slack group, which kind of sucks because a lot of them have a time zone advantage on me!</p>
@@ -45,11 +43,8 @@ hero: /images/rshiny/advent.jpg
 <div id="day-one" class="section level2">
 <h2>Day One</h2>
 <details>
-<summary>
-This was a bit of stream of consciousness, and I hadn’t had the experience with AoC enough to realize and be prepared to tackle a second extension problem immediately afterwards - I think you can see this change in my approach to solutions for later days.
-</summary>
+<p><summary> This was a bit of stream of consciousness, and I hadn’t had the experience with AoC enough to realize and be prepared to tackle a second extension problem immediately afterwards - I think you can see this change in my approach to solutions for later days. </summary></p>
 <p>— Day 1: Report Repair —</p>
-<p><a href="https://adventofcode.com/2020/day/1" class="uri">https://adventofcode.com/2020/day/1</a></p>
 <blockquote>
 <p>After saving Christmas <a href="https://adventofcode.com/events">five years in a row</a>, you’ve decided to take a vacation at a nice resort on a tropical island. Surely, Christmas will go on without you.</p>
 <p>The tropical island has its own currency and is entirely cash-only. The gold coins used there have a little picture of a starfish; the locals just call them <em>stars</em>. None of the currency exchanges seem to have heard of them, but somehow, you’ll need to find fifty of these coins by the time you arrive so you can pay the deposit on your room.</p>
@@ -141,9 +136,7 @@ triple_2020</code></pre>
 <div id="day-two" class="section level2">
 <h2>Day Two</h2>
 <details>
-<summary>
-This was a bit of an exercise in parsing, cleaning, and mapping, which was pretty comfortable for me.
-</summary>
+<p><summary> This was a bit of an exercise in parsing, cleaning, and mapping, which was pretty comfortable for me. </summary></p>
 <p>— Problem —</p>
 <blockquote>
 <p>To try to debug the problem, they have created a list (your puzzle input) of passwords (according to the corrupted database) and the corporate policy when that password was set.</p>
@@ -157,7 +150,6 @@ This was a bit of an exercise in parsing, cleaning, and mapping, which was prett
 <p>In the above example, 2 passwords are valid. The middle password, cdefg, is not; it contains no instances of b, but needs at least 1. The first and third passwords are valid: they contain one a or nine c, both within the limits of their respective policies.</p>
 </blockquote>
 <p>— Input Data —</p>
-<p>(You can get a copy of my data at <a href="https://github.com/tanho63/advent_of_code/blob/master/2020/day-02.txt" class="uri">https://github.com/tanho63/advent_of_code/blob/master/2020/day-02.txt</a>)</p>
 <pre class="r"><code>input_data &lt;- read.delim(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-02.txt&quot;,header = FALSE)</code></pre>
 <p>— How many passwords are valid?—</p>
 <pre class="r"><code>password_table_one &lt;- input_data %&gt;% 
@@ -228,9 +220,7 @@ head(password_table_two)</code></pre>
 <div id="day-three" class="section level2">
 <h2>Day Three</h2>
 <details>
-<summary>
-I visualized this problem in a tibble format from the start, but instead of going back to the front I visualized binding more columns onto the table, which necessitated a while loop. Once there, it became a simpler subsetting problem. I did get tripped up forgetting to iterate from 1,1 instead of 0,0, and then there were some order of operations problems with going down two rows instead of one, but all in all not a terrible experience solving.
-</summary>
+<p><summary> I visualized this problem in a tibble format from the start, but instead of going back to the front I visualized binding more columns onto the table, which necessitated a while loop. Once there, it became a simpler subsetting problem. I did get tripped up forgetting to iterate from 1,1 instead of 0,0, and then there were some order of operations problems with going down two rows instead of one, but all in all not a terrible experience solving. </summary></p>
 <p>Day three!</p>
 <p>— Problem —</p>
 <blockquote>
@@ -246,8 +236,7 @@ I visualized this problem in a tibble format from the start, but instead of goin
   unnest_wider(x,names_sep = &quot;_&quot;) %&gt;% 
   mutate_all(~case_when(.x == &quot;#&quot; ~ 1, .x == &quot;.&quot; ~ 0)) %&gt;% 
   as.matrix()</code></pre>
-<pre><code>## 
-## -- Column specification --------------------------------------------------------
+<pre><code>## Parsed with column specification:
 ## cols(
 ##   x = col_character()
 ## )</code></pre>
@@ -343,9 +332,7 @@ toboggan_paths</code></pre>
 <div id="day-four" class="section level2">
 <h2>Day Four</h2>
 <details>
-<summary>
-This one was immensely satisfying to crack - after applying my tibble cleaning on it, it was super easy to create the filters and counts as necessary, and super fast too! I still don’t consider myself a regex expert, but it turns out I know more than I think.
-</summary>
+<p><summary> This one was immensely satisfying to crack - after applying my tibble cleaning on it, it was super easy to create the filters and counts as necessary, and super fast too! I still don’t consider myself a regex expert, but it turns out I know more than I think. </summary></p>
 <p>— Problem Description —</p>
 <blockquote>
 <p>The automatic passport scanners are slow because they’re having trouble detecting which passports have all required fields. The expected fields are as follows:</p>
@@ -442,9 +429,7 @@ head(valid_p2)</code></pre>
 <div id="day-five" class="section level2">
 <h2>Day Five</h2>
 <details>
-<summary>
-As I said earlier, this one was not bad - I took my time to practice recursion, which came in handy later (on day seven, for example). I’m mostly just upset that I couldn’t recognize you could just convert to binary.
-</summary>
+<p><summary> As I said earlier, this one was not bad - I took my time to practice recursion, which came in handy later (on day seven, for example). I’m mostly just upset that I couldn’t recognize you could just convert to binary. </summary></p>
 <blockquote>
 <p>Instead of zones or groups, this airline uses binary space partitioning to seat people. A seat might be specified like FBFBBFFRLR, where F means “front”, B means “back”, L means “left”, and R means “right”.</p>
 <p>The first 7 characters will either be F or B; these specify exactly one of the 128 rows on the plane (numbered 0 through 127). Each letter tells you which half of a region the given seat is in. Start with the whole list of rows; the first letter indicates whether the seat is in the front (0 through 63) or the back (64 through 127). The next letter indicates which half of that region the seat is in, and so on until you’re left with exactly one row.</p>

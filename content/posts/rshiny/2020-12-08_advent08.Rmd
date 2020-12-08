@@ -2,7 +2,7 @@
 layout: single
 title: "Advent of Code, Day 8"
 date:   2020-12-07
-summary: "Tackling day seven of Advent of Code - Handheld Halting!"
+summary: "Tackling day eight of Advent of Code - handheld halting!"
 type: rshiny
 menu:
   sidebar:
@@ -85,14 +85,14 @@ while(!error_switch){
 
 }
 ```
-```{r}
+```{r include = FALSE}
 accumulator <- 1797
 ```
 ```{r}
 accumulator
 ```
 
-### Problem 2: Fix the program
+--- Problem 2: Fix the program ---
 
 The program has a bug where one of jmp or nop are wrong and should be the other way around, which will let the program run all of the rows. If the program exits correctly, what is the accumulator total?
 

@@ -1,8 +1,8 @@
 ---
 layout: single
-title: "Advent of Code, Days 1-5"
+title: "Advent of Code 2020, Days 1-5"
 date:   2020-12-05
-summary: "Thoughts on the first five days of Advent of Code!"
+summary: "Tackling the first five days of AdventOfCode2020: report repair, password philosophy, toboggan trajectory, passport processing, binary boarding!"
 type: rshiny
 menu:
   sidebar:
@@ -56,8 +56,6 @@ suppressPackageStartupMessages({
 <details> <summary> This was a bit of stream of consciousness, and I hadn't had the experience with AoC enough to realize and be prepared to tackle a second extension problem immediately afterwards - I think you can see this change in my approach to solutions for later days. </summary>
 
 --- Day 1: Report Repair ---
-
-<https://adventofcode.com/2020/day/1>
 
 > After saving Christmas [five years in a row](https://adventofcode.com/events), you've decided to take a vacation at a nice resort on a tropical island. Surely, Christmas will go on without you.
 >
@@ -119,7 +117,6 @@ input_data <- c(
 The first solution that comes to mind is finding the difference each entry and 2020, and then left-joining the entries onto this difference.
 
 ```{r}
-
 pair_2020 <- tibble(expense = input_data) %>% 
   mutate(difference = 2020 - expense) %>% 
   left_join(
@@ -179,8 +176,6 @@ triple_2020 %>%
 >In the above example, 2 passwords are valid. The middle password, cdefg, is not; it contains no instances of b, but needs at least 1. The first and third passwords are valid: they contain one a or nine c, both within the limits of their respective policies.
 
 --- Input Data ---
-
-(You can get a copy of my data at https://github.com/tanho63/advent_of_code/blob/master/2020/day-02.txt)
 
 ```{r}
 input_data <- read.delim("https://github.com/tanho63/advent_of_code/raw/master/2020/day-02.txt",header = FALSE)

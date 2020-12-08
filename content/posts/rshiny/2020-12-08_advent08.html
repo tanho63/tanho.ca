@@ -2,7 +2,7 @@
 layout: single
 title: "Advent of Code, Day 8"
 date:   2020-12-07
-summary: "Tackling day seven of Advent of Code - Handheld Halting!"
+summary: "Tackling day eight of Advent of Code - handheld halting!"
 type: rshiny
 menu:
   sidebar:
@@ -72,11 +72,9 @@ while(!error_switch){
   if(current_id %in% visited_codes$instruction_id) error_switch &lt;- TRUE
 
 }</code></pre>
-<pre class="r"><code>accumulator &lt;- 1797</code></pre>
 <pre class="r"><code>accumulator</code></pre>
 <pre><code>## [1] 1797</code></pre>
-<div id="problem-2-fix-the-program" class="section level3">
-<h3>Problem 2: Fix the program</h3>
+<p>— Problem 2: Fix the program —</p>
 <p>The program has a bug where one of jmp or nop are wrong and should be the other way around, which will let the program run all of the rows. If the program exits correctly, what is the accumulator total?</p>
 <p>First, create function for the previous problem’s accumulator.</p>
 <pre class="r"><code>run_accumulator &lt;- function(df_codes){
@@ -152,4 +150,3 @@ x &lt;- future_map_dfr(df_codelist,run_accumulator)</code></pre>
 ##   status  accumulator next_id
 ##   &lt;chr&gt;         &lt;dbl&gt;   &lt;int&gt;
 ## 1 SUCCESS        1036     626</code></pre>
-</div>
