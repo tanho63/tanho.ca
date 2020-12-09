@@ -1,0 +1,141 @@
+---
+layout: single
+title: "Advent of Code, Day 9"
+date:   2020-12-09
+summary: "Tackling day nine of Advent of Code - encoding error!"
+type: rshiny
+menu:
+  sidebar:
+    name: AdventofCode-09
+    identifier: adventcode2020-9
+    parent: rshiny
+url: /adventcode-2020-09
+hero: /images/rshiny/advent.jpg
+---
+
+
+Day nine - encoding error!
+
+```{r setup, message = FALSE}
+library(tidyverse)
+library(here)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+--- Description --- 
+
+> XMAS starts by transmitting a preamble of 25 numbers. After that, each number you receive should be the sum of any two of the 25 immediately previous numbers. The two numbers will have different values, and there might be more than one such pair.
+> 
+> For example, suppose your preamble consists of the numbers 1 through 25 in a random order. To be valid, the next number must be the sum of two of those numbers. 
+>
+>The first step of attacking the weakness in the XMAS data is to find the first number in the list (after the preamble) which is not the sum of two of the 25 numbers before it. What is the first number that does not have this property?
+
+--- Data ---
+```{r eval = FALSE}
+input_09 <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-09.txt")
+```
+
+--- Cleaning ---
+
+Offhand, I'm going to use Davis Vaughan's "slider" package to create the rolling windows for each row, and hopefully that helps tackle each problem. 
+
+```{r eval = FALSE}
+library(slider)
+
+df_cipher <- tibble(num = input_09) %>% 
+  mutate_all(as.numeric) %>% 
+  mutate(rolling = slide(num,~.x,.before = 24, .complete = TRUE) %>% lag()) %>% 
+  slice(-(1:25))
+```
+```{r include = FALSE}
+df_cipher <- structure(list(num = c(30, 11, 3, 33, 78, 4), rolling = list(
+    c(17, 14, 2, 35, 39, 31, 5, 25, 1, 29, 40, 48, 9, 37, 21, 
+    7, 41, 8, 15, 28, 47, 13, 16, 50, 45), c(14, 2, 35, 39, 31, 
+    5, 25, 1, 29, 40, 48, 9, 37, 21, 7, 41, 8, 15, 28, 47, 13, 
+    16, 50, 45, 30), c(2, 35, 39, 31, 5, 25, 1, 29, 40, 48, 9, 
+    37, 21, 7, 41, 8, 15, 28, 47, 13, 16, 50, 45, 30, 11), c(35, 
+    39, 31, 5, 25, 1, 29, 40, 48, 9, 37, 21, 7, 41, 8, 15, 28, 
+    47, 13, 16, 50, 45, 30, 11, 3), c(39, 31, 5, 25, 1, 29, 40, 
+    48, 9, 37, 21, 7, 41, 8, 15, 28, 47, 13, 16, 50, 45, 30, 
+    11, 3, 33), c(31, 5, 25, 1, 29, 40, 48, 9, 37, 21, 7, 41, 
+    8, 15, 28, 47, 13, 16, 50, 45, 30, 11, 3, 33, 78))), row.names = c(NA, 
+-6L), class = c("tbl_df", "tbl", "data.frame"))
+```
+```{r}
+head(df_cipher)
+```
+
+--- Problem 1 ---
+
+> Find the first number which is not the sum of the two numbers before it.
+
+```{r eval = FALSE}
+problem_1 <- df_cipher %>% 
+  mutate(rolling_sum = map2_lgl(rolling,num, 
+                       ~ crossing(x = .x, y = .x) %>% 
+                          mutate(sum = x + y,
+                                 flag = sum == .y) %>% 
+                         summarise(flag = any(flag)) %>% 
+                         pull(flag)))
+```
+```{r include = FALSE}
+problem_1 <- structure(list(num = 10884537, rolling = list(c(6365336, 10576376, 
+9788183, 10022967, 6830224, 7340534, 8068740, 7729774, 8062265, 
+16097220, 8189810, 8288063, 13970570, 16282371, 9851242, 11670932, 
+11219888, 11780248, 16275420, 11958448, 13089628, 13195560, 12624740, 
+13705870, 16689294)), rolling_sum = FALSE), row.names = c(NA, 
+-1L), class = c("tbl_df", "tbl", "data.frame"))
+```
+```{r}
+problem_1 %>% 
+  filter(!rolling_sum)
+
+solution_1 <- problem_1 %>% 
+  filter(!rolling_sum) %>% 
+  pull(num)
+```
+
+--- Problem 2 --- 
+
+> The final step in breaking the XMAS encryption relies on the invalid number you just found: you must find a contiguous set of at least two numbers in your list which sum to the invalid number from step 1.
+
+Back to slider again, this time using a loop to iterate the size of the rolling window upward until the solution is found.
+
+```{r eval = FALSE}
+problem_2 <- df_cipher %>% 
+  filter(num < solution_1) %>%
+  select(num)
+
+success <- FALSE
+size <- 1
+
+while(!success){
+  size <- size + 1
+  
+  test_solve <- problem_2 %>% 
+    mutate(rolling_sum = slide_dbl(num,sum,.complete = TRUE,.before = size - 1),
+           success = rolling_sum == solution_1)
+  
+  success <- any(test_solve$success,na.rm = TRUE)
+}
+
+cleanup_solution <- test_solve %>% 
+  slice((which(test_solve$success)-size+1):which(test_solve$success))
+```
+```{r include = FALSE}
+cleanup_solution <- structure(list(num = c(408514, 507208, 753282, 695857, 570543, 
+444281, 626571, 592643, 500865, 693401, 599118, 661929, 814643, 
+662453, 712303, 852795, 788131), rolling_sum = c(6419520, 6675531, 
+7148649, 7429404, 7628429, 7753756, 7967090, 8216758, 8374124, 
+8676795, 8899534, 9061257, 9507096, 9792646, 10107548, 10517218, 
+10884537), success = c(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, 
+FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, 
+FALSE, TRUE)), row.names = c(NA, -17L), class = c("tbl_df", "tbl", 
+"data.frame"))
+```
+```{r}
+cleanup_solution
+
+min(cleanup_solution$num) + max(cleanup_solution$num)
+```
