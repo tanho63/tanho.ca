@@ -17,6 +17,7 @@ suppressPackageStartupMessages({
   library(tidyverse)
   library(here)
   library(lubridate)
+  library(slider)
 })
 ```
 The obsession with Advent of Code is real - I've been looking forward to the midnight unlock for a few straight nights now, and my sleep schedule seems to be moving to accommodate. 
@@ -51,6 +52,7 @@ suppressPackageStartupMessages({
   library(tidyverse)
   library(here)
   library(lubridate)
+  library(slider)
 })
 ```
 
