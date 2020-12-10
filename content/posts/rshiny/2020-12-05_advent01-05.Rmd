@@ -40,7 +40,7 @@ x
 
 ## Packages used
 
-For the most part, I've used tidyverse pretty darn consistently thus far, even compared to the likes of David Robinson and Emil Hvidfeldt, who are doing these problems in R as well. 
+For the most part, I've used tidyverse pretty darn consistently thus far, who are doing these problems in R as well. 
 
 ```{r setup, message = FALSE}
 suppressPackageStartupMessages({

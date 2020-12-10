@@ -1,0 +1,655 @@
+---
+layout: single
+title: "Advent of Code 2020, Days 6-10"
+date:   2020-12-10
+summary: "Tackling the sixth through tenth days of AdventOfCode2020: custom customs, handy haversacks, handheld halting,  encoding error, and !"
+type: rshiny
+menu:
+  sidebar:
+    name: 'AdventofCode 2020, 6-10'
+    identifier: adventcode2020-6-10
+    parent: rshiny
+url: /adventcode-2020-06-10
+hero: /images/rshiny/advent.jpg
+---
+```{r setup, include = FALSE}
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(here)
+  library(lubridate)
+})
+```
+The obsession with Advent of Code is real - I've been looking forward to the midnight unlock for a few straight nights now, and my sleep schedule seems to be moving to accommodate. 
+
+A few problems in this set really frustrated me - as you can see from the time differences.
+
+## Statistics
+
+```{r echo = FALSE}
+
+x <- tibble::tribble(~'Day',     ~'time_1', ~'rank_1', ~'Score1',     ~'time_2', ~'rank_2', ~'Score2',
+ 10,   '00:08:09',   1437,      0,   '02:33:45',   7065,      0,
+  9,   '00:15:31',   3951,      0,   '00:34:03',   4722,      0,
+  8,   '00:34:58',   7532,      0,   '01:00:37',   6417,      0,
+  7,   '00:23:12',   1546,      0,   '01:50:18',   6048,      0,
+  6,   '00:10:04',   3730,      0,   '00:15:20',   2587,      0) %>% 
+  janitor::clean_names() %>% 
+  dplyr::select(-starts_with("score")) %>% 
+  dplyr::mutate(
+    timediff = (as.difftime(time_2) - as.difftime(time_1)),
+    timediff = round(timediff, 1)) %>% 
+  arrange(day)
+
+x
+```
+## Packages used
+
+For the most part, I've used tidyverse pretty darn consistently thus far. 
+
+```{r eval = FALSE}
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(here)
+  library(lubridate)
+})
+```
+
+## Day Six
+
+<details>
+<summary> I was elated to crack day six in a personal best time so far: `15:20`. I've settled into a "clean the data into a tibble" pattern before solving, and it seems to help! </summary>
+
+> The form asks a series of 26 yes-or-no questions marked a through z. All you need to do is identify the questions for which anyone in your group answers "yes". Since your group is just you, this doesn't take very long.
+>
+>However, the person sitting next to you seems to be experiencing a language barrier and asks if you can help. For each of the people in their group, you write down the questions for which they answer "yes", one per line. For example:
+>
+> - abcx
+> - abcy
+>- abcz
+>
+>In this group, there are 6 questions to which anyone answered "yes": a, b, c, x, y, and z. (Duplicate answers to the same question don't count extra; each question counts at most once.)
+
+--- Data ---
+```{r}
+input_06 <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-06.txt")
+```
+
+--- Cleaning ---
+```{r eval = FALSE}
+df_surveys <- tibble(data = input_06) %>% 
+  mutate(group_id = ifelse(data == "",1,0),
+         group_id = cumsum(group_id) + 1) %>% 
+  filter(data!="") %>% 
+  mutate(passenger_id = row_number(),
+         data = str_split(data,"")) %>% 
+  unnest_longer(data)
+```
+```{r include = FALSE}
+df_surveys <- structure(list(data = c("t", "r", "r", "t", "t", "r"), group_id = c(1, 
+1, 1, 1, 1, 1), passenger_id = c(1L, 1L, 2L, 2L, 3L, 3L)), row.names = c(NA, 
+-6L), class = c("tbl_df", "tbl", "data.frame"))
+```
+```{r}
+head(df_surveys)
+```
+
+--- Problem 1 ---
+For each group, count the number of questions to which anyone answered "yes". What is the sum of those counts?
+
+```{r eval = FALSE}
+p1 <- df_surveys %>% 
+  group_by(group_id) %>% 
+  summarise(count = length(unique(data))) %>% 
+  summarise(sum(count))
+```
+```{r include = FALSE}
+p1 <- structure(list(`sum(count)` = 6310L), row.names = c(NA, -1L), class = c("tbl_df", 
+"tbl", "data.frame"))
+```
+```{r}
+p1
+```
+
+--- Problem 2 ---
+
+Now count only where everyone in the group answered ALL the same questions.
+
+```{r eval = FALSE}
+p2 <- df_surveys %>% 
+  group_by(group_id) %>%
+  add_count(data,name = "answer_count") %>% 
+  mutate(group_count = length(unique(passenger_id))) %>% 
+  ungroup() %>% 
+  filter(answer_count == group_count) %>% 
+  group_by(group_id) %>% 
+  summarise(count = length(unique(data))) %>% 
+  summarise(sum(count))
+```
+```{r include = FALSE}
+p2 <- 3193
+```
+```{r}
+p2
+```
+
+New time PB of fifteen minutes is pretty satisfying!
+
+</details>
+
+## Day Seven
+
+<details>
+<summary> The first puzzle that really had me at an absolute loss and dire frustration. Pulled out parallel processing on it in the end and that saved the day, even after a few minutes of crunching. Foreshadowing future difficulties, obviously... </summary>
+
+
+--- Data ---
+```{r eval = FALSE}
+input_07 <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-07.txt")
+```
+
+--- Cleaning ---
+
+```{r eval = FALSE}
+df_rules <- tibble(input = input_07) %>% 
+  separate(input,into = c("name","rule"),sep = " bags contain ") %>% 
+  mutate(rule = str_split(rule,"bags|bag")) %>% 
+  unnest_longer(rule)  %>% 
+  mutate(rule = str_remove(rule,","),
+         rule = str_remove(rule,"\\."),
+         rule = str_squish(rule)) %>% 
+  filter(rule != "") %>% 
+  mutate(rule_qty = parse_number(rule,na = "no other"),
+         rule_colour = if_else(is.na(rule_qty), 
+                               NA_character_,
+                               str_remove(rule,as.character(rule_qty))),
+         rule_colour = str_squish(rule_colour))
+```
+```{r include = FALSE}
+df_rules <- structure(list(name = c("vibrant purple", "vibrant purple", "vibrant purple", 
+"posh crimson", "posh crimson", "posh crimson"), rule = c("3 shiny lavender", 
+"1 mirrored gray", "4 muted bronze", "4 drab plum", "5 dotted purple", 
+"3 vibrant lavender"), rule_qty = c(3, 1, 4, 4, 5, 3), rule_colour = c("shiny lavender", 
+"mirrored gray", "muted bronze", "drab plum", "dotted purple", 
+"vibrant lavender")), row.names = c(NA, -6L), class = c("tbl_df", 
+"tbl", "data.frame"))
+```
+```{r}
+head(df_rules)
+```
+
+--- Problem 1 --- 
+
+How many bag colours eventually contain one shiny gold bag?
+
+```{r eval = FALSE}
+
+find_parents <- function(colour,df_rules){
+  x <- df_rules %>% 
+    filter(rule_colour == colour, rule_qty >= 1)
+  
+  map_dfr(x$name,find_parents,df_rules) %>% 
+    bind_rows(x,.)
+}
+
+parents <- find_parents("shiny gold",df_rules)
+
+unique(parents$name) %>% length()
+```
+```{r echo = FALSE}
+print(119)
+```
+
+
+--- Problem 2 --- 
+
+> How many bags are inside your shiny gold bag?
+
+The ultimate "I'm too tired for this shit" move is to pull out parallel processing on it. Cause ugh. This ended up taking a few minutes on my machine. 
+
+```{r eval = FALSE}
+library(furrr) 
+
+plan(multiprocess)
+
+find_children <- function(colour,df_rules){
+  
+  x <- df_rules %>% 
+    filter(name == colour,!is.na(rule_qty))
+  
+  if(nrow(x)==0) return(tibble())
+  
+  x <- x %>% 
+    mutate(rule_colour = map2(rule_colour,rule_qty,rep_len)) %>% 
+    unnest_longer(rule_colour)
+  
+  y <- future_map_dfr(x$rule_colour,find_children,df_rules)
+  
+  bind_rows(x,y)
+}
+
+children <- find_children("shiny gold",df_rules)
+```
+```{r include=FALSE}
+children <- tibble(x = character(155802))
+```
+```{r}
+nrow(children)
+```
+
+</details>
+
+## Day Eight
+
+<details>
+
+<summary> I thought this problem was more manageable after (because of?) day seven's difficulties. Good practice with looping and functions, I think. </summary> 
+
+> The boot code is represented as a text file with one instruction per line of text. Each instruction consists of an operation (acc, jmp, or nop) and an argument (a signed number like +4 or -20).
+>
+>  -  acc increases or decreases a single global value called the accumulator by the value given in the argument. For example, acc +7 would increase the accumulator by 7. The accumulator starts at 0. After an acc instruction, the instruction immediately below it is executed next.
+>  -  jmp jumps to a new instruction relative to itself. The next instruction to execute is found using the argument as an offset from the jmp instruction; for example, jmp +2 would skip the next instruction, jmp +1 would continue to the instruction immediately below it, and jmp -20 would cause the instruction 20 lines above to be executed next.
+>  -  nop stands for No OPeration - it does nothing. The instruction immediately below it is executed next.
+>
+>This is an infinite loop: with this sequence of jumps, the program will run forever. The moment the program tries to run any instruction a second time, you know it will never terminate.
+>
+>Immediately before the program would run an instruction a second time, the value in the accumulator is 5.
+>
+> Run your copy of the boot code. Immediately before any instruction is executed a second time, what value is in the accumulator?
+
+--- Data ---
+
+```{r eval = FALSE}
+input_08 <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-08.txt")
+```
+
+--- Cleaning ---
+
+```{r eval = FALSE}
+df_codes <- tibble(x = input_08) %>% 
+  separate(x,c("instruction","qty"),sep = " ", convert = TRUE) %>% 
+  mutate(instruction_id = row_number(),
+         next_instruction_id = case_when(instruction == "jmp" ~ instruction_id + qty,
+                                         TRUE ~ instruction_id + 1L)) %>% 
+  select(instruction_id,instruction,qty,next_instruction_id)
+```
+```{r include = FALSE}
+df_codes <- structure(list(instruction_id = 1:6, instruction = c("acc", "acc", 
+"acc", "jmp", "nop", "acc"), qty = c(17L, 37L, -13L, 173L, 100L, 
+-7L), next_instruction_id = c(2L, 3L, 4L, 177L, 6L, 7L)), row.names = c(NA, 
+-6L), class = c("tbl_df", "tbl", "data.frame"))
+```
+```{r}
+head(df_codes)
+```
+
+--- Problem 1: ---
+
+Immediately before any instruction is executed a second time, what value is in the accumulator?
+
+```{r eval = FALSE}
+current_id <- 1
+accumulator <- 0
+error_switch <- FALSE
+visited_codes <- tibble()
+
+while(!error_switch){
+  
+  current_instruction <- df_codes %>% 
+    filter(instruction_id == current_id)
+  
+  visited_codes <- bind_rows(visited_codes,current_instruction)
+  
+  if(current_instruction$instruction == "acc") accumulator <- accumulator + current_instruction$qty
+  
+  current_id <- current_instruction$next_instruction_id
+  
+  if(current_id %in% visited_codes$instruction_id) error_switch <- TRUE
+
+}
+```
+```{r include = FALSE}
+accumulator <- 1797
+```
+```{r}
+accumulator
+```
+
+--- Problem 2: Fix the program ---
+
+The program has a bug where one of jmp or nop are wrong and should be the other way around, which will let the program run all of the rows. If the program exits correctly, what is the accumulator total?
+
+First, create function for the previous problem's accumulator.
+
+```{r eval = FALSE}
+run_accumulator <- function(df_codes){
+  
+  current_id <- 1
+  accumulator <- 0
+  error_switch <- FALSE
+  visited_codes <- tibble()
+  
+  while(!error_switch){
+    
+    current_instruction <- df_codes %>% 
+      filter(instruction_id == current_id)
+    
+    visited_codes <- bind_rows(visited_codes,current_instruction)
+    
+    if(current_instruction$instruction == "acc") accumulator <- accumulator + current_instruction$qty
+    
+    current_id <- current_instruction$next_instruction_id
+    
+    if(current_id == 626) error_switch <- TRUE
+    if(current_id %in% visited_codes$instruction_id) error_switch <- TRUE
+  }
+
+  status <- "FAIL"
+  
+  if(current_id == 626) status <- "SUCCESS"
+  
+  return( 
+    list(
+      status = status, 
+      accumulator = accumulator, 
+      next_id = current_id)
+  )
+}
+
+test_accumulator <- run_accumulator(df_codes)
+```
+```{r include = FALSE}
+test_accumulator <- structure(list(status = c("SUCCESS", "FAIL", "FAIL", "FAIL", 
+"FAIL", "FAIL"), accumulator = c(1036, 1818, 1797, 1797, 1797, 
+1797), next_id = c(626L, 448L, 606L, 606L, 606L, 606L)), row.names = c(NA, 
+-6L), class = c("tbl_df", "tbl", "data.frame"))
+```
+```{r}
+test_accumulator
+```
+
+Next, build function to switch jmp and nop, build list of dfs, run the accumulator on it and find the row with success.
+
+```{r eval = FALSE}
+library(furrr)
+
+plan(multisession)
+
+jmpnop_switcher <- function(id,df_codes){
+  
+  df_codes$instruction[id] <- switch(df_codes$instruction[id],
+                                     "jmp" = "nop",
+                                     "nop" = "jmp")
+  
+  df_codes <- df_codes %>% 
+    mutate(next_instruction_id = case_when(instruction == "jmp" ~ instruction_id + qty,
+                                           TRUE ~ instruction_id + 1L))
+  
+  df_codes
+}
+
+jmpnop_list <- df_codes$instruction_id[df_codes$instruction %in% c("jmp","nop")]
+
+df_codelist <- map(jmpnop_list,jmpnop_switcher,df_codes)
+
+x <- future_map_dfr(df_codelist,run_accumulator)
+```
+```{r include = FALSE}
+x <- structure(list(status = c("SUCCESS", "FAIL", "FAIL", "FAIL", 
+"FAIL", "FAIL"), accumulator = c(1036, 1818, 1797, 1797, 1797, 
+1797), next_id = c(626L, 448L, 606L, 606L, 606L, 606L)), row.names = c(NA, 
+-6L), class = c("tbl_df", "tbl", "data.frame"))
+```
+```{r}
+x %>% filter(status == "SUCCESS")
+```
+
+</details>
+
+## Day Nine
+
+<details>
+
+<summary> This one mentioned rolling windows, which led me to think of Davis Vaughan's slider package. That helped my process a lot! </summary>
+
+
+--- Description --- 
+
+> XMAS starts by transmitting a preamble of 25 numbers. After that, each number you receive should be the sum of any two of the 25 immediately previous numbers. The two numbers will have different values, and there might be more than one such pair.
+> 
+> For example, suppose your preamble consists of the numbers 1 through 25 in a random order. To be valid, the next number must be the sum of two of those numbers. 
+>
+>The first step of attacking the weakness in the XMAS data is to find the first number in the list (after the preamble) which is not the sum of two of the 25 numbers before it. What is the first number that does not have this property?
+
+--- Data ---
+```{r eval = FALSE}
+input_09 <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-09.txt")
+```
+
+--- Cleaning ---
+
+Offhand, I'm going to use Davis Vaughan's "slider" package to create the rolling windows for each row, and hopefully that helps tackle each problem. 
+
+```{r eval = FALSE}
+library(slider)
+
+df_cipher <- tibble(num = input_09) %>% 
+  mutate_all(as.numeric) %>% 
+  mutate(rolling = slide(num,~.x,.before = 24, .complete = TRUE) %>% lag()) %>% 
+  slice(-(1:25))
+```
+```{r include = FALSE}
+df_cipher <- structure(list(num = c(30, 11, 3, 33, 78, 4), rolling = list(
+    c(17, 14, 2, 35, 39, 31, 5, 25, 1, 29, 40, 48, 9, 37, 21, 
+    7, 41, 8, 15, 28, 47, 13, 16, 50, 45), c(14, 2, 35, 39, 31, 
+    5, 25, 1, 29, 40, 48, 9, 37, 21, 7, 41, 8, 15, 28, 47, 13, 
+    16, 50, 45, 30), c(2, 35, 39, 31, 5, 25, 1, 29, 40, 48, 9, 
+    37, 21, 7, 41, 8, 15, 28, 47, 13, 16, 50, 45, 30, 11), c(35, 
+    39, 31, 5, 25, 1, 29, 40, 48, 9, 37, 21, 7, 41, 8, 15, 28, 
+    47, 13, 16, 50, 45, 30, 11, 3), c(39, 31, 5, 25, 1, 29, 40, 
+    48, 9, 37, 21, 7, 41, 8, 15, 28, 47, 13, 16, 50, 45, 30, 
+    11, 3, 33), c(31, 5, 25, 1, 29, 40, 48, 9, 37, 21, 7, 41, 
+    8, 15, 28, 47, 13, 16, 50, 45, 30, 11, 3, 33, 78))), row.names = c(NA, 
+-6L), class = c("tbl_df", "tbl", "data.frame"))
+```
+```{r}
+head(df_cipher)
+```
+
+--- Problem 1 ---
+
+> Find the first number which is not the sum of the two numbers before it.
+
+```{r eval = FALSE}
+problem_1 <- df_cipher %>% 
+  mutate(rolling_sum = map2_lgl(rolling,num, 
+                       ~ crossing(x = .x, y = .x) %>% 
+                          mutate(sum = x + y,
+                                 flag = sum == .y) %>% 
+                         summarise(flag = any(flag)) %>% 
+                         pull(flag)))
+```
+```{r include = FALSE}
+problem_1 <- structure(list(num = 10884537, rolling = list(c(6365336, 10576376, 
+9788183, 10022967, 6830224, 7340534, 8068740, 7729774, 8062265, 
+16097220, 8189810, 8288063, 13970570, 16282371, 9851242, 11670932, 
+11219888, 11780248, 16275420, 11958448, 13089628, 13195560, 12624740, 
+13705870, 16689294)), rolling_sum = FALSE), row.names = c(NA, 
+-1L), class = c("tbl_df", "tbl", "data.frame"))
+```
+```{r}
+problem_1 %>% 
+  filter(!rolling_sum)
+
+solution_1 <- problem_1 %>% 
+  filter(!rolling_sum) %>% 
+  pull(num)
+```
+
+--- Problem 2 --- 
+
+> The final step in breaking the XMAS encryption relies on the invalid number you just found: you must find a contiguous set of at least two numbers in your list which sum to the invalid number from step 1.
+
+Back to slider again, this time using a loop to iterate the size of the rolling window upward until the solution is found.
+
+```{r eval = FALSE}
+problem_2 <- df_cipher %>% 
+  filter(num < solution_1) %>%
+  select(num)
+
+success <- FALSE
+size <- 1
+
+while(!success){
+  size <- size + 1
+  
+  test_solve <- problem_2 %>% 
+    mutate(rolling_sum = slide_dbl(num,sum,.complete = TRUE,.before = size - 1),
+           success = rolling_sum == solution_1)
+  
+  success <- any(test_solve$success,na.rm = TRUE)
+}
+
+cleanup_solution <- test_solve %>% 
+  slice((which(test_solve$success)-size+1):which(test_solve$success))
+```
+```{r include = FALSE}
+cleanup_solution <- structure(list(num = c(408514, 507208, 753282, 695857, 570543, 
+444281, 626571, 592643, 500865, 693401, 599118, 661929, 814643, 
+662453, 712303, 852795, 788131), rolling_sum = c(6419520, 6675531, 
+7148649, 7429404, 7628429, 7753756, 7967090, 8216758, 8374124, 
+8676795, 8899534, 9061257, 9507096, 9792646, 10107548, 10517218, 
+10884537), success = c(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, 
+FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, 
+FALSE, TRUE)), row.names = c(NA, -17L), class = c("tbl_df", "tbl", 
+"data.frame"))
+```
+```{r}
+cleanup_solution
+
+min(cleanup_solution$num) + max(cleanup_solution$num)
+```
+
+</details>
+
+## Day Ten
+
+<details>
+<summary> Another one for immense frustration. First problem was cracked in under eight minutes after some silly stumbling...and then the second half took me over two hours. </summary>
+
+--- Data ---
+```{r eval = FALSE}
+input_10 <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-10.txt")
+```
+
+--- Cleaning ---
+```{r eval = FALSE}
+df_adapters <- tibble(adapter = input_10) %>% 
+  mutate(adapter = as.numeric(adapter)) %>% 
+  add_row(adapter = max(.$adapter)+3) %>% 
+  arrange(adapter) %>% 
+  mutate(diff = adapter - lag(adapter,default = 0))
+```
+```{r include = FALSE}
+df_adapters <- structure(list(adapter = c(1, 2, 3, 4, 7, 8), diff = c(1, 1, 
+1, 1, 3, 1)), row.names = c(NA, -6L), class = c("tbl_df", "tbl", 
+"data.frame"))
+```
+```{r eval = FALSE}
+head(df_adapters)
+```
+
+--- Problem 1 ---
+
+> Find a chain that uses all of your adapters to connect the charging outlet to your device's built-in adapter and count the joltage differences between the charging outlet, the adapters, and your device. What is the number of 1-jolt differences multiplied by the number of 3-jolt differences?
+
+```{r eval = FALSE}
+p1 <- df_adapters %>% 
+  count(diff)
+```
+```{r include = FALSE}
+p1 <- structure(list(diff = c(1, 3), n = c(73L, 31L)), row.names = c(NA, 
+-2L), class = c("tbl_df", "tbl", "data.frame"))
+```
+```{r}
+p1
+prod(p1$n)
+```
+
+--- Problem 2 ---
+
+> What is the total number of distinct ways you can arrange the adapters to connect the charging outlet to your device?
+
+Back to the slider package here, I think.
+```{r}
+library(slider)
+options(scipen = 999)
+```
+
+Creating a table of adapters with the end at the top, and then a list of ways you could use that plug (i.e. which plugs the current plug can fit into).
+
+```{r eval = FALSE}
+p2 <- df_adapters %>%
+  select(adapter) %>%
+  add_row(adapter = 0) %>% 
+  arrange(desc(adapter)) %>% 
+  mutate(
+    ways = slide(adapter,~.x,.before = 3,.after = -1),
+    ways = map2(ways,adapter,~.x[.x-.y<=3]))
+```
+```{r include = FALSE}
+p2 <- structure(list(adapter = c(166, 163, 162, 161, 160, 159), ways = list(
+    numeric(0), 166, 163, c(163, 162), c(163, 162, 161), c(162, 
+    161, 160))), row.names = c(NA, -6L), class = c("tbl_df", 
+"tbl", "data.frame")) %>% 
+  mutate(ways = map_chr(ways,paste,collapse = ", "))
+```
+```{r}
+head(p2)
+```
+
+
+Beginning with the end in mind: 
+
+- adapter 163 can plug into adapter 166 and that's it. 
+- adapter 162 can plug into 163, and so inherits the number of ways that adapter 163 can plug into 166.
+- adapter 161 can plug into either 163 or 162, and so inherits the sum of (ways adapter 163 can plug in + ways adapter 162 can plug in).
+- adapter 160 can plug into any of 163,162,161, so inherits the sum of (ways adapter 163 + ways adapter 162 + ways adapter 161) etc
+
+Tried cumulative sums for a while before deciding on an external lookup table that was superassigned into. 
+
+```{r eval = FALSE}
+lookup_table <- numeric()
+lookup_table[[max(df_adapters$adapter)]] <- 1 # seed lookup_table for 166 as 1 path
+
+p2 <- p2 %>% slice(-1) # remove 166, ways you can plug 166 in is blank
+
+sum_ways <- function(ways,adapter){
+  
+  ways <- unlist(ways)
+  
+  total_ways <- sum(lookup_table[ways]) # read lookup table for each of the ways
+    
+  lookup_table[adapter] <<- total_ways # superassign into lookup table the total ways for this adapter
+  
+  return(total_ways)
+}
+
+p2_solve <- p2 %>% 
+  mutate(total_ways = map2_dbl(ways,adapter,sum_ways))
+```
+```{r include = FALSE}
+
+options(scipen = 99)
+
+p2_solve <- structure(list(adapter = c(7, 4, 3, 2, 1, 0), ways = list(c(10, 
+9, 8), 7, 4, c(4, 3), c(4, 3, 2), c(3, 2, 1)), total_ways = c(56693912375296, 
+56693912375296, 56693912375296, 113387824750592, 226775649501184, 
+396857386627072)), row.names = c(NA, -6L), class = c("tbl_df", 
+"tbl", "data.frame")) %>% 
+  mutate(ways = map_chr(ways,paste,collapse = ", "))
+```
+```{r}
+tail(p2_solve)
+
+max(p2_solve$total_ways)
+```
