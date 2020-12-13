@@ -32,7 +32,7 @@ hero: /images/rshiny/advent.jpg
 <div id="packages-used" class="section level2">
 <h2>Packages used</h2>
 <p>For the most part, I’ve used tidyverse pretty darn consistently thus far.</p>
-<pre class="r"><code>suppressPackageStartupMessages({
+<pre class="r language-r"><code>suppressPackageStartupMessages({
   library(tidyverse)
   library(here)
   library(lubridate)
@@ -54,16 +54,16 @@ hero: /images/rshiny/advent.jpg
 <p>In this group, there are 6 questions to which anyone answered “yes”: a, b, c, x, y, and z. (Duplicate answers to the same question don’t count extra; each question counts at most once.)</p>
 </blockquote>
 <p>— Data —</p>
-<pre class="r"><code>input_06 &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-06.txt&quot;)</code></pre>
+<pre class="r language-r"><code>input_06 &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-06.txt&quot;)</code></pre>
 <p>— Cleaning —</p>
-<pre class="r"><code>df_surveys &lt;- tibble(data = input_06) %&gt;% 
+<pre class="r language-r"><code>df_surveys &lt;- tibble(data = input_06) %&gt;% 
   mutate(group_id = ifelse(data == &quot;&quot;,1,0),
          group_id = cumsum(group_id) + 1) %&gt;% 
   filter(data!=&quot;&quot;) %&gt;% 
   mutate(passenger_id = row_number(),
          data = str_split(data,&quot;&quot;)) %&gt;% 
   unnest_longer(data)</code></pre>
-<pre class="r"><code>head(df_surveys)</code></pre>
+<pre class="r language-r"><code>head(df_surveys)</code></pre>
 <pre><code>## # A tibble: 6 x 3
 ##   data  group_id passenger_id
 ##   &lt;chr&gt;    &lt;dbl&gt;        &lt;int&gt;
@@ -75,18 +75,18 @@ hero: /images/rshiny/advent.jpg
 ## 6 r            1            3</code></pre>
 <p>— Problem 1 —
 For each group, count the number of questions to which anyone answered “yes”. What is the sum of those counts?</p>
-<pre class="r"><code>p1 &lt;- df_surveys %&gt;% 
+<pre class="r language-r"><code>p1 &lt;- df_surveys %&gt;% 
   group_by(group_id) %&gt;% 
   summarise(count = length(unique(data))) %&gt;% 
   summarise(sum(count))</code></pre>
-<pre class="r"><code>p1</code></pre>
+<pre class="r language-r"><code>p1</code></pre>
 <pre><code>## # A tibble: 1 x 1
 ##   `sum(count)`
 ##          &lt;int&gt;
 ## 1         6310</code></pre>
 <p>— Problem 2 —</p>
 <p>Now count only where everyone in the group answered ALL the same questions.</p>
-<pre class="r"><code>p2 &lt;- df_surveys %&gt;% 
+<pre class="r language-r"><code>p2 &lt;- df_surveys %&gt;% 
   group_by(group_id) %&gt;%
   add_count(data,name = &quot;answer_count&quot;) %&gt;% 
   mutate(group_count = length(unique(passenger_id))) %&gt;% 
@@ -95,7 +95,7 @@ For each group, count the number of questions to which anyone answered “yes”
   group_by(group_id) %&gt;% 
   summarise(count = length(unique(data))) %&gt;% 
   summarise(sum(count))</code></pre>
-<pre class="r"><code>p2</code></pre>
+<pre class="r language-r"><code>p2</code></pre>
 <pre><code>## [1] 3193</code></pre>
 <p>New time PB of fifteen minutes is pretty satisfying!</p>
 </details>
@@ -105,9 +105,9 @@ For each group, count the number of questions to which anyone answered “yes”
 <details>
 <p><summary> The first puzzle that really had me at an absolute loss and dire frustration. Pulled out parallel processing on it in the end and that saved the day, even after a few minutes of crunching. Foreshadowing future difficulties, obviously… </summary></p>
 <p>— Data —</p>
-<pre class="r"><code>input_07 &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-07.txt&quot;)</code></pre>
+<pre class="r language-r"><code>input_07 &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-07.txt&quot;)</code></pre>
 <p>— Cleaning —</p>
-<pre class="r"><code>df_rules &lt;- tibble(input = input_07) %&gt;% 
+<pre class="r language-r"><code>df_rules &lt;- tibble(input = input_07) %&gt;% 
   separate(input,into = c(&quot;name&quot;,&quot;rule&quot;),sep = &quot; bags contain &quot;) %&gt;% 
   mutate(rule = str_split(rule,&quot;bags|bag&quot;)) %&gt;% 
   unnest_longer(rule)  %&gt;% 
@@ -120,7 +120,7 @@ For each group, count the number of questions to which anyone answered “yes”
                                NA_character_,
                                str_remove(rule,as.character(rule_qty))),
          rule_colour = str_squish(rule_colour))</code></pre>
-<pre class="r"><code>head(df_rules)</code></pre>
+<pre class="r language-r"><code>head(df_rules)</code></pre>
 <pre><code>## # A tibble: 6 x 4
 ##   name           rule               rule_qty rule_colour     
 ##   &lt;chr&gt;          &lt;chr&gt;                 &lt;dbl&gt; &lt;chr&gt;           
@@ -132,7 +132,7 @@ For each group, count the number of questions to which anyone answered “yes”
 ## 6 posh crimson   3 vibrant lavender        3 vibrant lavender</code></pre>
 <p>— Problem 1 —</p>
 <p>How many bag colours eventually contain one shiny gold bag?</p>
-<pre class="r"><code>find_parents &lt;- function(colour,df_rules){
+<pre class="r language-r"><code>find_parents &lt;- function(colour,df_rules){
   x &lt;- df_rules %&gt;% 
     filter(rule_colour == colour, rule_qty &gt;= 1)
   
@@ -149,7 +149,7 @@ unique(parents$name) %&gt;% length()</code></pre>
 <p>How many bags are inside your shiny gold bag?</p>
 </blockquote>
 <p>The ultimate “I’m too tired for this shit” move is to pull out parallel processing on it. Cause ugh. This ended up taking a few minutes on my machine.</p>
-<pre class="r"><code>library(furrr) 
+<pre class="r language-r"><code>library(furrr) 
 
 plan(multiprocess)
 
@@ -170,7 +170,7 @@ find_children &lt;- function(colour,df_rules){
 }
 
 children &lt;- find_children(&quot;shiny gold&quot;,df_rules)</code></pre>
-<pre class="r"><code>nrow(children)</code></pre>
+<pre class="r language-r"><code>nrow(children)</code></pre>
 <pre><code>## [1] 155802</code></pre>
 </details>
 </div>
@@ -190,15 +190,15 @@ children &lt;- find_children(&quot;shiny gold&quot;,df_rules)</code></pre>
 <p>Run your copy of the boot code. Immediately before any instruction is executed a second time, what value is in the accumulator?</p>
 </blockquote>
 <p>— Data —</p>
-<pre class="r"><code>input_08 &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-08.txt&quot;)</code></pre>
+<pre class="r language-r"><code>input_08 &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-08.txt&quot;)</code></pre>
 <p>— Cleaning —</p>
-<pre class="r"><code>df_codes &lt;- tibble(x = input_08) %&gt;% 
+<pre class="r language-r"><code>df_codes &lt;- tibble(x = input_08) %&gt;% 
   separate(x,c(&quot;instruction&quot;,&quot;qty&quot;),sep = &quot; &quot;, convert = TRUE) %&gt;% 
   mutate(instruction_id = row_number(),
          next_instruction_id = case_when(instruction == &quot;jmp&quot; ~ instruction_id + qty,
                                          TRUE ~ instruction_id + 1L)) %&gt;% 
   select(instruction_id,instruction,qty,next_instruction_id)</code></pre>
-<pre class="r"><code>head(df_codes)</code></pre>
+<pre class="r language-r"><code>head(df_codes)</code></pre>
 <pre><code>## # A tibble: 6 x 4
 ##   instruction_id instruction   qty next_instruction_id
 ##            &lt;int&gt; &lt;chr&gt;       &lt;int&gt;               &lt;int&gt;
@@ -210,7 +210,7 @@ children &lt;- find_children(&quot;shiny gold&quot;,df_rules)</code></pre>
 ## 6              6 acc            -7                   7</code></pre>
 <p>— Problem 1: —</p>
 <p>Immediately before any instruction is executed a second time, what value is in the accumulator?</p>
-<pre class="r"><code>current_id &lt;- 1
+<pre class="r language-r"><code>current_id &lt;- 1
 accumulator &lt;- 0
 error_switch &lt;- FALSE
 visited_codes &lt;- tibble()
@@ -229,12 +229,12 @@ while(!error_switch){
   if(current_id %in% visited_codes$instruction_id) error_switch &lt;- TRUE
 
 }</code></pre>
-<pre class="r"><code>accumulator</code></pre>
+<pre class="r language-r"><code>accumulator</code></pre>
 <pre><code>## [1] 1797</code></pre>
 <p>— Problem 2: Fix the program —</p>
 <p>The program has a bug where one of jmp or nop are wrong and should be the other way around, which will let the program run all of the rows. If the program exits correctly, what is the accumulator total?</p>
 <p>First, create function for the previous problem’s accumulator.</p>
-<pre class="r"><code>run_accumulator &lt;- function(df_codes){
+<pre class="r language-r"><code>run_accumulator &lt;- function(df_codes){
   
   current_id &lt;- 1
   accumulator &lt;- 0
@@ -269,7 +269,7 @@ while(!error_switch){
 }
 
 test_accumulator &lt;- run_accumulator(df_codes)</code></pre>
-<pre class="r"><code>test_accumulator</code></pre>
+<pre class="r language-r"><code>test_accumulator</code></pre>
 <pre><code>## # A tibble: 6 x 3
 ##   status  accumulator next_id
 ##   &lt;chr&gt;         &lt;dbl&gt;   &lt;int&gt;
@@ -280,7 +280,7 @@ test_accumulator &lt;- run_accumulator(df_codes)</code></pre>
 ## 5 FAIL           1797     606
 ## 6 FAIL           1797     606</code></pre>
 <p>Next, build function to switch jmp and nop, build list of dfs, run the accumulator on it and find the row with success.</p>
-<pre class="r"><code>library(furrr)
+<pre class="r language-r"><code>library(furrr)
 
 plan(multisession)
 
@@ -302,7 +302,7 @@ jmpnop_list &lt;- df_codes$instruction_id[df_codes$instruction %in% c(&quot;jmp&
 df_codelist &lt;- map(jmpnop_list,jmpnop_switcher,df_codes)
 
 x &lt;- future_map_dfr(df_codelist,run_accumulator)</code></pre>
-<pre class="r"><code>x %&gt;% filter(status == &quot;SUCCESS&quot;)</code></pre>
+<pre class="r language-r"><code>x %&gt;% filter(status == &quot;SUCCESS&quot;)</code></pre>
 <pre><code>## # A tibble: 1 x 3
 ##   status  accumulator next_id
 ##   &lt;chr&gt;         &lt;dbl&gt;   &lt;int&gt;
@@ -320,16 +320,16 @@ x &lt;- future_map_dfr(df_codelist,run_accumulator)</code></pre>
 <p>The first step of attacking the weakness in the XMAS data is to find the first number in the list (after the preamble) which is not the sum of two of the 25 numbers before it. What is the first number that does not have this property?</p>
 </blockquote>
 <p>— Data —</p>
-<pre class="r"><code>input_09 &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-09.txt&quot;)</code></pre>
+<pre class="r language-r"><code>input_09 &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-09.txt&quot;)</code></pre>
 <p>— Cleaning —</p>
 <p>Offhand, I’m going to use Davis Vaughan’s “slider” package to create the rolling windows for each row, and hopefully that helps tackle each problem.</p>
-<pre class="r"><code>library(slider)
+<pre class="r language-r"><code>library(slider)
 
 df_cipher &lt;- tibble(num = input_09) %&gt;% 
   mutate_all(as.numeric) %&gt;% 
   mutate(rolling = slide(num,~.x,.before = 24, .complete = TRUE) %&gt;% lag()) %&gt;% 
   slice(-(1:25))</code></pre>
-<pre class="r"><code>head(df_cipher)</code></pre>
+<pre class="r language-r"><code>head(df_cipher)</code></pre>
 <pre><code>## # A tibble: 6 x 2
 ##     num rolling   
 ##   &lt;dbl&gt; &lt;list&gt;    
@@ -343,20 +343,20 @@ df_cipher &lt;- tibble(num = input_09) %&gt;%
 <blockquote>
 <p>Find the first number which is not the sum of the two numbers before it.</p>
 </blockquote>
-<pre class="r"><code>problem_1 &lt;- df_cipher %&gt;% 
+<pre class="r language-r"><code>problem_1 &lt;- df_cipher %&gt;% 
   mutate(rolling_sum = map2_lgl(rolling,num, 
                        ~ crossing(x = .x, y = .x) %&gt;% 
                           mutate(sum = x + y,
                                  flag = sum == .y) %&gt;% 
                          summarise(flag = any(flag)) %&gt;% 
                          pull(flag)))</code></pre>
-<pre class="r"><code>problem_1 %&gt;% 
+<pre class="r language-r"><code>problem_1 %&gt;% 
   filter(!rolling_sum)</code></pre>
 <pre><code>## # A tibble: 1 x 3
 ##        num rolling    rolling_sum
 ##      &lt;dbl&gt; &lt;list&gt;     &lt;lgl&gt;      
 ## 1 10884537 &lt;dbl [25]&gt; FALSE</code></pre>
-<pre class="r"><code>solution_1 &lt;- problem_1 %&gt;% 
+<pre class="r language-r"><code>solution_1 &lt;- problem_1 %&gt;% 
   filter(!rolling_sum) %&gt;% 
   pull(num)</code></pre>
 <p>— Problem 2 —</p>
@@ -364,7 +364,7 @@ df_cipher &lt;- tibble(num = input_09) %&gt;%
 <p>The final step in breaking the XMAS encryption relies on the invalid number you just found: you must find a contiguous set of at least two numbers in your list which sum to the invalid number from step 1.</p>
 </blockquote>
 <p>Back to slider again, this time using a loop to iterate the size of the rolling window upward until the solution is found.</p>
-<pre class="r"><code>problem_2 &lt;- df_cipher %&gt;% 
+<pre class="r language-r"><code>problem_2 &lt;- df_cipher %&gt;% 
   filter(num &lt; solution_1) %&gt;%
   select(num)
 
@@ -383,7 +383,7 @@ while(!success){
 
 cleanup_solution &lt;- test_solve %&gt;% 
   slice((which(test_solve$success)-size+1):which(test_solve$success))</code></pre>
-<pre class="r"><code>cleanup_solution</code></pre>
+<pre class="r language-r"><code>cleanup_solution</code></pre>
 <pre><code>## # A tibble: 17 x 3
 ##       num rolling_sum success
 ##     &lt;dbl&gt;       &lt;dbl&gt; &lt;lgl&gt;  
@@ -404,7 +404,7 @@ cleanup_solution &lt;- test_solve %&gt;%
 ## 15 712303    10107548 FALSE  
 ## 16 852795    10517218 FALSE  
 ## 17 788131    10884537 TRUE</code></pre>
-<pre class="r"><code>min(cleanup_solution$num) + max(cleanup_solution$num)</code></pre>
+<pre class="r language-r"><code>min(cleanup_solution$num) + max(cleanup_solution$num)</code></pre>
 <pre><code>## [1] 1261309</code></pre>
 </details>
 </div>
@@ -413,44 +413,44 @@ cleanup_solution &lt;- test_solve %&gt;%
 <details>
 <p><summary> Another one for immense frustration. First problem was cracked in under eight minutes after some silly stumbling…and then the second half took me over two hours. </summary></p>
 <p>— Data —</p>
-<pre class="r"><code>input_10 &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-10.txt&quot;)</code></pre>
+<pre class="r language-r"><code>input_10 &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-10.txt&quot;)</code></pre>
 <p>— Cleaning —</p>
-<pre class="r"><code>df_adapters &lt;- tibble(adapter = input_10) %&gt;% 
+<pre class="r language-r"><code>df_adapters &lt;- tibble(adapter = input_10) %&gt;% 
   mutate(adapter = as.numeric(adapter)) %&gt;% 
   add_row(adapter = max(.$adapter)+3) %&gt;% 
   arrange(adapter) %&gt;% 
   mutate(diff = adapter - lag(adapter,default = 0))</code></pre>
-<pre class="r"><code>head(df_adapters)</code></pre>
+<pre class="r language-r"><code>head(df_adapters)</code></pre>
 <p>— Problem 1 —</p>
 <blockquote>
 <p>Find a chain that uses all of your adapters to connect the charging outlet to your device’s built-in adapter and count the joltage differences between the charging outlet, the adapters, and your device. What is the number of 1-jolt differences multiplied by the number of 3-jolt differences?</p>
 </blockquote>
-<pre class="r"><code>p1 &lt;- df_adapters %&gt;% 
+<pre class="r language-r"><code>p1 &lt;- df_adapters %&gt;% 
   count(diff)</code></pre>
-<pre class="r"><code>p1</code></pre>
+<pre class="r language-r"><code>p1</code></pre>
 <pre><code>## # A tibble: 2 x 2
 ##    diff     n
 ##   &lt;dbl&gt; &lt;int&gt;
 ## 1     1    73
 ## 2     3    31</code></pre>
-<pre class="r"><code>prod(p1$n)</code></pre>
+<pre class="r language-r"><code>prod(p1$n)</code></pre>
 <pre><code>## [1] 2263</code></pre>
 <p>— Problem 2 —</p>
 <blockquote>
 <p>What is the total number of distinct ways you can arrange the adapters to connect the charging outlet to your device?</p>
 </blockquote>
 <p>Back to the slider package here, I think.</p>
-<pre class="r"><code>library(slider)
+<pre class="r language-r"><code>library(slider)
 options(scipen = 999)</code></pre>
 <p>Creating a table of adapters with the end at the top, and then a list of ways you could use that plug (i.e. which plugs the current plug can fit into).</p>
-<pre class="r"><code>p2 &lt;- df_adapters %&gt;%
+<pre class="r language-r"><code>p2 &lt;- df_adapters %&gt;%
   select(adapter) %&gt;%
   add_row(adapter = 0) %&gt;% 
   arrange(desc(adapter)) %&gt;% 
   mutate(
     ways = slide(adapter,~.x,.before = 3,.after = -1),
     ways = map2(ways,adapter,~.x[.x-.y&lt;=3]))</code></pre>
-<pre class="r"><code>head(p2)</code></pre>
+<pre class="r language-r"><code>head(p2)</code></pre>
 <pre><code>## # A tibble: 6 x 2
 ##   adapter ways           
 ##     &lt;dbl&gt; &lt;chr&gt;          
@@ -467,8 +467,8 @@ options(scipen = 999)</code></pre>
 <li>adapter 161 can plug into either 163 or 162, and so inherits the sum of (ways adapter 163 can plug in + ways adapter 162 can plug in).</li>
 <li>adapter 160 can plug into any of 163,162,161, so inherits the sum of (ways adapter 163 + ways adapter 162 + ways adapter 161) etc</li>
 </ul>
-<p>Tried cumulative sums for a while before deciding on an external lookup table that was superassigned into.</p>
-<pre class="r"><code>lookup_table &lt;- numeric()
+<p>Tried cumulative sums and actual recursion for a while before deciding on an external lookup table that was superassigned into.</p>
+<pre class="r language-r"><code>lookup_table &lt;- numeric()
 lookup_table[[max(df_adapters$adapter)]] &lt;- 1 # seed lookup_table for 166 as 1 path
 
 p2 &lt;- p2 %&gt;% slice(-1) # remove 166, ways you can plug 166 in is blank
@@ -486,7 +486,7 @@ sum_ways &lt;- function(ways,adapter){
 
 p2_solve &lt;- p2 %&gt;% 
   mutate(total_ways = map2_dbl(ways,adapter,sum_ways))</code></pre>
-<pre class="r"><code>tail(p2_solve)</code></pre>
+<pre class="r language-r"><code>tail(p2_solve)</code></pre>
 <pre><code>## # A tibble: 6 x 3
 ##   adapter ways     total_ways
 ##     &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt;
@@ -496,6 +496,6 @@ p2_solve &lt;- p2 %&gt;%
 ## 4       2 4, 3        1.13e14
 ## 5       1 4, 3, 2     2.27e14
 ## 6       0 3, 2, 1     3.97e14</code></pre>
-<pre class="r"><code>max(p2_solve$total_ways)</code></pre>
+<pre class="r language-r"><code>max(p2_solve$total_ways)</code></pre>
 <pre><code>## [1] 396857386627072</code></pre>
 </div>

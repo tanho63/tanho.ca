@@ -19,7 +19,10 @@ suppressPackageStartupMessages({
   library(lubridate)
   library(slider)
 })
+
+knitr::opts_chunk$set(class.source = "language-r")
 ```
+
 The obsession with Advent of Code is real - I've been looking forward to the midnight unlock for a few straight nights now, and my sleep schedule seems to be moving to accommodate. 
 
 A few problems in this set really frustrated me - as you can see from the time differences.
@@ -617,7 +620,7 @@ Beginning with the end in mind:
 - adapter 161 can plug into either 163 or 162, and so inherits the sum of (ways adapter 163 can plug in + ways adapter 162 can plug in).
 - adapter 160 can plug into any of 163,162,161, so inherits the sum of (ways adapter 163 + ways adapter 162 + ways adapter 161) etc
 
-Tried cumulative sums for a while before deciding on an external lookup table that was superassigned into. 
+Tried cumulative sums and actual recursion for a while before deciding on an external lookup table that was superassigned into. 
 
 ```{r eval = FALSE}
 lookup_table <- numeric()
