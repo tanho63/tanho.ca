@@ -1,0 +1,1019 @@
+---
+layout: single
+title: "Advent of Code 2020, Days 11-15"
+date:   2020-12-15
+summary: "Tackling the eleventh through fifteenth days of AdventOfCode2020: seating system, rain risk, shuttle search,  docking data, rambunctious recitation!"
+type: rshiny
+menu:
+  sidebar:
+    name: 'AdventofCode 2020, 11-15'
+    identifier: adventcode2020-11-15
+    parent: rshiny
+url: /adventcode-2020-11-15
+hero: /images/rshiny/advent.jpg
+---
+
+```{r include = FALSE}
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(lubridate)
+})
+
+knitr::opts_chunk$set(class.source = "language-r")
+```
+
+Starting to feel the pressure as my lack of background in both mathematics and computer science starts to reveal itself. Solutions starting to really take a good chunk of time, so I'm starting to cap how long I can work on it before going to sleep (usually about an hour or two tops). 
+
+I think this is really expanding my programming chops in terms of condensing for performance and concision - finding that solutions are less and less tibble-like as we go along. 
+
+```{r echo = FALSE}
+x <- tibble::tribble(~'day',     ~'time_1', ~'rank_1',      ~'time_2', ~'rank_2', 
+ 15,   "00:22:52",  2525,      "10:02:48",  16739,
+ 14,   "12:08:40",  19807,      "18:11:04",  20419,
+ 13,   "00:20:24",  4415,      "02:43:43",   4111,
+ 12,   "09:53:37",  21352,      "11:19:35",  19545,
+ 11,   "01:56:31",  7938,      "11:01:00",  18044)
+
+x
+```
+
+## Packages used
+
+A few new packages - binaryLogic helped handle the binary/bitmask problem, numbers was an attempt at the Chinese Remainder Theorem that didn't work out for some reason (32 bit issues?), rvest/httr was the way I ended up solving Day Thirteen.
+
+```{r eval = FALSE}
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(here)
+  library(lubridate)
+  
+  library(rvest)
+  library(httr)
+  
+  library(slider)
+  library(furrr)
+  library(memoise)
+  library(numbers)
+  
+  library(binaryLogic)
+})
+```
+
+## Day Eleven
+
+<details>
+<summary> This one taught me that tibbles are very slow to iterate over, and that matrices were much better to access with the row/col indices. Once I got over that problem, the functions ran so much more beautifully! </summary>
+
+
+--- Description ---
+
+> All decisions are based on the number of occupied seats adjacent to a given seat (one of the eight positions immediately up, down, left, right, or diagonal from the seat). The following rules are applied to every seat simultaneously:
+
+>    If a seat is empty (L) and there are no occupied seats adjacent to it, the seat becomes occupied.
+>    If a seat is occupied (#) and four or more seats adjacent to it are also occupied, the seat becomes empty.
+>    Otherwise, the seat's state does not change.
+
+--- Data ---
+```{r eval = FALSE}
+input_11 <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-11.txt")
+```
+
+--- Cleaning ---
+
+```{r eval = FALSE}
+seat_map <- tibble(col = input_11) %>% 
+  mutate(col = str_split(col,"")) %>% 
+  unnest_wider(col,names_sep = "_") %>% 
+  mutate_all(~replace(.x,.x == ".",NA)) %>% 
+  mutate_all(~replace(.x,.x == "L",0)) %>% 
+  mutate_all(as.numeric)
+
+seat_matrix <- as.matrix(seat_map)
+
+seat_index <- seat_map %>% 
+  rownames_to_column(var = "row_index") %>% 
+  mutate(row_index = as.numeric(row_index)) %>% 
+  pivot_longer(cols = -row_index,names_to = "column_index") %>% 
+  mutate(column_index = parse_number(column_index))
+```
+
+Functions
+
+```{r eval = FALSE}
+generate_adjacent <- function(row_index,column_index,seat_matrix){
+  
+  check <- seat_matrix[[row_index,column_index]]
+  
+  if(is.na(check)) return(NA)
+  
+  r <- c(row_index - 1, row_index, row_index + 1)
+  c <- c(column_index -1, column_index, column_index + 1)
+  
+  x <- expand_grid(row = r,col = c) %>% 
+    filter(!(row==row_index & col==column_index)) %>% 
+    filter(between(row,1,nrow(seat_matrix)),between(col,1,ncol(seat_matrix))) %>% 
+    mutate(value = map2_dbl(row,col,~seat_matrix[[.x,.y]])) %>% 
+    filter(!is.na(value))
+    
+  return(x)
+}
+
+get_seat <- function(row,col,p1){
+  p1[[row, col]]
+}
+
+count_occupied <- function(adjacent_seats,p1){
+
+  if(is.logical(adjacent_seats)) return(NA)
+  
+  x <- adjacent_seats %>% 
+    mutate(value = map2_dbl(.data$row,.data$col,get_seat,p1))
+  
+  sum(x$value,na.rm = TRUE)
+}
+
+```
+
+--- Problem 1 ---
+
+> Simulate your seating area by applying the seating rules repeatedly until no seats change state. How many seats end up occupied?
+
+```{r eval = FALSE}
+p1_index <- seat_index %>% 
+  mutate(adjacent_seats = future_map2(row_index,column_index,generate_adjacent,seat_matrix))
+
+p1 <- seat_matrix
+total_value <- sum(p1,na.rm = TRUE)
+total_change <- 1
+iteration <- 1
+list_changes <- c()
+
+while(total_change!=0){
+  
+  p1_index <- p1_index %>% 
+    mutate(adjacent_status = future_map_dbl(adjacent_seats,count_occupied,p1),
+           value = case_when(adjacent_status == 0 ~ 1,
+                              adjacent_status >=4 ~ 0,
+                              TRUE ~ value))
+  
+  p1 <- matrix(p1_index$value,nrow = nrow(seat_matrix), ncol = ncol(seat_matrix), byrow=TRUE)
+  
+  change <- sum(p1,na.rm = TRUE)
+  total_change <- change - total_value
+  total_value <- change
+  
+  list_changes <- c(list_changes,change)
+  
+  iteration <- iteration + 1
+  
+  print(iteration)
+  
+}
+```
+```{r include = FALSE}
+change <- 2243
+```
+```{r}
+change # last change
+```
+
+--- Problem 2 ---
+
+> People don't just care about adjacent seats - they care about the first seat they can see in each of those eight directions!
+
+So rewrite the adjacent seats function first, then rerun the loop and get seats etc. Trying matrices for faster speed.
+
+Functions
+
+```{r eval = FALSE}
+gen_los <- function(row_dir,col_dir,row_index,col_index,row_max,col_max,seat_matrix){
+  if(!between(row_index + row_dir,1,row_max)) return(NULL)
+  if(!between(col_index + col_dir,1,col_max)) return(NULL)
+  
+  value <- seat_matrix[[row_index + row_dir,col_index + col_dir]]
+  
+  if(!is.na(value)) return(list(row = row_index + row_dir, col = col_index + col_dir))
+  
+  new_rowindex <- row_index + row_dir
+  new_colindex <- col_index + col_dir
+  
+  gen_los(row_dir,col_dir,new_rowindex,new_colindex,row_max,col_max,seat_matrix)
+}
+
+generate_los <- function(row_index,column_index,seat_matrix){
+  
+  check <- seat_matrix[row_index,column_index]
+  
+  if(is.na(check)) return(NA)
+  
+  r <- c(-1, 0, 1)
+  c <- c(-1, 0, 1)
+  
+  x <- expand_grid(row = r,col = c) %>% 
+    filter(!(row == 0 & col == 0))
+  
+  y <- map2_dfr(x$row,x$col,gen_los,row_index,column_index,nrow(seat_matrix),ncol(seat_matrix),seat_matrix)
+  
+  return(y)
+}
+
+get_seat2 <- function(row,col,iteration){
+  p2[row,col]
+}
+
+count_occupied2 <- function(adjacent_seats,iteration){
+  
+  if(is.logical(adjacent_seats)) return(NA)
+  
+  x <- map2_dbl(adjacent_seats$row,adjacent_seats$col,get_seat2,iteration) 
+  
+  sum(x,na.rm = TRUE)
+}
+```
+
+```{r eval = FALSE}
+p2_index <- seat_index %>% 
+  mutate(row_index = as.numeric(row_index),
+         adjacent_seats = future_map2(row_index,column_index,generate_los,seat_matrix))
+```
+
+```{r eval = FALSE}
+p2 <- seat_matrix
+total_value2 <- sum(p2,na.rm = TRUE)
+total_change2 <- 1
+iteration2 <- 1
+list_changes2 <- c()
+
+while(total_change2!=0){
+  
+  p2_index <- p2_index %>% 
+    mutate(adjacent_status = future_map_dbl(adjacent_seats,count_occupied2,iteration2),
+           value = case_when(adjacent_status == 0 ~ 1,
+                             adjacent_status >=5 ~ 0,
+                             TRUE ~ value))
+  
+  p2 <- matrix(p2_index$value,nrow = nrow(seat_matrix), ncol = ncol(seat_matrix), byrow=TRUE)
+  
+  change2 <- sum(p2,na.rm = TRUE)
+  total_change2 <- change2 - total_value2
+  total_value2 <- change2
+  
+  list_changes2 <- c(list_changes2,change2)
+  
+  iteration2 <- iteration2 + 1
+  
+  print(iteration2)
+  
+}
+```
+```{r include = FALSE}
+change2 <- 2027
+```
+```{r}
+change2
+```
+
+</details>
+
+## Day Twelve
+
+<details>
+
+<summary> I vastly overcomplicated the solution on this a few times, but as I stopped and tried to simplify the solution became clearer. Good practice on functions, and drawing out hard copy pseudocode when necessary! </summary>
+
+
+--- Description ---
+
+>The navigation instructions (your puzzle input) consists of a sequence of single-character actions paired with integer input values. After staring at them for a few minutes, you work out what they probably mean:
+>
+>    - Action N means to move north by the given value.
+>    - Action S means to move south by the given value.
+>    - Action E means to move east by the given value.
+>    - Action W means to move west by the given value.
+>    - Action L means to turn left the given number of degrees.
+>    - Action R means to turn right the given number of degrees.
+>    - Action F means to move forward by the given value in the direction the ship is currently facing.
+
+--- Data --- 
+
+```{r eval = FALSE}
+input_12 <- read_lines("https://github.com/tanho63/advent_of_code/blob/master/2020/day-12.txt")
+```
+
+--- Cleaning ---
+
+```{r eval = FALSE}
+instructions <- tibble(instruction = input_12) %>%
+  extract(instruction,into = c("instruction","num"),regex = "^([A-z])([0-9]+)",convert = TRUE)
+
+```
+
+--- Problem 1 ---
+
+> Figure out where the navigation instructions lead. What is the Manhattan distance between that location and the ship's starting position?
+
+Setting out some functions.
+
+```{r eval = FALSE}
+move_nesw1 <- function(direction,value,current_position){
+  
+  switch(direction,
+         "N" = current_position$y <- current_position$y + value,
+         "E" = current_position$x <- current_position$x + value,
+         "S" = current_position$y <- current_position$y - value,
+         "W" = current_position$x <- current_position$x - value
+         )
+  return(current_position)
+}
+
+move_lr1 <- function(direction,value,current_position){
+  switch(direction,
+         "L" = current_position$direction <- current_position$direction + value,
+         "R" = current_position$direction <- current_position$direction - value)
+  
+  if(current_position$direction >= 360) current_position$direction <- current_position$direction %% 360
+  
+  if(current_position$direction < 0) current_position$direction <- current_position$direction + 360
+  
+  return(current_position)
+}
+
+move_fb1 <- function(value,current_position){
+  
+  dir <- current_position$direction %>% as.character 
+  
+  switch (dir,
+    '0' = current_position$x <- current_position$x + value,
+    '90' = current_position$y <- current_position$y + value,
+    '180' = current_position$x <- current_position$x - value,
+    '270' = current_position$y <- current_position$y - value
+  )
+  
+  return(current_position)
+}
+
+decide_move1 <- function(current_position,direction,value){
+  
+  switch(direction,
+         "L" = ,
+         "R" = move_lr1(direction,value,current_position),
+         "F" = move_fb1(value,current_position),
+         "N" = ,
+         "E" = ,
+         "S" = ,
+         "W" = move_nesw1(direction,value,current_position))
+}
+```
+
+Now run through the instructions:
+
+```{r eval = FALSE}
+current_position <- list(
+  direction = 0, # where 0 = East
+  x = 0,
+  y = 0
+)
+positions <- current_position
+
+for(i in seq_len(nrow(instructions))){
+
+  new_position <- decide_move1(current_position,instructions$instruction[[i]],instructions$num[[i]])
+  
+  positions <- bind_rows(positions,new_position)
+  
+  current_position <- new_position
+}
+```
+```{r include = FALSE}
+current_position <- list(direction = 90, x = -397, y = -399)
+```
+```{r}
+current_position
+
+abs(current_position$x) + abs(current_position$y)
+
+```
+
+--- Problem 2 ---
+
+> Figure out where the navigation instructions actually lead. What is the Manhattan distance between that location and the ship's starting position?
+
+Rewriting previous functions:
+
+```{r eval = FALSE}
+move_waypoint_nesw <- function(direction,value,current_position){
+  
+  switch(direction,
+         "N" = current_position$waypoint_y <- current_position$waypoint_y + value,
+         "E" = current_position$waypoint_x <- current_position$waypoint_x + value,
+         "S" = current_position$waypoint_y <- current_position$waypoint_y - value,
+         "W" = current_position$waypoint_x <- current_position$waypoint_x - value
+         )
+  return(current_position)
+}
+
+move_waypoint_lr <- function(direction,value,current_position){
+
+  new_position <- current_position
+  
+  if(value == 90){
+    if(direction == "L"){
+      new_position$waypoint_x <- current_position$waypoint_y * -1
+      new_position$waypoint_y <- current_position$waypoint_x
+    }
+    if(direction == "R"){
+      new_position$waypoint_x <- current_position$waypoint_y 
+      new_position$waypoint_y <- current_position$waypoint_x * -1
+    }
+  }
+  
+  if(value == 180){
+    new_position$waypoint_x <- current_position$waypoint_x * -1
+    new_position$waypoint_y <- current_position$waypoint_y * -1
+  }
+  
+  if(value == 270){
+    if(direction == "R"){
+      new_position$waypoint_x <- current_position$waypoint_y * -1
+      new_position$waypoint_y <- current_position$waypoint_x
+    }
+    if(direction == "L"){
+      new_position$waypoint_x <- current_position$waypoint_y 
+      new_position$waypoint_y <- current_position$waypoint_x * -1
+    }
+  }
+  
+  return(new_position)
+}
+
+move_fb_waypoint <- function(value,current_position){
+  
+  dir <- current_position$direction %>% as.character 
+  
+  current_position$ship_x <- current_position$ship_x + (value * current_position$waypoint_x)
+  current_position$ship_y <- current_position$ship_y + (value * current_position$waypoint_y)
+  
+  return(current_position)
+}
+
+decide_move2 <- function(current_position,direction,value){
+  
+  switch(direction,
+         "L" = ,
+         "R" = move_waypoint_lr(direction,value,current_position),
+         "N" = ,
+         "E" = ,
+         "S" = ,
+         "W" = move_waypoint_nesw(direction,value,current_position),
+         "F" = move_fb_waypoint(value,current_position)
+  )
+}
+```
+
+```{r eval = FALSE}
+current_position <- list(
+  waypoint_x = 10,
+  waypoint_y = 1,
+  ship_x = 0,
+  ship_y = 0
+)
+
+positions <- current_position
+
+for(i in seq_len(nrow(instructions))){
+
+  new_position <- decide_move2(current_position,instructions$instruction[[i]],instructions$num[[i]])
+  
+  positions <- bind_rows(positions,new_position)
+  
+  current_position <- new_position
+}
+```
+```{r include = FALSE}
+current_position <- list(waypoint_x = 26, waypoint_y = 37, ship_x = -24417, ship_y = -15029)
+```
+```{r}
+current_position
+
+abs(current_position$ship_x) + abs(current_position$ship_y)
+```
+
+</details>
+
+## Day Thirteen
+
+<details> 
+<summary> This one ended up outside of my domain in terms of numerology/mathematics, and I struggled miserably with this one for quite a long time. I had a naive solution written out, but eventually used the opportunity to learn how to query Wolfram Alpha API from R and pass it a system of equations to solve. </summary>
+
+--- Description ---
+
+> Your notes (your puzzle input) consist of two lines. The first line is your estimate of the earliest timestamp you could depart on a bus. The second line lists the bus IDs that are in service according to the shuttle company; entries that show x must be out of service, so you decide to ignore them.
+> 
+> To save time once you arrive, your goal is to figure out the earliest bus you can take to the airport. (There will be exactly one such bus.)
+
+--- Data ---
+```{r eval = FALSE}
+input_13 <- read_lines("https://github.com/tanho63/advent_of_code/blob/master/2020/day-13.txt")
+
+input_13_e <- c("939","7,13,x,x,59,x,31,19")
+```
+
+---Cleaning---
+
+```{r eval = FALSE}
+earliest_timestamp <- input_13[[1]] %>% as.numeric
+
+earliest_timestamp_e <- input_13_e[[1]] %>% as.numeric
+
+bus_departures <- tibble(id = input_13[[2]]) %>% 
+  separate_rows(id,sep = ",")
+
+bus_departures_e <- tibble(id = input_13_e[[2]]) %>% 
+  separate_rows(id,sep = ",")
+```
+
+--- Problem 1 ---
+
+```{r eval = FALSE}
+p1 <- bus_departures %>% 
+  filter(id != "x") %>% 
+  mutate(id = as.numeric(id)) %>% 
+  mutate(next_departure = earliest_timestamp %/% id * id,
+         next_departure = case_when(earliest_timestamp > next_departure ~ next_departure + id,
+                                    TRUE ~ next_departure)) %>% 
+  arrange(next_departure)
+```
+```{r include = FALSE}
+earliest_timestamp <- 1006726
+p1 <- structure(list(id = c(647, 23, 13, 37, 19, 29, 17, 41, 557), 
+    next_departure = c(1006732, 1006733, 1006733, 1006733, 1006734, 
+    1006735, 1006740, 1006755, 1007056)), row.names = c(NA, -9L
+), class = c("tbl_df", "tbl", "data.frame"))
+```
+```{r}
+head(p1)
+p1$id[[1]] * (p1$next_departure[[1]] - earliest_timestamp)
+```
+
+--- Problem 2 ---
+
+```{r eval = FALSE}
+p2 <- bus_departures %>% 
+  mutate(offset = row_number()-1) %>% 
+  filter(id != "x") %>% 
+  mutate(id = as.numeric(id))
+
+```
+
+My naive solution looked like this:
+
+```{r eval = FALSE}
+run_checks <- function(timestamp,id,offset){
+  sum((timestamp+offset) %% id)
+}
+
+biggest_factor <- max(p2$id)
+
+timestamp <- 100000000000000 %/% biggest_factor * biggest_factor
+
+sum <- 1
+
+while(sum!=0){
+  timestamp <- timestamp+biggest_factor
+  sum <- run_checks(timestamp,p2$id,p2$offset)
+}
+
+timestamp
+```
+
+While I was waiting for the first loop, I started reading solutions in other languages. I'm admittedly getting a little out of my depth, and noticed a) people talking about the naive/brute-force solution being incredibly slow even in a language like C, b) how many people looked up and implemented Chinese Remainder Theorem (some math concept I'd never heard of) and c) how many people just copied their problem into an online solver. 
+
+I don't have the math chops to teach myself CRT at 1:30 am, so I decided to look around at some other options. 
+
+Firstly, trying the {numbers} package I found on CRAN, which professed to have a `chinese()` function. 
+
+```{r eval = FALSE}
+library(numbers)
+options(scipen = 999)
+
+chinese(p2$offset,p2$id)
+```
+```{r echo = FALSE}
+663851081414962
+```
+
+This ... seemed ... promising - but failed to pass muster as the solution.  
+
+I futzed with this, thinking that I'd done it wrong and set things up incorrectly - but alas, no dice. 
+
+Next, Reddit suggested Rosetta Code as a place to get functions in any programming language for CRT, so I toyed with that:
+
+```{r eval = FALSE}
+mul_inv <- function(a, b)
+{
+  b0 <- b
+  x0 <- 0L
+  x1 <- 1L
+ 
+  if (b == 1) return(1L)
+  while(a > 1){
+    q <- a/b
+ 
+    t <- b
+    b <- a %% b
+    a <- t
+ 
+    t <- x0
+    x0 <- x1 - q*x0
+    x1 <- t
+  }
+ 
+  if (x1 < 0) x1 <- x1 + b0
+  return(x1)
+}
+ 
+chinese_remainder <- function(n, a)
+{
+  len <- length(n)
+ 
+  prod <- 1L
+  sum <- 0L
+ 
+  for (i in 1:len) prod <- prod * n[i]
+ 
+  for (i in 1:len){
+    p <- prod / n[i]
+    sum <- sum + a[i] * mul_inv(p, n[i]) * p
+  }
+ 
+  return(sum %% prod)
+}
+ 
+n <- p2$id
+a <- p2$offset
+ 
+chinese_remainder(n, a)
+```
+```{r echo = FALSE}
+502023422045264
+```
+
+but also no dice. I figure it's reaching R's bigint limits, or something, and causing rounding/float errors. 
+
+Finally, I resorted to just getting old faithful, Wolfram Alpha, to solve the system of equations.
+
+I'm an honorable cheat though: I figured I'd limit myself to learning and using the Wolfram Alpha API instead. 
+
+Here's some of my standard set of packages for interacting with APIs:
+```{r eval = FALSE}
+library(httr)
+library(glue)
+library(xml2)
+library(rvest)
+```
+
+You need to sign up for an API app ID, which is free but limited to 2000 queries per month. https://products.wolframalpha.com/api
+
+I've got my apikey saved as a system environment variable, there are other ways to handle the secret (rstudioapi, keyring, etc)
+
+```{r eval = FALSE}
+apikey <- Sys.getenv("wolfram_alpha")
+```
+
+Create the system of equations and reduce it into a single comma separated string
+
+```{r eval = FALSE}
+equations <- glue::glue("(x + {p2$offset}) mod {p2$id}=0") %>% paste(collapse = ",")
+```
+
+Send the equations and the apikey as html query parameters in a GET request
+
+```{r eval = FALSE}
+response <- httr::GET("http://api.wolframalpha.com/v2/query",
+               query = list(input = equations,
+                            appid = apikey))
+```
+
+Parse the response, drilling down to the plaintext.
+
+```{r eval = FALSE}
+resp_content <- content(response,as = "parsed")
+
+plaintext <- resp_content %>% 
+  html_nodes("plaintext") %>% 
+  html_text()
+```
+```{r include = FALSE}
+plaintext <- c("{(x + 0) mod 23 = 0, (x + 13) mod 41 = 0, (x + 23) mod 647 = 0, (x + 41) mod 13 = 0, (x + 42) mod 19 = 0, (x + 52) mod 29 = 0, (x + 54) mod 557 = 0, (x + 60) mod 37 = 0, (x + 71) mod 17 = 0}", 
+"{x mod 23 = 0, (x + 13) mod 41 = 0, (x + 23) mod 647 = 0, (x + 41) mod 13 = 0, (x + 42) mod 19 = 0, (x + 52) mod 29 = 0, (x + 54) mod 557 = 0, (x + 60) mod 37 = 0, (x + 71) mod 17 = 0}", 
+"{x - 23 floor(x/23) = 0, -41 floor((x + 13)/41) + x + 13 = 0, -647 floor((x + 23)/647) + x + 23 = 0, -13 floor((x + 2)/13) + x + 2 = 0, -19 floor((x + 4)/19) + x + 4 = 0, -29 floor((x + 23)/29) + x + 23 = 0, -557 floor((x + 54)/557) + x + 54 = 0, -37 floor((x + 23)/37) + x + 23 = 0, -17 floor((x + 3)/17) + x + 3 = 0}", 
+"x = 1531146567793219 n + 867295486378319, n element Z")
+```
+```{r}
+plaintext 
+```
+
+</details>
+
+## Day Fourteen
+
+<details>
+
+<summary> A much more approachable solution for me - definitely had much more of an idea of how the solution would/should play out. Got tripped up on R's 32 bit defaults, but searching for a binary operations package led me to binaryLogic and it handled things nicely. A great feeling to solve after the misery of the previous day. </summary>
+
+Day fourteen - Docking Data!
+
+--- Description ---
+
+> The initialization program (your puzzle input) can either update the bitmask or write a value to memory. Values and memory addresses are both 36-bit unsigned integers. For example, ignoring bitmasks for a moment, a line like mem[8] = 11 would write the value 11 to memory address 8.
+
+--- Data ---
+```{r eval = FALSE}
+input_14 <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-14-example1.txt")
+
+input_14_e1 <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-14-example1.txt")
+```
+
+--- Problem 1 ---
+
+So I think I'll try super-assigning into a global "current_mask" and "current_memory" list, and create functions to update the mask and to write into the memory list. 
+
+```{r eval = FALSE}
+current_mask <- list()
+current_memory <- numeric()
+
+choose_function <- function(instruction){
+  
+  if(str_detect(instruction,"mask")) update_mask(instruction)
+  
+  if(str_detect(instruction,"mem")) write_memory(instruction)
+}
+
+update_mask <- function(instruction){
+  
+  mask <- str_remove(instruction, "mask = ") %>% str_split("") %>% unlist()
+  
+  mask_locations <- str_which(mask,"X",negate = TRUE)
+
+  current_mask <<- list(
+    location = mask_locations,
+    value = mask[mask_locations] %>% as.integer()
+  )
+  
+  return(current_mask)
+}
+
+update_mask(input_14_e1[1])
+```
+```{r echo = FALSE}
+list(location = c(30L, 35L), value = 1:0)
+```
+```{r eval = FALSE}
+write_memory <- function(instruction){
+  
+  mem_instruction <- str_split(instruction," = ") %>% unlist()
+  
+  mem_location <- parse_number(mem_instruction[[1]])
+  
+  mem_value <- parse_integer(mem_instruction[[2]]) %>% 
+    as.binary(signed = TRUE, size = 5)
+  
+  mem_value[current_mask$location+4] <- current_mask$value
+  
+  mem_value <- as.numeric(mem_value)
+  
+  current_memory[[mem_location]]<<-mem_value
+  
+  return(mem_value)
+}
+write_memory(input_14_e1[2])
+```
+```{r echo = FALSE}
+73
+```
+```{r eval = FALSE}
+walk(input_14,choose_function)
+
+sum(current_memory %>% unlist(),na.rm = TRUE)
+```
+```{r echo = FALSE}
+10035335144140
+```
+
+--- Problem 2 ---
+
+```{r eval = FALSE}
+input_14_e2 <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-14-example2.txt")
+```
+
+> Instead, it acts as a memory address decoder. Immediately before a value is written to memory, each bit in the bitmask modifies the corresponding bit of the destination memory address in the following way:
+>
+>    - If the bitmask bit is 0, the corresponding memory address bit is unchanged.
+>    - If the bitmask bit is 1, the corresponding memory address bit is overwritten with 1.
+>    - If the bitmask bit is X, the corresponding memory address bit is floating.
+
+This suggests a revised "mask decoder" function:
+
+```{r eval = FALSE}
+instruction <- input_14_e2[1]
+
+update_decoder <- function(instruction){
+  
+  mask <- str_remove(instruction, "mask = ") %>% str_split("") %>% unlist()
+  
+  overwrite_locations <- str_which(mask,"1")
+
+  float_locations <- str_which(mask,"X")
+  
+  current_mask <<- list(
+    overwrite = overwrite_locations,
+    float = float_locations)
+  
+  return(current_mask)
+}
+
+update_decoder(instruction)
+```
+```{r echo = FALSE}
+list(overwrite = c(32L, 35L), float = c(31L, 36L))
+```
+
+> A floating bit is not connected to anything and instead fluctuates unpredictably. In practice, this means the floating bits will take on all possible values, potentially causing many memory addresses to be written all at once!
+
+So instead of masking what the value is, the address being written to is "masked" by floats. I'll try to use expand_grid to get all the combination of float values. 
+
+```{r eval = FALSE}
+instruction <- input_14_e2[2]
+current_memory <- tibble()
+
+write_memory_two <- function(instruction){
+  
+  mem_instruction <- str_split(instruction," = ") %>% unlist()
+  
+  mem_location <- parse_number(mem_instruction[[1]]) %>% 
+    as.binary(signed = TRUE, size = 5)
+  
+  mem_location[current_mask$overwrite+4] <- 1
+    
+  x <- tibble(float_locations = current_mask$float + 4,
+              float_values = list(c(0,1))) %>% 
+    deframe() %>% 
+    expand.grid() 
+    
+  mem_locations <- pmap(x,~ {mem_location[current_mask$float +4] <- c(...); as.numeric(mem_location)}) %>% unlist()
+    
+  mem_value <- parse_integer(mem_instruction[[2]])
+    
+  current_memory <<- bind_rows(current_memory,
+                               tibble(mem_locations = mem_locations,
+                                      mem_value = mem_value))
+  return(current_memory)
+}
+
+write_memory_two(instruction)
+```
+```{r echo = FALSE}
+structure(list(mem_locations = c(26, 58, 27, 59, 26, 58, 27, 
+59), mem_value = c(100L, 100L, 100L, 100L, 100L, 100L, 100L, 
+100L)), row.names = c(NA, -8L), class = c("tbl_df", "tbl", "data.frame"
+))
+```
+
+```{r eval = FALSE}
+current_memory <- tibble()
+current_mask <- list()
+
+choose_operation <- function(instruction){
+  
+  if(str_detect(instruction,"mask")) update_decoder(instruction)
+  
+  if(str_detect(instruction,"mem")) write_memory_two(instruction)
+}
+
+walk(input_14,choose_operation)
+
+current_memory %>% 
+  group_by(mem_locations) %>% 
+  slice_tail() %>% 
+  ungroup() %>% 
+  pull(mem_value) %>% 
+  sum()
+```
+```{r echo = FALSE}
+3817372618036
+```
+
+Ran into some memory overflow issues, so decided to just save all the instructions and slice tail later. (In hindsight, that's probably more R-like anyway)
+
+</details>
+
+## Day Fifteen
+
+<details>
+<summary> Day Fifteen was a quick solve for part one, but part two ended up testing some computational/data structure limits! I kept condensing my part one solution, and eventually arrived on a pretty tight R loop. </summary>
+
+--- Description ---
+
+> So, after the starting numbers, each turn results in that player speaking aloud either 0 (if the last number is new) or an age (if the last number is a repeat).
+
+--- Data ---
+
+```{r eval = FALSE}
+input_15 <- c(15,12,0,14,3,1)
+```
+
+--- Problem 1 ---
+
+```{r eval = FALSE}
+p1 <- tibble(index = 1:6,value = input_15) %>% 
+  bind_rows(list(index = 7:2020))
+
+find_next <- function(i){
+  prev <- p1$value[i - 1]
+  new <- 0
+  
+  if(prev %in% p1$value[-(i-1)]) {
+    new <- p1 %>% 
+      filter(prev == value) %>% 
+      slice_tail(n = 2) %>% 
+      pull(index) %>% 
+      diff()
+    }
+  
+  p1$value[i] <<- new
+}
+
+walk(7:2020,find_next)
+tail(p1$value,1)
+```
+```{r echo = FALSE}
+249
+```
+
+--- Problem 2 ---
+
+30,000,000 iterations slows this down heck of a lot! 
+
+Listing changes I made to first solution: 
+
+- instead of storing what each iteration said, store when each number was last said
+- reconfigure to store a vector of previous value and a second vector of value before previous value
+- pre-emptively build out the previous vectors to 100,000 long - if overflow, increase incrementally - this avoids copy on modify
+- pass solutions from prev_1 to prev_2 by location
+- don't recalculate indexes twice for each loop - pre-set it before the loop and then do it at the end of loop
+- superassigning is slow, move the superassigned thing inside the function
+- tibbles are slow. matrices are slow. data.table is slow in this context too. 
+
+```{r eval = FALSE}
+
+find_next2 <- function(p1, range) {
+  
+  p2 <- p1 %>% 
+    group_by(value) %>% 
+    slice_tail(n=2) %>%
+    mutate(rank = rank(desc(index))) %>% 
+    ungroup() %>% 
+    pivot_wider(names_from = rank, names_prefix = "prev_",values_from = index) %>% 
+    arrange(value) %>% 
+    left_join(
+      y = .,
+      x = tibble(value = 0:100000),
+      by = 'value'
+    )
+  
+  value <- p2$value %>% as.integer()
+  
+  prev_1 <- p2$prev_1
+  
+  prev_2 <- p2$prev_2
+  
+  index <- which(prev_1 == max(prev_1,na.rm=TRUE))
+  
+  for (i in range) {
+    
+    prev_value <- prev_2[index]
+    index <- 1
+    
+    if(!is.na(prev_value)) index <- i - prev_value
+    
+    prev_2[index] <- prev_1[index]
+    prev_1[index] <- i
+    
+    # if(i %% 1000000 ==0) message(i)
+  }
+  
+  # Return the last value
+  return(index - 1)
+}
+tictoc::tic()
+find_next2(p1,2021:30000000)
+tictoc::toc()
+```
+```{r echo = FALSE}
+41687
+message("11.85 sec elapsed")
+```
+
+
+
+<details>

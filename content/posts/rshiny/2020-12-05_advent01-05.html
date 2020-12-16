@@ -34,7 +34,7 @@ hero: /images/rshiny/advent.jpg
 <div id="packages-used" class="section level2">
 <h2>Packages used</h2>
 <p>For the most part, I’ve used tidyverse pretty darn consistently thus far, who are doing these problems in R as well.</p>
-<pre class="r"><code>suppressPackageStartupMessages({
+<pre class="r language-r"><code>suppressPackageStartupMessages({
   library(tidyverse)
   library(here)
   library(lubridate)
@@ -65,7 +65,7 @@ hero: /images/rshiny/advent.jpg
 <p>— Data —</p>
 <p><a href="https://adventofcode.com/2020/day/1/input" class="uri">https://adventofcode.com/2020/day/1/input</a></p>
 <p>Copy-paste + datapasta’s Fiddle Selection. (Thank you, Miles!)</p>
-<pre class="r"><code>input_data &lt;- c(
+<pre class="r language-r"><code>input_data &lt;- c(
   1630, 1801, 1917, 1958, 1953, 1521, 1990, 1959, 1543, 1798, 
   638, 1499, 1977, 1433, 1532, 1780, 1559, 1866, 1962, 1999, 
   1623, 1772, 1730, 1670, 1791, 1947, 1961, 1523, 959, 1998, 
@@ -88,7 +88,7 @@ hero: /images/rshiny/advent.jpg
   1995, 657, 1784, 1644, 1941, 1596, 1849, 1065, 1927, 1525)</code></pre>
 <p>— Part One: Find a solution where the sum of two entries equals 2020. —</p>
 <p>The first solution that comes to mind is finding the difference each entry and 2020, and then left-joining the entries onto this difference.</p>
-<pre class="r"><code>pair_2020 &lt;- tibble(expense = input_data) %&gt;% 
+<pre class="r language-r"><code>pair_2020 &lt;- tibble(expense = input_data) %&gt;% 
   mutate(difference = 2020 - expense) %&gt;% 
   left_join(
     x = .,
@@ -103,14 +103,14 @@ pair_2020</code></pre>
 ##     &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;
 ## 1     586       1434      1434
 ## 2    1434        586       586</code></pre>
-<pre class="r"><code>pair_2020 %&gt;% 
+<pre class="r language-r"><code>pair_2020 %&gt;% 
   mutate(multiply = expense * expense.y) %&gt;% 
   distinct(multiply) %&gt;% 
   pull()</code></pre>
 <pre><code>## [1] 840324</code></pre>
 <p>— Part Two: Find a solution where the sum of three entries equals 2020 —</p>
 <p>Okay, I can’t use the first approach here, so now I’ll hit crossing to make a big dataframe, then sum it all afterwards and filter to where sum == 2020.</p>
-<pre class="r"><code>triple_2020 &lt;- crossing(first = input_data, 
+<pre class="r language-r"><code>triple_2020 &lt;- crossing(first = input_data, 
                         second = input_data, 
                         third = input_data) %&gt;% 
   mutate(total = first + second + third,
@@ -127,7 +127,7 @@ triple_2020</code></pre>
 ## 4   903    910   207  2020 170098110
 ## 5   910    207   903  2020 170098110
 ## 6   910    903   207  2020 170098110</code></pre>
-<pre class="r"><code>triple_2020 %&gt;% 
+<pre class="r language-r"><code>triple_2020 %&gt;% 
   distinct(product) %&gt;% 
   pull()</code></pre>
 <pre><code>## [1] 170098110</code></pre>
@@ -150,9 +150,9 @@ triple_2020</code></pre>
 <p>In the above example, 2 passwords are valid. The middle password, cdefg, is not; it contains no instances of b, but needs at least 1. The first and third passwords are valid: they contain one a or nine c, both within the limits of their respective policies.</p>
 </blockquote>
 <p>— Input Data —</p>
-<pre class="r"><code>input_data &lt;- read.delim(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-02.txt&quot;,header = FALSE)</code></pre>
+<pre class="r language-r"><code>input_data &lt;- read.delim(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-02.txt&quot;,header = FALSE)</code></pre>
 <p>— How many passwords are valid?—</p>
-<pre class="r"><code>password_table_one &lt;- input_data %&gt;% 
+<pre class="r language-r"><code>password_table_one &lt;- input_data %&gt;% 
   separate(1,into = c(&quot;qty&quot;,&quot;character&quot;,&quot;password&quot;),sep = &quot; &quot;) %&gt;% 
   separate(qty, into = c(&quot;min&quot;,&quot;max&quot;), sep = &quot;-&quot;,convert = TRUE) %&gt;% 
   mutate(character = str_remove(character,&quot;:&quot;),
@@ -175,7 +175,7 @@ head(password_table_one)</code></pre>
 ## 4 FALSE
 ## 5  TRUE
 ## 6 FALSE</code></pre>
-<pre class="r"><code>sum(password_table_one$valid)</code></pre>
+<pre class="r language-r"><code>sum(password_table_one$valid)</code></pre>
 <pre><code>## [1] 418</code></pre>
 <p>— Part Two: how many passwords are valid under the second policy?—</p>
 <blockquote>
@@ -196,7 +196,7 @@ head(password_table_one)</code></pre>
 <blockquote>
 <p>How many passwords are valid according to the new interpretation of the policies?</p>
 </blockquote>
-<pre class="r"><code>password_table_two &lt;- input_data %&gt;% 
+<pre class="r language-r"><code>password_table_two &lt;- input_data %&gt;% 
   separate(1,into = c(&quot;qty&quot;,&quot;character&quot;,&quot;password&quot;),sep = &quot; &quot;) %&gt;% 
   separate(qty, into = c(&quot;pos1&quot;,&quot;pos2&quot;), sep = &quot;-&quot;,convert = TRUE) %&gt;% 
   mutate(character = str_remove(character,&quot;:&quot;),
@@ -213,7 +213,7 @@ head(password_table_two)</code></pre>
 ## 4   10   11         x     x, z     1  TRUE
 ## 5   13   14         d     d, d     2 FALSE
 ## 6   16   18         s     j, x     0 FALSE</code></pre>
-<pre class="r"><code>sum(password_table_two$valid)</code></pre>
+<pre class="r language-r"><code>sum(password_table_two$valid)</code></pre>
 <pre><code>## [1] 616</code></pre>
 </details>
 </div>
@@ -231,7 +231,7 @@ head(password_table_two)</code></pre>
 </blockquote>
 <p>— Input Data —</p>
 <p>Converting to a matrix of 1s and 0s, where “#” is 1 and “.” is 0</p>
-<pre class="r"><code>input_matrix &lt;- read_table(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-03.txt&quot;,col_names = &quot;x&quot;) %&gt;% 
+<pre class="r language-r"><code>input_matrix &lt;- read_table(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-03.txt&quot;,col_names = &quot;x&quot;) %&gt;% 
   mutate(x = str_split(x,&quot;&quot;)) %&gt;% 
   unnest_wider(x,names_sep = &quot;_&quot;) %&gt;% 
   mutate_all(~case_when(.x == &quot;#&quot; ~ 1, .x == &quot;.&quot; ~ 0)) %&gt;% 
@@ -245,18 +245,18 @@ head(password_table_two)</code></pre>
 <p>Starting at the top-left corner of your map and following a slope of right 3 and down 1, how many trees would you encounter?</p>
 </blockquote>
 <p>So the pattern repeats to the right until you get down to the bottom, i.e. until you access row 323 in this case.</p>
-<pre class="r"><code>input_rows &lt;- nrow(input_matrix)
+<pre class="r language-r"><code>input_rows &lt;- nrow(input_matrix)
 
 input_rows</code></pre>
 <pre><code>## [1] 323</code></pre>
 <p>323 is the goal rows, and that means we’ll need ~ 969 columns. Tackling this via cbind + a while loop.</p>
-<pre class="r"><code>input_columns &lt;- input_rows * 3
+<pre class="r language-r"><code>input_columns &lt;- input_rows * 3
 
 wide_matrix &lt;- input_matrix
 
 while(ncol(wide_matrix) &lt; input_columns) wide_matrix &lt;- cbind(wide_matrix,input_matrix)</code></pre>
 <p>Now building an accessor tibble with row numbers and column numbers</p>
-<pre class="r"><code>row_accessor &lt;- 2:input_rows # start at 1,1 so the next row is 2
+<pre class="r language-r"><code>row_accessor &lt;- 2:input_rows # start at 1,1 so the next row is 2
 
 column_accessor &lt;- 1:input_rows * 3 + 1 # start at 1,1 and move right three, so next column is 4
 
@@ -277,7 +277,7 @@ head(indices)</code></pre>
 ## 4     5     13     1
 ## 5     6     16     1
 ## 6     7     19     1</code></pre>
-<pre class="r"><code>sum(indices$path)</code></pre>
+<pre class="r language-r"><code>sum(indices$path)</code></pre>
 <pre><code>## [1] 280</code></pre>
 <p>— Problem 2: Find this path for multiple slopes —</p>
 <p>Find the path for</p>
@@ -289,7 +289,7 @@ head(indices)</code></pre>
 <li>1,2</li>
 </ul>
 <p>A good time to generalise the previous steps!</p>
-<pre class="r"><code>fn_slope &lt;- function(right,down,matrix){
+<pre class="r language-r"><code>fn_slope &lt;- function(right,down,matrix){
   
   # Calculate number of columns
   column_count &lt;- (nrow(matrix) * right)
@@ -325,7 +325,7 @@ toboggan_paths</code></pre>
 ## 3     5     1    74
 ## 4     7     1    78
 ## 5     1     2    35</code></pre>
-<pre class="r"><code>reduce(toboggan_paths$paths,`*`)</code></pre>
+<pre class="r language-r"><code>reduce(toboggan_paths$paths,`*`)</code></pre>
 <pre><code>## [1] 4355551200</code></pre>
 </details>
 </div>
@@ -348,7 +348,7 @@ toboggan_paths</code></pre>
 </blockquote>
 <p>Count the number of valid passports - those that have <code>all required fields</code>. Treat cid as optional. In your batch file, how many passports are valid?</p>
 <p>— Input Data —</p>
-<pre class="r"><code>input_data &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-04.txt&quot;)
+<pre class="r language-r"><code>input_data &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-04.txt&quot;)
 
 head(input_data)</code></pre>
 <pre><code>## [1] &quot;iyr:2015 cid:189 ecl:oth byr:1947 hcl:#6c4ab1 eyr:2026&quot;                        
@@ -358,7 +358,7 @@ head(input_data)</code></pre>
 ## [5] &quot;pid:688706448 iyr:2017 hgt:162cm cid:174 ecl:grn byr:1943 hcl:#808e9e eyr:2025&quot;
 ## [6] &quot;&quot;</code></pre>
 <p>Cleaning data into a tibble.</p>
-<pre class="r"><code>df_passports &lt;- tibble(data = input_data) %&gt;%
+<pre class="r language-r"><code>df_passports &lt;- tibble(data = input_data) %&gt;%
   mutate(blank = ifelse(data == &quot;&quot;,1,0),
          passport_id = cumsum(blank)+1) %&gt;% 
   filter(!blank) %&gt;% 
@@ -378,7 +378,7 @@ head(df_passports)</code></pre>
 ## 5           5 2013  83    amb   1974  #ceb3a1 2028  191cm 524032739
 ## 6           6 &lt;NA&gt;  221   gry   1963  eefed5  2029  183cm 88405792</code></pre>
 <p>— Problem 1: How many complete/non-missing passports? —</p>
-<pre class="r"><code>valid_p1 &lt;- df_passports %&gt;% 
+<pre class="r language-r"><code>valid_p1 &lt;- df_passports %&gt;% 
   select(-cid) %&gt;% 
   filter_all(~!is.na(.x))
 
@@ -392,11 +392,11 @@ head(valid_p1)</code></pre>
 ## 4           4 2026  oth   1942  #fffffd 2024  159cm 812929897
 ## 5           5 2013  amb   1974  #ceb3a1 2028  191cm 524032739
 ## 6           7 2018  grn   1923  #18171d 2021  181cm 777881168</code></pre>
-<pre class="r"><code>nrow(valid_p1)</code></pre>
+<pre class="r language-r"><code>nrow(valid_p1)</code></pre>
 <pre><code>## [1] 264</code></pre>
 <p>— Problem 2: Validate columns —</p>
 <p>Time to add more validation beyond non-missing!</p>
-<pre class="r"><code>valid_p2 &lt;- valid_p1 %&gt;% 
+<pre class="r language-r"><code>valid_p2 &lt;- valid_p1 %&gt;% 
   mutate_at(c(&quot;byr&quot;,&quot;iyr&quot;,&quot;eyr&quot;),as.numeric) %&gt;% 
   filter(
     between(byr,1920,2002),
@@ -422,7 +422,7 @@ head(valid_p2)</code></pre>
 ## 4           7  2018 grn    1923 #18171d  2021 181cm 777881168
 ## 5           8  2016 gry    1941 #a5e1b5  2027 178cm 062495008
 ## 6          10  2020 blu    1925 #888785  2023 188cm 117915262</code></pre>
-<pre class="r"><code>nrow(valid_p2)</code></pre>
+<pre class="r language-r"><code>nrow(valid_p2)</code></pre>
 <pre><code>## [1] 224</code></pre>
 </details>
 </div>
@@ -438,10 +438,10 @@ head(valid_p2)</code></pre>
 <p>Every seat also has a unique seat ID: multiply the row by 8, then add the column. In this example, the seat has ID 44 * 8 + 5 = 357.</p>
 </blockquote>
 <p>— Data —</p>
-<pre class="r"><code>input_05 &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-05.txt&quot;)</code></pre>
+<pre class="r language-r"><code>input_05 &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-05.txt&quot;)</code></pre>
 <p>— Problem 1: highest seat ID? —</p>
 <p>A good time to dust off some recursive functions!</p>
-<pre class="r"><code>search_function &lt;- function(string,range){
+<pre class="r language-r"><code>search_function &lt;- function(string,range){
   
   midpoint &lt;- length(range)%/%2
   accessor &lt;- str_sub(string,1,1) 
@@ -462,7 +462,7 @@ head(valid_p2)</code></pre>
 
 search_function(&quot;FBFBBFF&quot;,0:127)</code></pre>
 <pre><code>## [1] 44</code></pre>
-<pre class="r"><code>df_boardingpasses &lt;- tibble(input = input_05) %&gt;% 
+<pre class="r language-r"><code>df_boardingpasses &lt;- tibble(input = input_05) %&gt;% 
   mutate(row_string = str_sub(input,1,7),
          seat_string = str_sub(input,-3,-1),
          row = map_dbl(row_string,search_function,0:127),
@@ -479,14 +479,14 @@ head(df_boardingpasses)</code></pre>
 ## 4 FFBFFBBLRR FFBFFBB    LRR            19     3     155
 ## 5 FFBFBFBLLL FFBFBFB    LLL            21     0     168
 ## 6 FFBFFBFLRR FFBFFBF    LRR            18     3     147</code></pre>
-<pre class="r"><code>max(df_boardingpasses$seat_id)</code></pre>
+<pre class="r language-r"><code>max(df_boardingpasses$seat_id)</code></pre>
 <pre><code>## [1] 818</code></pre>
 <p>— Problem 2: Your Seat —</p>
 <blockquote>
 <p>It’s a completely full flight, so your seat should be the only missing boarding pass in your list. However, there’s a catch: some of the seats at the very front and back of the plane don’t exist on this aircraft, so they’ll be missing from your list as well.</p>
 <p>Your seat wasn’t at the very front or back, though; the seats with IDs +1 and -1 from yours will be in your list.</p>
 </blockquote>
-<pre class="r"><code>actual_seats &lt;-  df_boardingpasses %&gt;% 
+<pre class="r language-r"><code>actual_seats &lt;-  df_boardingpasses %&gt;% 
   arrange(row,seat) %&gt;% 
   filter(
     row != min(row),
