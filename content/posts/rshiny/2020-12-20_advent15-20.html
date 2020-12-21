@@ -1,0 +1,1326 @@
+---
+layout: single
+title: "Advent of Code 2020, Days 16-20"
+date:   2020-12-20
+summary: "Tackling the sixteenth through twentieth days of AdventOfCode2020: Ticket Translation, Conway Cubes, Operation Order, Monster Messages, Jurassic Jigsaw!"
+type: rshiny
+menu:
+  sidebar:
+    name: 'AdventofCode 2020, 16-20'
+    identifier: adventcode2020-16-20
+    parent: rshiny
+url: /adventcode-2020-16-20
+hero: /images/rshiny/advent.jpg
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>The completionist streak continues, despite ever-increasing puzzle difficulty and timelines. I’m finding myself more and more comfortable with using loops, despite previous hatred of them, and I think I’m being challenged to think about data structures and reducing my data structures to non-tibbles (i.e. matrices, vectors, lists) - which is faster to iterate over in large scale.</p>
+<p>I’m also thinking about things like copy on modify, parallel processing, and recursion! (and an uncomfortable dose of regex).</p>
+<p>Greatly enjoying it still, although I’m now limiting how long I stay up to 60-90 minutes.</p>
+<pre><code>## # A tibble: 5 x 5
+##     day time_1   rank_1 time_2   rank_2
+##   &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;
+## 1    20 00:43:06    948 21:39:22   6404
+## 2    19 01:23:47   2466 11:42:08   6929
+## 3    18 11:24:51  13996 11:54:32  12112
+## 4    17 01:45:32   4130 07:49:59   9588
+## 5    16 00:24:42   2780 01:00:42   1869</code></pre>
+<div id="packages-used" class="section level2">
+<h2>Packages used</h2>
+<pre class="r language-r"><code>suppressPackageStartupMessages({
+  library(tidyverse)
+  library(here)
+  library(furrr)
+  library(lobstr)
+  library(glue)
+  
+})</code></pre>
+</div>
+<div id="day-sixteen" class="section level2">
+<h2>Day Sixteen</h2>
+<details>
+<p><summary> This one was pretty straightforward as a parse, clean, and map - felt lots better than day 15, but this would be quite rare for the next few days. </summary></p>
+<p>— Description —</p>
+<blockquote>
+<p>Unfortunately, you can’t actually read the words on the ticket. You can, however, read the numbers, and so you figure out the fields these tickets must have and the valid ranges for values in those fields.</p>
+<p>You collect the rules for ticket fields, the numbers on your ticket, and the numbers on other nearby tickets for the same train service (via the airport security cameras) together into a single document you can reference (your puzzle input).</p>
+</blockquote>
+<p>— Data —</p>
+<pre class="r language-r"><code>input_16 &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-16.txt&quot;)</code></pre>
+<p>— Cleaning —</p>
+<p>Definitely a problem that would benefit from tidying. Also going to go ahead and create an integer vector for each rule range, which will facilitate <code>%in%</code> checks later.</p>
+<pre class="r language-r"><code>x &lt;- tibble(input = input_16) %&gt;% 
+  mutate(group = cumsum(input == &quot;&quot;))
+
+rules &lt;- x %&gt;% 
+  filter(group == 0) %&gt;% 
+  separate(input,c(&quot;rule&quot;,&quot;values&quot;),sep = &quot;: &quot;) %&gt;% 
+  separate_rows(values, sep = &quot; or &quot;) %&gt;% 
+  separate(values,c(&quot;start_value&quot;,&quot;end_value&quot;),sep = &quot;-&quot;,convert = TRUE) %&gt;% 
+  mutate(range = map2(start_value,end_value,~.x:.y)) %&gt;% 
+  select(-group) %&gt;% 
+  group_by(rule) %&gt;% 
+  summarise(range = list(range))
+
+your_ticket &lt;- x %&gt;% 
+  filter(group == 1, input!=&quot;&quot;,input!=&quot;your ticket:&quot;) %&gt;% 
+  separate_rows(input, sep = &quot;,&quot;, convert = TRUE) %&gt;% 
+  mutate(field_id = row_number()) %&gt;% 
+  select(-group)
+
+other_tickets &lt;- x %&gt;% 
+  filter(group == 2,input!=&quot;&quot;,input!=&quot;nearby tickets:&quot;) %&gt;% 
+  mutate(ticket_id = row_number()) %&gt;% 
+  separate_rows(input,sep = &quot;,&quot;,convert = TRUE) %&gt;% 
+  select(-group)</code></pre>
+<p>— Problem 1 —</p>
+<blockquote>
+<p>Start by determining which tickets are completely invalid; these are tickets that contain values which aren’t valid for any field. Ignore your ticket for now.</p>
+<p>Consider the validity of the nearby tickets you scanned. What is your ticket scanning error rate?</p>
+</blockquote>
+<pre class="r language-r"><code>rule_range &lt;- rules$range %&gt;% unlist() %&gt;% unique()
+
+check_invalid &lt;- other_tickets %&gt;% 
+  mutate(check = input %in% rule_range) %&gt;% 
+  filter(!check)</code></pre>
+<pre class="r language-r"><code>head(check_invalid)</code></pre>
+<pre><code>## # A tibble: 6 x 3
+##   input ticket_id check
+##   &lt;int&gt;     &lt;int&gt; &lt;lgl&gt;
+## 1     8         2 FALSE
+## 2     4        13 FALSE
+## 3     3        23 FALSE
+## 4    24        25 FALSE
+## 5   979        29 FALSE
+## 6   984        34 FALSE</code></pre>
+<pre class="r language-r"><code>sum(check_invalid$input)</code></pre>
+<pre><code>## [1] 25895</code></pre>
+<p>— Problem 2 —</p>
+<blockquote>
+<p>Using the valid ranges for each field, determine what order the fields appear on the tickets. The order is consistent between all tickets: if seat is the third field, it is the third field on every ticket, including your ticket.</p>
+</blockquote>
+<p>Looks straightforward enough: filter out the ticket ids that are invalid, then create a field_id and summarise the values for each field_id as a vector.</p>
+<pre class="r language-r"><code>valid_other &lt;- other_tickets %&gt;%
+  filter(!ticket_id %in% check_invalid$ticket_id) %&gt;% 
+  group_by(ticket_id) %&gt;% 
+  mutate(field_id = row_number()) %&gt;% 
+  ungroup()
+
+field_summary &lt;- valid_other %&gt;%
+  arrange(input) %&gt;% 
+  group_by(field_id) %&gt;% 
+  summarise(values = list(input),
+            min = min(input,na.rm = TRUE),
+            max = max(input,na.rm = TRUE))</code></pre>
+<pre class="r language-r"><code>head(field_summary)</code></pre>
+<pre><code>## # A tibble: 6 x 4
+##   field_id values        min   max
+##      &lt;int&gt; &lt;list&gt;      &lt;int&gt; &lt;int&gt;
+## 1        1 &lt;int [190]&gt;    50   916
+## 2        2 &lt;int [190]&gt;    55   946
+## 3        3 &lt;int [190]&gt;    50   947
+## 4        4 &lt;int [190]&gt;    60   945
+## 5        5 &lt;int [190]&gt;    51   948
+## 6        6 &lt;int [190]&gt;    52   947</code></pre>
+<p>We can check all fields against all rules with crossing, which’ll create one row for every rule x field - from there, run an %in% operator to check whether all values are in a range, and then filter to where these checks are TRUE. Then summarise this by the rule so that we can see what field_options there are for each rule</p>
+<pre class="r language-r"><code>check_fields &lt;- crossing(rules,field_summary) %&gt;% 
+  mutate(range = map(range,unlist)) %&gt;% 
+  mutate(check = map2_lgl(range,values,~all(.y %in% .x))) %&gt;% 
+  filter(check)
+
+field_options &lt;- check_fields %&gt;% 
+  group_by(rule) %&gt;% 
+  summarise(n = n(),field_id = list(field_id)) %&gt;% 
+  ungroup() %&gt;% 
+  arrange(n)</code></pre>
+<pre class="r language-r"><code>field_options</code></pre>
+<pre><code>## # A tibble: 20 x 3
+##    rule                   n field_id  
+##    &lt;chr&gt;              &lt;int&gt; &lt;list&gt;    
+##  1 arrival location       1 &lt;int [1]&gt; 
+##  2 train                  2 &lt;int [2]&gt; 
+##  3 arrival station        3 &lt;int [3]&gt; 
+##  4 price                  4 &lt;int [4]&gt; 
+##  5 arrival track          5 &lt;int [5]&gt; 
+##  6 wagon                  6 &lt;int [6]&gt; 
+##  7 route                  7 &lt;int [7]&gt; 
+##  8 departure time         8 &lt;int [8]&gt; 
+##  9 departure station      9 &lt;int [9]&gt; 
+## 10 departure platform    10 &lt;int [10]&gt;
+## 11 departure date        11 &lt;int [11]&gt;
+## 12 departure location    12 &lt;int [12]&gt;
+## 13 departure track       13 &lt;int [13]&gt;
+## 14 duration              14 &lt;int [14]&gt;
+## 15 type                  15 &lt;int [15]&gt;
+## 16 arrival platform      16 &lt;int [16]&gt;
+## 17 zone                  17 &lt;int [17]&gt;
+## 18 seat                  18 &lt;int [18]&gt;
+## 19 class                 19 &lt;int [19]&gt;
+## 20 row                   20 &lt;int [20]&gt;</code></pre>
+<p>Inspecting these options, we can see that there’s only one option for arrival location, two options for train (one of which is the only option for arrival location), three options for arrival station (but two are in the previous etc) - and continuing the visual inspection shows this pattern carries forward for all twenty fields.</p>
+<p>Writing a quick little loop here to assign the fields starting with the first one.</p>
+<pre class="r language-r"><code>unassigned &lt;- field_options
+
+assigned &lt;- tibble(rule = NULL, field_id = NULL)
+
+while(nrow(unassigned)&gt;0){
+  
+  assigned &lt;- unassigned %&gt;% 
+    slice(1) %&gt;% 
+    bind_rows(assigned,.)
+  
+  unassigned &lt;- unassigned %&gt;% 
+    tail(n = -1) %&gt;% 
+    mutate(field_id = map(field_id, ~.x[!.x %in% assigned$field_id]))
+  
+}</code></pre>
+<pre class="r language-r"><code>your_assignment &lt;- assigned %&gt;% 
+  mutate(field_id = map_dbl(field_id,unlist)) %&gt;% 
+  left_join(your_ticket, by = c(&quot;field_id&quot;)) %&gt;% 
+  filter(str_starts(rule,&quot;departure&quot;))</code></pre>
+<pre class="r language-r"><code>your_assignment</code></pre>
+<pre><code>## # A tibble: 6 x 4
+##   rule                   n field_id input
+##   &lt;chr&gt;              &lt;int&gt;    &lt;dbl&gt; &lt;int&gt;
+## 1 departure time         8       19   193
+## 2 departure station      9        1    61
+## 3 departure platform    10       13   197
+## 4 departure date        11       20   157
+## 5 departure location    12       15   181
+## 6 departure track       13        7    89</code></pre>
+<pre class="r language-r"><code>prod(your_assignment$input)</code></pre>
+<pre><code>## [1] 5865723727753</code></pre>
+</details>
+</div>
+<div id="day-seventeen" class="section level2">
+<h2>Day Seventeen</h2>
+<details>
+<p><summary> Conway’s Game of Life was there in a previous day (day 11) - this one expanded into multiple dimensions. I wrote a brute force naive solution, went to bed, and gambled on it solving for when I woke up (which it did)! I then went back and trimmed it down to two minutes runtime, so that was pretty nice! </summary></p>
+<p>— Description —</p>
+<blockquote>
+<p>The experimental energy source is based on cutting-edge technology: a set of Conway Cubes contained in a pocket dimension! When you hear it’s having problems, you can’t help but agree to take a look.</p>
+<p>The pocket dimension contains an infinite 3-dimensional grid. At every integer 3-dimensional coordinate (x,y,z), there exists a single cube which is either active or inactive.</p>
+</blockquote>
+<p>So essentially Conway’s game of life again…but in three dimensions?</p>
+<p>— Data —</p>
+<pre class="r language-r"><code>input_17 &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-17.txt&quot;)
+input_17_e &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-17-example-1.txt&quot;)</code></pre>
+<p>— Cleaning —</p>
+<p>Exploring a new part of R to me: arrays, which are vertically stacked matrices.</p>
+<pre class="r language-r"><code>example_matrix &lt;- tibble(x = input_17_e) %&gt;%
+  mutate(x = str_split(x, &quot;&quot;)) %&gt;%
+  unnest_wider(x, names_sep = &quot;_&quot;) %&gt;%
+  mutate_all(~ case_when(.x == &quot;#&quot; ~ 1, TRUE ~ 0)) %&gt;%
+  as.matrix()
+
+example_empty &lt;- matrix(
+  data = rep(0, length(example_matrix)),
+  nrow = nrow(example_matrix),
+  ncol = ncol(example_matrix)
+)
+
+example_array &lt;- c(example_empty, example_matrix, example_empty) %&gt;%
+  array(dim = c(nrow(example_matrix), ncol(example_matrix), 3))
+
+input_matrix &lt;- tibble(x = input_17) %&gt;%
+  mutate(x = str_split(x, &quot;&quot;)) %&gt;%
+  unnest_wider(x, names_sep = &quot;_&quot;) %&gt;%
+  mutate_all(~ case_when(.x == &quot;#&quot; ~ 1, TRUE ~ 0)) %&gt;%
+  as.matrix()
+
+input_empty &lt;- matrix(
+  data = rep(0, length(input_matrix)), byrow = TRUE,
+  nrow = nrow(input_matrix),
+  ncol = ncol(input_matrix)
+)
+
+input_array &lt;- c(input_empty, input_matrix, input_empty) %&gt;%
+  array(dim = c(nrow(input_matrix), ncol(input_matrix), 3))</code></pre>
+<p>Okay! So now we have the starting states of the example as <code>example_array</code> and the actual problem as <code>input_array</code>. We can access the dimensions of the arrays via</p>
+<pre class="r language-r"><code>dim(example_array)</code></pre>
+<pre><code>## [1] 3 3 3</code></pre>
+<p>and access a specific layer with array[row,column,layer].</p>
+<pre class="r language-r"><code>example_array[1, 2, 2]</code></pre>
+<pre><code>## [1] 1</code></pre>
+<p>— Problem 1 —</p>
+<p>We can build out a list of indices with the dimensions, I think!</p>
+<pre class="r language-r"><code># array &lt;- example_array
+
+get_indices &lt;- function(array) {
+  dimensions &lt;- dim(array)
+
+  actual_indices &lt;- crossing(
+    x = seq_len(dimensions[[1]]),
+    y = seq_len(dimensions[[2]]),
+    z = seq_len(dimensions[[3]])
+  ) %&gt;%
+    arrange(z, x, y) %&gt;%
+    mutate(
+      value = pmap_dbl(list(x, y, z), ~ array[...]),
+      x = x + 1,
+      y = y + 1
+    )
+
+  indices &lt;- crossing(
+    x = seq_len(dimensions[[1]] + 2),
+    y = seq_len(dimensions[[2]] + 2),
+    z = seq_len(dimensions[[3]])
+  ) %&gt;%
+    arrange(z, x, y) %&gt;%
+    left_join(actual_indices, by = c(&quot;x&quot;, &quot;y&quot;, &quot;z&quot;)) %&gt;%
+    mutate_all(replace_na, 0)
+
+  return(indices)
+}
+
+example_indices &lt;- get_indices(example_array)</code></pre>
+<p>Now to create a function to check the neighbouring indices and count nearby occupied cells.</p>
+<pre class="r language-r"><code># indices &lt;- example_indices
+# x &lt;- 1
+# y &lt;- 2
+# z &lt;- 2
+
+count_neighbours &lt;- function(x, y, z, indices) {
+  x_max &lt;- max(indices$x)
+  y_max &lt;- max(indices$y)
+  z_max &lt;- max(indices$z)
+
+  increments &lt;- c(-1, 0, 1)
+
+  neighbours &lt;- crossing(
+    x = increments + x,
+    y = increments + y,
+    z = increments + z
+  ) %&gt;%
+    filter(
+      !(.data$x == .env$x &amp; .data$y == .env$y &amp; .data$z == .env$z),
+      between(.data$x, 1, x_max),
+      between(.data$y, 1, y_max),
+      between(.data$z, 1, z_max)
+    ) %&gt;%
+    mutate(value = pmap_dbl(list(x, y, z), ~ indices$value[indices$x == ..1 &amp; indices$y == ..2 &amp; indices$z == ..3])) %&gt;%
+    pull(value) %&gt;%
+    sum()
+
+  return(neighbours)
+}
+
+example_neighbours &lt;- example_indices %&gt;%
+  mutate(neighbours = pmap_dbl(list(x, y, z), count_neighbours, .))</code></pre>
+<p>Now that we have the neighbours, we need to increment their values based on the rules.</p>
+<pre class="r language-r"><code># indices &lt;- example_neighbours
+
+apply_rules &lt;- function(indices) {
+  x &lt;- indices %&gt;%
+    mutate(new_value = case_when(
+      value == 1 &amp; neighbours %in% c(2, 3) ~ 1,
+      value == 1 ~ 0,
+      value == 0 &amp; neighbours == 3 ~ 1,
+      TRUE ~ 0
+    ))
+  return(x)
+}
+
+example_count &lt;- example_neighbours %&gt;%
+  apply_rules()</code></pre>
+<p>(I was stumped for a while here as to why my puzzle input did not match up to the example, but consulting no-spoilers-reddit seems that they’re dropping empty x/y dimensions which is quite annoying!)</p>
+<p>Now to increment the array in every direction (but sticking with a list of indices for now, I find that easier to work with mentally)</p>
+<pre class="r language-r"><code># indices &lt;- example_count
+grow_indices &lt;- function(indices) {
+  new_x &lt;- max(indices$x + 2) %&gt;% seq_len()
+  new_y &lt;- max(indices$y + 2) %&gt;% seq_len()
+  new_z &lt;- max(indices$z + 2) %&gt;% seq_len()
+
+  new_indices &lt;- indices %&gt;%
+    transmute(
+      x = x + 1,
+      y = y + 1,
+      z = z + 1,
+      value = new_value
+    )
+
+  indices &lt;- crossing(
+    x = new_x,
+    y = new_y,
+    z = new_z
+  ) %&gt;%
+    left_join(new_indices, by = c(&quot;x&quot;, &quot;y&quot;, &quot;z&quot;)) %&gt;%
+    mutate(value = replace_na(value, 0))
+
+  return(indices)
+}
+# grow_indices(example_count)</code></pre>
+<p>Wrap it all into a caller function and for-loop.</p>
+<pre class="r language-r"><code># array &lt;- example_array
+# times &lt;- 6
+
+run_conwaycube &lt;- function(array, times) {
+  indices &lt;- get_indices(array)
+
+  for (i in seq_len(times)) {
+    indices &lt;- indices %&gt;%
+      mutate(neighbours = pmap_dbl(list(x, y, z), count_neighbours, .)) %&gt;%
+      apply_rules() %&gt;%
+      grow_indices()
+
+    message(paste(i, Sys.time()))
+  }
+
+  return(sum(indices$value))
+}
+
+run_conwaycube(input_array,6)</code></pre>
+<pre><code>1 2020-12-17 10:26:13
+2 2020-12-17 10:26:16
+3 2020-12-17 10:26:22
+4 2020-12-17 10:26:33
+5 2020-12-17 10:26:52
+6 2020-12-17 10:27:23
+
+280</code></pre>
+<p>— Problem 2 —</p>
+<p>FOUR DIMENSIONS?! (brain explodes)</p>
+<p>Actually, maybe I can just adjust my functions for a fourth dimension <code>w</code></p>
+<pre class="r language-r"><code>get_indices_4d &lt;- function(array) {
+  
+  dimensions &lt;- dim(array)
+  
+  actual_indices &lt;- crossing(
+    x = seq_len(dimensions[[1]]),
+    y = seq_len(dimensions[[2]]),
+    z = seq_len(dimensions[[3]])
+  ) %&gt;%
+    arrange(z, x, y) %&gt;%
+    mutate(
+      value = pmap_dbl(list(x, y, z), ~ array[...]),
+      x = x + 1,
+      y = y + 1,
+      w = 2
+    )
+  
+  indices &lt;- crossing(
+    x = seq_len(dimensions[[1]] + 2),
+    y = seq_len(dimensions[[2]] + 2),
+    z = seq_len(dimensions[[3]]),
+    w = seq_len(dimensions[[3]])
+  ) %&gt;%
+    arrange(z, x, y, w) %&gt;%
+    left_join(actual_indices, by = c(&quot;x&quot;, &quot;y&quot;, &quot;z&quot;, &quot;w&quot;)) %&gt;%
+    mutate_all(replace_na, 0)
+  
+  return(indices)
+}
+
+count_neighbours_4d &lt;- function(x, y, z, w, indices) {
+  x_max &lt;- max(indices$x)
+  y_max &lt;- max(indices$y)
+  z_max &lt;- max(indices$z)
+  w_max &lt;- max(indices$w)
+  
+  increments &lt;- c(-1, 0, 1)
+  
+  neighbours &lt;- crossing(
+    x = increments + x,
+    y = increments + y,
+    z = increments + z,
+    w = increments + w
+  ) %&gt;%
+    filter(
+      !(.data$x == .env$x &amp; 
+          .data$y == .env$y &amp; 
+          .data$z == .env$z &amp; 
+          .data$w == .env$w),
+      between(.data$x, 1, x_max),
+      between(.data$y, 1, y_max),
+      between(.data$z, 1, z_max),
+      between(.data$w, 1, w_max)
+    ) %&gt;%
+    mutate(
+      value = pmap_dbl(
+        list(x, y, z, w), 
+        ~ indices$value[indices$x == ..1 &amp; 
+                          indices$y == ..2 &amp; 
+                          indices$z == ..3 &amp; 
+                          indices$w == ..4])) %&gt;%
+    pull(value) %&gt;%
+    sum()
+  
+  return(neighbours)
+}
+
+# apply rules doesn&#39;t change since rules are the same
+
+grow_indices_4d &lt;- function(indices) {
+  new_x &lt;- max(indices$x + 2) %&gt;% seq_len()
+  new_y &lt;- max(indices$y + 2) %&gt;% seq_len()
+  new_z &lt;- max(indices$z + 2) %&gt;% seq_len()
+  new_w &lt;- max(indices$w + 2) %&gt;% seq_len()
+  
+  new_indices &lt;- indices %&gt;%
+    transmute(
+      x = x + 1,
+      y = y + 1,
+      z = z + 1,
+      w = w + 1,
+      value = new_value
+    )
+  
+  indices &lt;- crossing(
+    x = new_x,
+    y = new_y,
+    z = new_z,
+    w = new_w
+  ) %&gt;%
+    left_join(new_indices, by = c(&quot;x&quot;, &quot;y&quot;, &quot;z&quot;, &quot;w&quot;)) %&gt;%
+    mutate(value = replace_na(value, 0))
+  
+  return(indices)
+}
+
+run_conwaycube_4d &lt;- function(array, times) {
+  
+  indices &lt;- get_indices_4d(array)
+  
+  message(paste(Sys.time(), nrow(indices)))
+  
+  for (i in seq_len(times)) {
+    indices &lt;- indices %&gt;%
+      mutate(neighbours = pmap_dbl(list(x, y, z, w), count_neighbours_4d, .)) %&gt;%
+      apply_rules() %&gt;%
+      grow_indices_4d()
+    message(paste(i, Sys.time(), nrow(indices)))
+  }
+  return(sum(indices$value))
+}
+
+run_conwaycube_4d(input_array, 6)</code></pre>
+<pre><code>2020-12-17 02:01:36 900
+1 2020-12-17 02:01:41 3600
+2 2020-12-17 02:02:12 9604
+3 2020-12-17 02:04:46 20736
+4 2020-12-17 02:15:10 39204
+5 2020-12-17 02:50:04 67600
+6 2020-12-17 04:35:08 108900
+
+[1] 1696</code></pre>
+<p>Admittedly, I plugged this in and went to sleep - but it was the correct answer!</p>
+<p>— Iterating on Problem 2 for speed —</p>
+<p>Problem 2 takes quite some time to run. Trying a few approaches to trimming it down:</p>
+<p>Firstly, as Liam Y suggested in the R4DS Slack - arrange the neighbour function so that it’s only checking neighbours that have positive integer values:</p>
+<pre class="r language-r"><code>count_neighbours_4d &lt;- function(indices){
+
+  filtered_indices &lt;- indices %&gt;%
+    filter(value == 1) # This should reduce the amount of iteration needed!
+
+  indices %&gt;%
+    mutate(neighbours = pmap_dbl(list(x,y,z,w),check_each_neighbour,filtered_indices))
+}
+
+check_each_neighbour &lt;- function(x, y, z, w, indices){
+
+  increments &lt;- c(-1, 0, 1)
+
+  n &lt;- crossing(
+    x = increments + x,
+    y = increments + y,
+    z = increments + z,
+    w = increments + w
+  ) %&gt;%
+    filter(
+      !(.data$x == .env$x &amp; 
+          .data$y == .env$y &amp; 
+          .data$z == .env$z &amp; 
+          .data$w == .env$w)
+    ) %&gt;%
+    mutate(
+      value = pmap(list(.data$x,.data$y,.data$z,.data$w),
+                   ~(indices$value[indices$x == ..1 &amp; indices$y == ..2 &amp; indices$z == ..3 &amp; indices$w == ..4]))) %&gt;%
+    pull(value) %&gt;%
+    unlist() %&gt;%
+    sum(na.rm = TRUE)
+
+  return(n)
+}
+
+run_conwaycube_4d &lt;- function(array, times) {
+  indices &lt;- get_indices_4d(array)
+
+  message(paste(Sys.time(), nrow(indices)))
+
+  for (i in seq_len(times)) {
+    indices &lt;- indices %&gt;%
+      count_neighbours_4d() %&gt;% 
+      apply_rules() %&gt;%
+      grow_indices_4d()
+
+    message(paste(i, Sys.time(), nrow(indices)))
+  }
+
+  return(sum(indices$value))
+}
+
+run_conwaycube_4d(input_array, 6)</code></pre>
+<pre><code>2020-12-17 16:08:14 900
+1 2020-12-17 16:08:18 3600
+2 2020-12-17 16:08:38 9604
+3 2020-12-17 16:09:29 20736
+4 2020-12-17 16:11:39 39204
+5 2020-12-17 16:15:26 67600
+6 2020-12-17 16:25:28 108900
+
+[1] 1696</code></pre>
+<p>Just doing that much shrunk the run-time from 2 hours 35 minutes to ~17 minutes! I can do better though, I think - in Day 11’s final approach, I arranged things into a matrix and approached it from there - I think I can definitely do the same here! (and also, add parallel processing because duh)</p>
+<pre class="r language-r"><code>count_neighbours_4d &lt;- function(indices){
+
+  v &lt;- indices %&gt;% 
+    arrange(w,z,y,x) %&gt;% 
+    pull(value)
+  
+  a &lt;- array(v,dim = c(max(indices$x),
+                       max(indices$y),
+                       max(indices$z),
+                       max(indices$w)))
+
+  i &lt;- indices %&gt;%
+    mutate(neighbours = future_pmap_dbl(.l = list(.data$x,.data$y,.data$z,.data$w),.f = check_each_neighbour,a = .env$a))
+
+  return(i)
+}
+
+check_each_neighbour &lt;- function(x, y, z, w, a){
+
+  increments &lt;- c(-1, 0, 1)
+
+  # browser()
+  
+  n &lt;- crossing(
+    x = increments + x,
+    y = increments + y,
+    z = increments + z,
+    w = increments + w
+  ) %&gt;%
+    filter(
+      !(.data$x == .env$x &amp; 
+          .data$y == .env$y &amp; 
+          .data$z == .env$z &amp; 
+          .data$w == .env$w),
+      between(.data$x,1,dim(a)[[1]]),
+      between(.data$y,1,dim(a)[[2]]),
+      between(.data$z,1,dim(a)[[3]]),
+      between(.data$w,1,dim(a)[[4]]),
+    ) %&gt;%
+    mutate(
+      value = pmap_dbl(
+        list(.data$x,.data$y,.data$z,.data$w),
+        ~a[..1,..2,..3,..4])) %&gt;%
+    pull(value) %&gt;%
+    unlist() %&gt;%
+    sum(na.rm = TRUE)
+
+  return(n)
+}
+
+run_conwaycube_4d &lt;- function(array, times) {
+  indices &lt;- get_indices_4d(array)
+
+  message(paste(Sys.time(), nrow(indices)))
+
+  for (i in seq_len(times)) {
+    indices &lt;- indices %&gt;%
+      count_neighbours_4d() %&gt;% 
+      apply_rules() %&gt;%
+      grow_indices_4d()
+
+    message(paste(i, Sys.time(), nrow(indices)))
+  }
+
+  return(sum(indices$value))
+}
+
+run_conwaycube_4d(input_array, 6)</code></pre>
+<pre><code>2020-12-17 18:39:43 900
+1 2020-12-17 18:39:45 3600
+2 2020-12-17 18:39:48 9604
+3 2020-12-17 18:39:56 20736
+4 2020-12-17 18:40:13 39204
+5 2020-12-17 18:40:44 67600
+6 2020-12-17 18:41:39 108900
+[1] 1696</code></pre>
+<p>Shaving it down to two minutes runtime is extremely satisfying!</p>
+</details>
+</div>
+<div id="day-eighteen" class="section level2">
+<h2>Day Eighteen</h2>
+<details>
+<p><summary> I went to bed thinking that it was a regex problem and that I’d need to essentially write my own parser - but I eventually thought of tricking the R parser to evaluate in the order I wanted it to, and that was much less painful! </summary></p>
+<p>— Description —</p>
+<blockquote>
+<p>Unfortunately, it seems like this “math” follows different rules than you remember.</p>
+<p>The homework (your puzzle input) consists of a series of expressions that consist of addition (+), multiplication (*), and parentheses ((…)). Just like normal math, parentheses indicate that the expression inside must be evaluated before it can be used by the surrounding expression. Addition still finds the sum of the numbers on both sides of the operator, and multiplication still finds the product.</p>
+<p>However, the rules of operator precedence have changed. Rather than evaluating multiplication before addition, the operators have the same precedence, and are evaluated left-to-right regardless of the order in which they appear.</p>
+</blockquote>
+<p>— Data —</p>
+<pre class="r language-r"><code>input_18 &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-18.txt&quot;)</code></pre>
+<p>— Cleaning —</p>
+<pre class="r language-r"><code>operations &lt;- tibble(x = input_18)</code></pre>
+<p>— Problem 1 —</p>
+<p>R doesn’t have editable math operator precedence (which is a good thing!), but we can trick the R parser into evaluating <code>*</code> at the same level as <code>+</code> by string-replacing <code>*</code> with <code>-</code> and then switching the definition of <code>-</code> to be equal to <code>*</code>.</p>
+<p>The R parser will read the operator list and decide which ones to do, and it knows that “+” is equal in precedence to “-”. So it will evaluate them left to right, and it goes back to the new definition of “-” which is "*".</p>
+<pre class="r language-r"><code>`-` &lt;- `*`
+  
+p1 &lt;- operations %&gt;% 
+  mutate(modified_x = str_replace_all(x,&quot;\\*&quot;,&quot;\\-&quot;),
+         output = map_dbl(modified_x,~ eval(parse(text = .x))))</code></pre>
+<pre class="r language-r"><code>head(p1)</code></pre>
+<pre><code>## # A tibble: 6 x 2
+##   modified_x                                                              output
+##   &lt;chr&gt;                                                                    &lt;dbl&gt;
+## 1 9 - 8 + 2 + (4 - (2 - 2 + 9 - 2) - 9 - 3 - 8) + 8 - 5                   1.13e5
+## 2 8 - (9 + 5 + 5 - 6 + 8 - 3) - 5 - 7 - 4 + 9                             4.10e5
+## 3 (9 + (2 - 6 + 7 - 5)) - (7 + 7 - 5 + (6 + 2 + 6) - (7 - 8 - 8 + 9))~    7.98e6
+## 4 ((8 + 3 - 6 - 2) - 9 + 3) + 5 + 6 - 3                                   3.61e3
+## 5 6 - (9 + 6 - (7 + 4 + 2 + 5 + 6) - 7 + 3 - (5 - 8 - 6 + 6 - 7 - 8))~    1.67e9
+## 6 (8 - 6 + 8) + 6 - 8 - (9 - (6 + 8 - 3 + 8) + (7 - 9 - 6 - 3) - 3 + ~    9.44e6</code></pre>
+<pre class="r language-r"><code>sum(p1$output)</code></pre>
+<pre><code>## [1] 16332191652452</code></pre>
+<p>For extra credit, here’s the abstract syntax tree for the first operation as written normally:</p>
+<pre class="r language-r"><code>lobstr::ast(expression(9 * 8 + 2 + (4 * (2 * 2 + 9 * 2) * 9 * 3 * 8) + 8 * 5))</code></pre>
+<pre><code>## o-expression 
+## \-o-`+` 
+##   +-o-`+` 
+##   | +-o-`+` 
+##   | | +-o-`*` 
+##   | | | +-9 
+##   | | | \-8 
+##   | | \-2 
+##   | \-o-`(` 
+##   |   \-o-`*` 
+##   |     +-o-`*` 
+##   |     | +-o-`*` 
+##   |     | | +-o-`*` 
+##   |     | | | +-4 
+##   |     | | | \-o-`(` 
+##   |     | | |   \-o-`+` 
+##   |     | | |     +-o-`*` 
+##   |     | | |     | +-2 
+##   |     | | |     | \-2 
+##   |     | | |     \-o-`*` 
+##   |     | | |       +-9 
+##   |     | | |       \-2 
+##   |     | | \-9 
+##   |     | \-3 
+##   |     \-8 
+##   \-o-`*` 
+##     +-8 
+##     \-5</code></pre>
+<p>and the revised version:</p>
+<pre class="r language-r"><code>lobstr::ast(expression(9 - 8 + 2 + (4 - (2 - 2 + 9 - 2) - 9 - 3 - 8) + 8 - 5))</code></pre>
+<pre><code>## o-expression 
+## \-o-`-` 
+##   +-o-`+` 
+##   | +-o-`+` 
+##   | | +-o-`+` 
+##   | | | +-o-`-` 
+##   | | | | +-9 
+##   | | | | \-8 
+##   | | | \-2 
+##   | | \-o-`(` 
+##   | |   \-o-`-` 
+##   | |     +-o-`-` 
+##   | |     | +-o-`-` 
+##   | |     | | +-o-`-` 
+##   | |     | | | +-4 
+##   | |     | | | \-o-`(` 
+##   | |     | | |   \-o-`-` 
+##   | |     | | |     +-o-`+` 
+##   | |     | | |     | +-o-`-` 
+##   | |     | | |     | | +-2 
+##   | |     | | |     | | \-2 
+##   | |     | | |     | \-9 
+##   | |     | | |     \-2 
+##   | |     | | \-9 
+##   | |     | \-3 
+##   | |     \-8 
+##   | \-8 
+##   \-5</code></pre>
+<p>— Problem 2 —</p>
+<p>Problem 2 is in the same vein but now just needs the <code>+</code> evaluated before the <code>*</code>, so we can do the same <code>*</code> to <code>-</code> swap and then now switch <code>+</code> to the <code>*</code> symbol, so that R thinks it is evaluated before the <code>-</code>.</p>
+<pre class="r language-r"><code>`-` &lt;- `*`
+`*` &lt;- `+`
+  
+p2 &lt;- operations %&gt;% 
+  mutate(modified_x = str_replace_all(x,&quot;\\*&quot;,&quot;\\-&quot;),
+         modified_x = str_replace_all(modified_x,&quot;\\+&quot;,&quot;\\*&quot;),
+         output = map_dbl(modified_x,~ eval(parse(text = .x))))</code></pre>
+<pre class="r language-r"><code>head(p2)</code></pre>
+<pre><code>## # A tibble: 6 x 2
+##   modified_x                                                              output
+##   &lt;chr&gt;                                                                    &lt;dbl&gt;
+## 1 9 - 8 * 2 * (4 - (2 - 2 * 9 - 2) - 9 - 3 - 8) * 8 - 5                   1.71e6
+## 2 8 - (9 * 5 * 5 - 6 * 8 - 3) - 5 - 7 - 4 * 9                             2.90e6
+## 3 (9 * (2 - 6 * 7 - 5)) - (7 * 7 - 5 * (6 * 2 * 6) - (7 - 8 - 8 * 9))~    7.04e7
+## 4 ((8 * 3 - 6 - 2) - 9 * 3) * 5 * 6 - 3                                   4.78e3
+## 5 6 - (9 * 6 - (7 * 4 * 2 * 5 * 6) - 7 * 3 - (5 - 8 - 6 * 6 - 7 - 8))~    4.64e9
+## 6 (8 - 6 * 8) * 6 - 8 - (9 - (6 * 8 - 3 * 8) * (7 - 9 - 6 - 3) - 3 * ~    4.81e8</code></pre>
+<pre class="r language-r"><code>sum(p2$output)</code></pre>
+<pre><code>## [1] 351175492232654</code></pre>
+<p>The same “extra credit exercise”:</p>
+<pre class="r language-r"><code>lobstr::ast(expression(9 * 8 + 2 + (4 * (2 * 2 + 9 * 2) * 9 * 3 * 8) + 8 * 5))</code></pre>
+<pre><code>## o-expression 
+## \-o-`+` 
+##   +-o-`+` 
+##   | +-o-`+` 
+##   | | +-o-`*` 
+##   | | | +-9 
+##   | | | \-8 
+##   | | \-2 
+##   | \-o-`(` 
+##   |   \-o-`*` 
+##   |     +-o-`*` 
+##   |     | +-o-`*` 
+##   |     | | +-o-`*` 
+##   |     | | | +-4 
+##   |     | | | \-o-`(` 
+##   |     | | |   \-o-`+` 
+##   |     | | |     +-o-`*` 
+##   |     | | |     | +-2 
+##   |     | | |     | \-2 
+##   |     | | |     \-o-`*` 
+##   |     | | |       +-9 
+##   |     | | |       \-2 
+##   |     | | \-9 
+##   |     | \-3 
+##   |     \-8 
+##   \-o-`*` 
+##     +-8 
+##     \-5</code></pre>
+<p>revised to:</p>
+<pre class="r language-r"><code>lobstr::ast(9 - 8 * 2 * (4 - (2 - 2 * 9 - 2) - 9 - 3 - 8) * 8 - 5)</code></pre>
+<pre><code>## o-`-` 
+## +-o-`-` 
+## | +-9 
+## | \-o-`*` 
+## |   +-o-`*` 
+## |   | +-o-`*` 
+## |   | | +-8 
+## |   | | \-2 
+## |   | \-o-`(` 
+## |   |   \-o-`-` 
+## |   |     +-o-`-` 
+## |   |     | +-o-`-` 
+## |   |     | | +-o-`-` 
+## |   |     | | | +-4 
+## |   |     | | | \-o-`(` 
+## |   |     | | |   \-o-`-` 
+## |   |     | | |     +-o-`-` 
+## |   |     | | |     | +-2 
+## |   |     | | |     | \-o-`*` 
+## |   |     | | |     |   +-2 
+## |   |     | | |     |   \-9 
+## |   |     | | |     \-2 
+## |   |     | | \-9 
+## |   |     | \-3 
+## |   |     \-8 
+## |   \-8 
+## \-5</code></pre>
+</details>
+</div>
+<div id="day-nineteen" class="section level2">
+<h2>Day Nineteen</h2>
+<details>
+<p><summary> This one was the regex problem that I feared in Day Eighteen’s problem. Looping over the rules and substituting them worked okay in the first part, but I spent far too long trying to learn recursive regex and eventually reduced the problem down to hardcoded recursion. </summary></p>
+<p>— Description —</p>
+<blockquote>
+<p>They think their satellite has collected an image of a sea monster! Unfortunately, the connection to the satellite is having problems, and many of the messages sent back from the satellite have been corrupted.</p>
+<p>They sent you a list of the rules valid messages should obey and a list of received messages they’ve collected so far (your puzzle input).</p>
+<p>Your goal is to determine the number of messages that completely match rule 0.</p>
+</blockquote>
+<p>— Data —</p>
+<pre class="r language-r"><code>input_19 &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-19.txt&quot;)
+
+input_19_e &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-19-e.txt&quot;)
+
+input_19_e2 &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-19-e2.txt&quot;)</code></pre>
+<p>— Cleaning —</p>
+<p>Seems nice to split the list of rules into its own tibble.</p>
+<pre class="r language-r"><code>messages_e &lt;- tibble(message = input_19_e) %&gt;% 
+  mutate(type = cumsum(message == &quot;&quot;)) %&gt;% 
+  filter(type == 1,message !=&quot;&quot;) %&gt;% 
+  select(-type)
+
+rules_e &lt;- tibble(rule = input_19_e) %&gt;% 
+  mutate(type = cumsum(rule == &quot;&quot;)) %&gt;% 
+  filter(type == 0) %&gt;% 
+  select(-type) %&gt;% 
+  separate(rule,into = c(&quot;rule_id&quot;,&quot;rule_desc&quot;), sep = &quot;: &quot;)
+
+messages &lt;- tibble(message = input_19) %&gt;% 
+  mutate(type = cumsum(message == &quot;&quot;)) %&gt;% 
+  filter(type == 1,message !=&quot;&quot;) %&gt;% 
+  select(-type)
+
+rules &lt;- tibble(rule = input_19) %&gt;% 
+  mutate(type = cumsum(rule == &quot;&quot;)) %&gt;% 
+  filter(type == 0) %&gt;% 
+  select(-type) %&gt;% 
+  separate(rule,into = c(&quot;rule_id&quot;,&quot;rule_desc&quot;), sep = &quot;: &quot;)</code></pre>
+<p>— Problem 1 —</p>
+<blockquote>
+<p>Your goal is to determine the number of messages that completely match rule 0.</p>
+</blockquote>
+<p>Okay, so writing a function that loops over the rules, taking only complete rules (i.e. rules without numbers) and string-replacing them into their rule_id. Also need to add padding so that the rule id doesn’t match individual digits, and need to add parentheses for rules that have an OR condition.</p>
+<pre class="r language-r"><code>rule_recurse &lt;- function(rules){
+  
+  rules &lt;- rules %&gt;% 
+    mutate(rule_desc = if_else(str_detect(rule_desc,&quot;a|b&quot;), 
+                               str_remove_all(rule_desc,&#39;\\&quot;&#39;), 
+                               rule_desc),
+           rule_id = paste0(&quot; &quot;,rule_id,&quot; &quot;),
+           rule_desc = paste0(&quot; &quot;,rule_desc,&quot; &quot;),
+           rule_desc = if_else(str_detect(rule_desc,&quot;\\|&quot;),
+                               paste0(&quot; ( &quot;,rule_desc,&quot; ) &quot;),
+                               rule_desc))
+  
+  while(any(str_detect(rules$rule_desc,&quot;[0-9]&quot;))){
+    
+    x &lt;- rules %&gt;% 
+      filter(!str_detect(rule_desc,&quot;[0-9]&quot;))
+    
+    for(i in seq_along(x$rule_id)){
+      rules$rule_desc &lt;- str_replace_all(rules$rule_desc, x$rule_id[i], x$rule_desc[i])
+    }
+  }
+  
+  rules &lt;- rules %&gt;% 
+    mutate_all(str_remove_all,&quot; &quot;) %&gt;% 
+    mutate(rule_desc = paste0(&quot;^&quot;,rule_desc,&quot;$&quot;))
+  
+  return(rules)
+}
+ 
+rules_e1 &lt;- rules_e %&gt;% 
+  rule_recurse() %&gt;% 
+  filter(rule_id == 0) %&gt;% 
+  pull(rule_desc)
+
+messages_e1 &lt;- messages_e %&gt;% 
+  mutate(match = str_detect(message,rules_e1))
+
+p1_rules &lt;- rules %&gt;% 
+  rule_recurse() %&gt;% 
+  filter(rule_id == 0) %&gt;% 
+  pull(rule_desc)
+
+p1_messages &lt;- messages %&gt;% 
+  mutate(match = str_detect(message,p1_rules))
+
+sum(p1_messages$match)</code></pre>
+<pre><code>## [1] 122</code></pre>
+<p>— Problem 2 —</p>
+<blockquote>
+<p>Replace 8 and 11 with new rules that create looping - how to fix?</p>
+</blockquote>
+<p>Approach: “Pray to the regex gods and hope they find you worthy”</p>
+<p>Deconstructing the rules changes:</p>
+<p>8 is <code>42 | 42 8</code> - so it starts as <code>42</code>, and then when replaced with itself becomes <code>42 42</code>, <code>42 42 42</code> etc - we can represent this as “one or more of” pretty easily: <code>42 +</code> handles that condition.</p>
+<p>11 is trickier: <code>42 31 | 42 11 31</code> means plugging <code>42 31</code> recursively into the middle of another set of 42 and 31. I spent a reading through regex recursion on this one, went to bed, continued trying regex recursion on it, until I eventually decided to hardcode <code>42 31 | 42 42 31 31 | 42 42 42 31 31 31</code> etc for like ten iterations of the loop. (I tried fifty, and got a literal stack overflow error!)</p>
+<p><img src="https://i.imgur.com/eudI6NN.png" /></p>
+<pre class="r language-r"><code>messages_e2 &lt;- tibble(message = input_19_e2) %&gt;% 
+  mutate(type = cumsum(message == &quot;&quot;)) %&gt;% 
+  filter(type == 1,message !=&quot;&quot;) %&gt;% 
+  select(-type)
+
+rules_e2 &lt;- tibble(rule = input_19_e2) %&gt;% 
+  mutate(type = cumsum(rule == &quot;&quot;)) %&gt;% 
+  filter(type == 0) %&gt;% 
+  select(-type) %&gt;% 
+  separate(rule,into = c(&quot;rule_id&quot;,&quot;rule_desc&quot;), sep = &quot;: &quot;)
+
+rule_updater &lt;- function(rules){
+  rules %&gt;% 
+    mutate(
+      rule_desc = case_when(
+        rule_id == &quot;8&quot; ~ &quot;42 +&quot;,
+        rule_id == &quot;11&quot; ~ 
+          paste(
+            map_chr(1:10, ~rep_len(42,.x) %&gt;% paste(collapse = &quot; &quot;)),
+            map_chr(1:10, ~rep_len(31,.x) %&gt;% paste(collapse = &quot; &quot;)),
+            collapse = &quot; | &quot;),
+        TRUE ~ rule_desc))
+}
+
+p2_rules_e &lt;- rules_e2 %&gt;% 
+  rule_updater() %&gt;% 
+  rule_recurse() %&gt;% 
+  filter(rule_id == 0) %&gt;% 
+  pull(rule_desc)
+
+messages_p2_e &lt;- messages_e2 %&gt;%
+  mutate(match = str_detect(message,p2_rules_e))
+
+sum(messages_p2_e$match)</code></pre>
+<pre><code>## [1] 12</code></pre>
+<pre class="r language-r"><code>p2_rules &lt;- rules %&gt;% 
+  rule_updater() %&gt;% 
+  rule_recurse() %&gt;% 
+  filter(rule_id == 0) %&gt;% 
+  pull(rule_desc)
+
+p2_messages &lt;- messages %&gt;% 
+  mutate(match = str_detect(message, p2_rules))
+
+sum(p2_messages$match)</code></pre>
+<pre><code>## [1] 287</code></pre>
+<p>Working through the example only sort of helped: I got the example to be 12 but the actual problem ended up failing for hours. It was a good filter for bad solutions though, because when the example was wrong I knew not to bother with the actual problem.</p>
+</details>
+</div>
+<div id="day-twenty" class="section level2">
+<h2>Day Twenty</h2>
+<details>
+<p><summary> Jigsaw puzzle solving turned out to be quite arduous. I came away from the first part quite confident (cracking the top 1000 solves for part 1!) but obviously had taken the shortcut for finding the corners and didn’t actually solve the puzzle tiles into a single matrix. Iterating over the rest of the puzzle took me the better part of the afternoon and evening.</p>
+<p>I never felt entirely out of my depth, but it was definitely a slog for motivation. </summary></p>
+<p>— Description —</p>
+<blockquote>
+<p>The camera array consists of many cameras; rather than produce a single square image, they produce many smaller square image tiles that need to be reassembled back into a single image.</p>
+<p>Worse yet, the camera array appears to be malfunctioning: each image tile has been rotated and flipped to a random orientation. Your first task is to reassemble the original image by orienting the tiles so they fit together.</p>
+</blockquote>
+<p>— Data —</p>
+<pre class="r language-r"><code>input_20 &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-20.txt&quot;)</code></pre>
+<p>— Cleaning —</p>
+<pre class="r language-r"><code>tiles &lt;- tibble(tile = input_20) %&gt;%
+  mutate(id = if_else(str_starts(tile,&quot;Tile&quot;),tile,NA_character_),
+         id = parse_number(id)) %&gt;%  
+  fill(id) %&gt;% 
+  filter(tile!=&quot;&quot;,str_detect(tile,&quot;Tile &quot;,negate = TRUE)) %&gt;%
+  mutate(tile = str_split(tile,&quot;&quot;)) %&gt;% 
+  group_by(id) %&gt;% 
+  summarise(tile = list(unlist(tile))) %&gt;% 
+  mutate(tile = map(tile,~matrix(.x,nrow = 10, ncol = 10, byrow = TRUE)))</code></pre>
+<p>— Problem 1 —</p>
+<p>Find corner tiles.</p>
+<pre class="r language-r"><code>tile_edges &lt;- tiles %&gt;% 
+  mutate(tile_edges = map(tile, 
+                          ~list(
+                            top = .x[1,], top_rev = rev(.x[1,]),
+                            bottom = .x[10,], bottom_rev = rev(.x[10,]),
+                            left = .x[,1], left_rev = rev(.x[,1]),
+                            right = .x[,10], right_rev = rev(.x[,10])))) %&gt;% 
+  unnest_longer(tile_edges,indices_to = &quot;border_position&quot;) %&gt;% 
+  transmute(id,border_position,tile_edges = map_chr(tile_edges,paste,collapse = &quot;&quot;)) 
+
+p1 &lt;- tile_edges %&gt;% 
+  group_by(tile_edges) %&gt;% 
+  mutate(matches = n()-1) %&gt;% 
+  ungroup() %&gt;% 
+  group_by(id) %&gt;% 
+  summarise(sum_matches = sum(matches)/2) %&gt;% 
+  filter(sum_matches == 2)
+
+p1</code></pre>
+<pre><code>## # A tibble: 4 x 2
+##      id sum_matches
+##   &lt;dbl&gt;       &lt;dbl&gt;
+## 1  1109           2
+## 2  1693           2
+## 3  2909           2
+## 4  3371           2</code></pre>
+<pre class="r language-r"><code>prod(p1$id)</code></pre>
+<pre><code>## [1] 18411576553343</code></pre>
+<p>— Problem 2 —</p>
+<p>Assemble the picture and find the sea monster.</p>
+<p>(Internal swearing as I only found the corners first and didn’t actually do the joining bit, so time to catch up)</p>
+<pre class="r language-r"><code>matching_edges &lt;- tile_edges %&gt;% 
+  group_by(tile_edges) %&gt;% 
+  mutate(matches = n()-1, 
+         matching_tiles = list(id)) %&gt;% 
+  ungroup() %&gt;% 
+  filter(matches!=0) %&gt;% 
+  mutate(matching_tiles = map2_dbl(matching_tiles,id,~.x[.x!=.y])) %&gt;%
+  group_by(id) %&gt;% 
+  mutate(matches = sum(matches)/2) %&gt;% 
+  ungroup()
+
+edges &lt;- matching_edges %&gt;% 
+  filter(matches &lt;= 3) %&gt;% 
+  distinct(id,matches,matching_tiles) %&gt;% 
+  filter(matching_tiles %in% .$id)
+
+corners &lt;- matching_edges %&gt;% 
+  filter(matches == 2)</code></pre>
+<pre class="r language-r"><code>id_matrix &lt;- matrix(numeric(),nrow = 12, ncol = 12)
+
+perimeter &lt;- c(1109,1181)
+perimeter_options &lt;- edges %&gt;% 
+  filter(!matching_tiles %in% perimeter)
+
+while(nrow(perimeter_options)&gt;0){
+ 
+  i &lt;- length(perimeter)+1
+  
+  perimeter[i] &lt;- perimeter_options %&gt;% 
+    filter(id == tail(perimeter,1)) %&gt;% 
+    pull(matching_tiles)
+  
+  perimeter_options &lt;- perimeter_options %&gt;% 
+    filter(!matching_tiles %in% perimeter)
+}
+
+id_matrix[1,] &lt;- perimeter[1:12]
+id_matrix[,12] &lt;- perimeter[12:23]
+id_matrix[12,] &lt;- rev(perimeter[23:34])
+id_matrix[,1] &lt;- c(1109,rev(perimeter[34:44]))
+
+rm(perimeter_options,perimeter)
+
+id_matrix</code></pre>
+<pre><code>##       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
+##  [1,] 1109 1181 2719 1373 1303 1637 3023 1447 1361  1019  1733  1693
+##  [2,] 1487   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA  1609
+##  [3,] 3319   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA  2861
+##  [4,] 2423   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA  1867
+##  [5,] 2161   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA  3229
+##  [6,] 2999   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA  3313
+##  [7,] 1069   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA  3677
+##  [8,] 2371   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA  3833
+##  [9,] 3821   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA  3779
+## [10,] 1523   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA  2819
+## [11,] 3637   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA  2917
+## [12,] 3371 2543 2749 3301 2141 1061 1597 2459 1759  2633  2207  2909</code></pre>
+<p>YAY WE HAVE THE PERIMETER! (Still a mountain to climb, but hey.)</p>
+<p>Filling in the middles by looking at the tile above and the tile to the left.</p>
+<pre class="r language-r"><code>middles &lt;- matching_edges %&gt;% 
+  filter(matches == 4) %&gt;% 
+  distinct(id,matching_tiles)
+
+for(col in 2:11){
+  for(row in 2:11){
+    
+    up &lt;- id_matrix[row-1,col]
+    left &lt;- id_matrix[row,col-1]
+    
+    v &lt;- middles %&gt;% 
+      filter(matching_tiles %in% c(up,left)) %&gt;% 
+      group_by(id) %&gt;% 
+      summarise(n = n()) %&gt;% 
+      filter(n == 2) %&gt;% 
+      pull(id)
+    
+    middles &lt;- middles %&gt;% filter(id!=v)
+    
+    id_matrix[row,col] &lt;- v 
+  }
+}
+
+rm(up, left, v)
+
+id_matrix</code></pre>
+<pre><code>##       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
+##  [1,] 1109 1181 2719 1373 1303 1637 3023 1447 1361  1019  1733  1693
+##  [2,] 1487 2441 3671 3221 1367 1097 3761 1601 1091  3253  1667  1609
+##  [3,] 3319 3257 3863 2593 3089 3181 2273 2699 1429  1697  3691  2861
+##  [4,] 2423 1213 1559 2969 2621 3739 1193 1823 2531  1489  2549  1867
+##  [5,] 2161 3019 3881 2411 1619 2081 2617 2707 3527  3467  1439  3229
+##  [6,] 2999 2843 2083 1789 2131 2521 3137 3673 2377  1123  1847  3313
+##  [7,] 1069 2557 2777 1049 1993 1423 3931 1153 2663  1201  1129  3677
+##  [8,] 2371 1553 3727 1249 1607 1741 2683 2039 1327  3011  1033  3833
+##  [9,] 3821 3491 1783 3877 3413 3659 3517 1879 3583  3191  3533  3779
+## [10,] 1523 3329 2677 2953 3463 1171 1627 2789 3203  3461  1103  2819
+## [11,] 3637 1997 2221 2467 2287 2551 2897 1747 3967  1657  3299  2917
+## [12,] 3371 2543 2749 3301 2141 1061 1597 2459 1759  2633  2207  2909</code></pre>
+<p>Okay! So we now have the location of each tile and now need to orient each tile correctly. Again starting from the top corner tile, now rotating and flipping the tile until it fits into the correct orientation.</p>
+<p>Some helpers from Stack Overflow: <a href="https://stackoverflow.com/questions/16496210/rotate-a-matrix-in-r-by-90-degrees-clockwise" class="uri">https://stackoverflow.com/questions/16496210/rotate-a-matrix-in-r-by-90-degrees-clockwise</a></p>
+<pre class="r language-r"><code>rotate_matrix &lt;- function(x) t(x[nrow(x):1,])
+
+flip_matrix &lt;- function(x) x[nrow(x):1,]</code></pre>
+<p>First, fill in leftmost column of the matrix, aligning top of new tile with bottom of previous tile.</p>
+<pre class="r language-r"><code>correct_tiles &lt;- tiles %&gt;% 
+  filter(id == 1109)
+
+for(i in 2:12){
+  
+  i_id &lt;- id_matrix[i,1]
+  up_id &lt;- id_matrix[i-1,1]
+  
+  up_tile &lt;- correct_tiles %&gt;% 
+    filter(id == up_id) %&gt;% 
+    pluck(&quot;tile&quot;, 1)
+  
+  up_bottom &lt;- up_tile[10,] %&gt;% paste(collapse = &quot;&quot;)
+  
+  i_tile &lt;- tiles %&gt;% 
+    filter(id == i_id) %&gt;% 
+    pluck(&quot;tile&quot;, 1)
+
+  i_list &lt;- tibble(tile = list(
+    i_tile,
+    i_tile %&gt;% rotate_matrix(),
+    i_tile %&gt;% rotate_matrix() %&gt;% rotate_matrix(),
+    i_tile %&gt;% rotate_matrix() %&gt;% rotate_matrix() %&gt;% rotate_matrix(),
+    i_tile %&gt;% flip_matrix(),
+    i_tile %&gt;% flip_matrix() %&gt;% rotate_matrix(),
+    i_tile %&gt;% flip_matrix() %&gt;% rotate_matrix() %&gt;% rotate_matrix(),
+    i_tile %&gt;% flip_matrix() %&gt;% rotate_matrix() %&gt;% rotate_matrix() %&gt;% rotate_matrix()
+  )) %&gt;% 
+    mutate(match = map_lgl(tile,~.x[1,] %&gt;% paste(collapse = &quot;&quot;) == up_bottom)) %&gt;% 
+    filter(match)
+  
+  if(nrow(i_list)==0) stop()
+  
+  i_tile &lt;- i_list$tile[[1]]
+  
+  correct_tiles &lt;- tibble(id = i_id, tile = list(i_tile)) %&gt;% 
+    bind_rows(correct_tiles,.)
+  
+}</code></pre>
+<p>Okay, now orient the top row by accessing the right hand side:</p>
+<pre class="r language-r"><code>for(i in 2:12){
+  
+  i_id &lt;- id_matrix[1,i]
+  left_id &lt;- id_matrix[1,i-1]
+  
+  left_tile &lt;- correct_tiles %&gt;% 
+    filter(id == left_id) %&gt;% 
+    pluck(&quot;tile&quot;, 1)
+  
+  left_right &lt;- left_tile[,10] %&gt;% paste(collapse = &quot;&quot;)
+  
+  i_tile &lt;- tiles %&gt;% 
+    filter(id == i_id) %&gt;% 
+    pluck(&quot;tile&quot;, 1)
+  
+  i_left &lt;- i_tile[,1] %&gt;% paste(collapse = &quot;&quot;)
+  
+  i_list &lt;- tibble(tile = list(
+    i_tile,
+    i_tile %&gt;% rotate_matrix(),
+    i_tile %&gt;% rotate_matrix() %&gt;% rotate_matrix(),
+    i_tile %&gt;% rotate_matrix() %&gt;% rotate_matrix() %&gt;% rotate_matrix(),
+    i_tile %&gt;% flip_matrix(),
+    i_tile %&gt;% flip_matrix() %&gt;% rotate_matrix(),
+    i_tile %&gt;% flip_matrix() %&gt;% rotate_matrix() %&gt;% rotate_matrix(),
+    i_tile %&gt;% flip_matrix() %&gt;% rotate_matrix() %&gt;% rotate_matrix() %&gt;% rotate_matrix()
+  )) %&gt;% 
+    mutate(match = map_lgl(tile,~.x[,1] %&gt;% paste(collapse = &quot;&quot;) == left_right)) %&gt;% 
+    filter(match)
+  
+  if(nrow(i_list)==0) stop()
+  
+  i_tile &lt;- i_list$tile[[1]]
+  
+  correct_tiles &lt;- tibble(id = i_id, tile = list(i_tile)) %&gt;% 
+    bind_rows(correct_tiles,.)
+  
+}
+
+correct_tiles</code></pre>
+<p>Now reapply the vertical orienter for each remaining column:</p>
+<pre class="r language-r"><code>for(c in 2:12){ # c is column
+  for(r in 2:12){ # r is row
+    
+    i_id &lt;- id_matrix[r,c]
+    up_id &lt;- id_matrix[r-1,c]
+    
+    up_tile &lt;- correct_tiles %&gt;% 
+      filter(id == up_id) %&gt;% 
+      pluck(&quot;tile&quot;, 1)
+    
+    up_bottom &lt;- up_tile[10,] %&gt;% paste(collapse = &quot;&quot;)
+    
+  i_tile &lt;- tiles %&gt;% 
+    filter(id == i_id) %&gt;% 
+    pluck(&quot;tile&quot;, 1)
+
+  i_list &lt;- tibble(tile = list(
+    i_tile,
+    i_tile %&gt;% rotate_matrix(),
+    i_tile %&gt;% rotate_matrix() %&gt;% rotate_matrix(),
+    i_tile %&gt;% rotate_matrix() %&gt;% rotate_matrix() %&gt;% rotate_matrix(),
+    i_tile %&gt;% flip_matrix(),
+    i_tile %&gt;% flip_matrix() %&gt;% rotate_matrix(),
+    i_tile %&gt;% flip_matrix() %&gt;% rotate_matrix() %&gt;% rotate_matrix(),
+    i_tile %&gt;% flip_matrix() %&gt;% rotate_matrix() %&gt;% rotate_matrix() %&gt;% rotate_matrix()
+  )) %&gt;% 
+    mutate(match = map_lgl(tile,~.x[1,] %&gt;% paste(collapse = &quot;&quot;) == up_bottom)) %&gt;% 
+    filter(match)
+  
+  if(nrow(i_list)==0) stop()
+  
+  i_tile &lt;- i_list$tile[[1]]
+      
+  correct_tiles &lt;- tibble(id = i_id, tile = list(i_tile)) %&gt;% 
+    bind_rows(correct_tiles,.)
+  }
+}</code></pre>
+<p>Okay, so theoretically we now have a directory of correctly oriented tiles! Now to strip out the border rows from each tile:</p>
+<pre class="r language-r"><code>borderless_tiles &lt;- correct_tiles %&gt;% 
+  mutate(tile = map(tile,~.x[2:9,2:9]))</code></pre>
+<p>And then row-bind each column together, then bind each column together into the final matrix.</p>
+<pre class="r language-r"><code>tile_matrix &lt;- matrix(character(), nrow = 96)
+
+for(c in 1:12){
+  column_matrix &lt;- matrix(character(), ncol = 8)
+  
+  for(r in 1:12){
+    tile_id &lt;- id_matrix[r,c]
+    
+    tile &lt;- borderless_tiles %&gt;% 
+      filter(id == tile_id) %&gt;% 
+      pluck(&quot;tile&quot;,1)
+    
+    column_matrix &lt;- rbind(column_matrix,tile)
+  }
+  
+  tile_matrix &lt;- cbind(tile_matrix,column_matrix)
+}</code></pre>
+<p>Now to detect a seamonster! First, the monster:</p>
+<pre class="r language-r"><code>monster &lt;- tibble(x = c(&quot;                  # &quot;, 
+                        &quot;#    ##    ##    ###&quot;,
+                        &quot; #  #  #  #  #  #   &quot;)) %&gt;% 
+  mutate(x = str_split(x,&quot;&quot;),
+         row = row_number()) %&gt;% 
+  unnest_wider(x, names_sep = &quot;&quot;) %&gt;% 
+  pivot_longer(cols = -row,names_to = &quot;col&quot;) %&gt;% 
+  mutate(col = parse_number(col)) %&gt;% 
+  filter(value == &quot;#&quot;)</code></pre>
+<p>Now, we need to loop over the tile matrix, looking at every 20-wide + 3-tall matrix to see if it’s a monster. We’ll need to do this for every iteration of the tile matrix (rotates and flips).</p>
+<pre class="r language-r"><code>scan_tile_matrix_for_monsters &lt;- function(tile_matrix,monster){
+  
+  monster_count &lt;- 0
+  
+  for(c in 1:(ncol(tile_matrix)-19)){
+    
+    for(r in 1:(nrow(tile_matrix)-2)){
+      
+      x &lt;- tile_matrix[r:(r+2),c:(c+19)]
+      
+      v &lt;- map2_lgl(monster$row,monster$col, ~x[.x,.y]==&quot;#&quot;) %&gt;% all()
+      
+      if(v) monster_count &lt;- monster_count + 1
+    }
+  }
+  
+  return(monster_count)
+}
+
+all_matrices &lt;- list(
+  tile_matrix,
+  tile_matrix %&gt;% rotate_matrix(),
+  tile_matrix %&gt;% rotate_matrix() %&gt;% rotate_matrix(),
+  tile_matrix %&gt;% rotate_matrix() %&gt;% rotate_matrix() %&gt;% rotate_matrix(),
+  flip_matrix(tile_matrix),
+  flip_matrix(tile_matrix) %&gt;% rotate_matrix(),
+  flip_matrix(tile_matrix) %&gt;% rotate_matrix() %&gt;% rotate_matrix(),
+  flip_matrix(tile_matrix) %&gt;% rotate_matrix() %&gt;% rotate_matrix() %&gt;% rotate_matrix()
+  )
+
+monster_count &lt;- map_dbl(all_matrices,scan_tile_matrix_for_monsters,monster)
+
+monster_count</code></pre>
+<pre><code>## [1]  0  0 43  0  0  0  0  0</code></pre>
+<pre class="r language-r"><code>sum(tile_matrix == &quot;#&quot;) - (max(monster_count) * nrow(monster))</code></pre>
+<pre><code>## [1] 2002</code></pre>
+<p>Whew, that was a doozy!</p>
+</details>
+</div>

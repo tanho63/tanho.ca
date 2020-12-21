@@ -6,7 +6,7 @@ summary: "Tackling the sixth through tenth days of AdventOfCode2020: custom cust
 type: rshiny
 menu:
   sidebar:
-    name: 'AdventofCode 2020, 6-10'
+    name: 'AdventofCode 2020, 06-10'
     identifier: adventcode2020-06-10
     parent: rshiny
 url: /adventcode-2020-06-10

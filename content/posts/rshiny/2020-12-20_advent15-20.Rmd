@@ -1,0 +1,1640 @@
+---
+layout: single
+title: "Advent of Code 2020, Days 16-20"
+date:   2020-12-20
+summary: "Tackling the sixteenth through twentieth days of AdventOfCode2020: Ticket Translation, Conway Cubes, Operation Order, Monster Messages, Jurassic Jigsaw!"
+type: rshiny
+menu:
+  sidebar:
+    name: 'AdventofCode 2020, 16-20'
+    identifier: adventcode2020-16-20
+    parent: rshiny
+url: /adventcode-2020-16-20
+hero: /images/rshiny/advent.jpg
+---
+
+```{r include = FALSE}
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(lubridate)
+})
+
+options(scipen = 999)
+
+knitr::opts_chunk$set(class.source = "language-r")
+```
+
+The completionist streak continues, despite ever-increasing puzzle difficulty and timelines. I'm finding myself more and more comfortable with using loops, despite previous hatred of them, and I think I'm being challenged to think about data structures and reducing my data structures to non-tibbles (i.e. matrices, vectors, lists) - which is faster to iterate over in large scale. 
+
+I'm also thinking about things like copy on modify, parallel processing, and recursion! (and an uncomfortable dose of regex).
+
+Greatly enjoying it still, although I'm now limiting how long I stay up to 60-90 minutes.
+
+```{r echo = FALSE}
+x <- tibble::tribble(
+  ~'day',     ~'time_1', ~'rank_1',      ~'time_2', ~'rank_2', 
+  20,   "00:43:06",    948,   "21:39:22",   6404,
+  19,   "01:23:47",   2466,   "11:42:08",   6929,
+  18,   "11:24:51",  13996,   "11:54:32",  12112,
+  17,   "01:45:32",   4130,   "07:49:59",   9588,
+  16,   "00:24:42",   2780,   "01:00:42",   1869)
+
+x
+```
+
+## Packages used
+
+```{r eval = FALSE}
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(here)
+  library(furrr)
+  library(lobstr)
+  library(glue)
+  
+})
+```
+
+## Day Sixteen
+
+<details>
+
+<summary> This one was pretty straightforward as a parse, clean, and map - felt lots better than day 15, but this would be quite rare for the next few days. </summary>
+
+
+--- Description ---
+
+> Unfortunately, you can't actually read the words on the ticket. You can, however, read the numbers, and so you figure out the fields these tickets must have and the valid ranges for values in those fields.
+>
+> You collect the rules for ticket fields, the numbers on your ticket, and the numbers on other nearby tickets for the same train service (via the airport security cameras) together into a single document you can reference (your puzzle input).
+
+--- Data ---
+
+```{r eval = FALSE}
+input_16 <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-16.txt")
+```
+
+--- Cleaning ---
+
+Definitely a problem that would benefit from tidying. Also going to go ahead and create an integer vector for each rule range, which will facilitate `%in%` checks later.
+
+```{r eval = FALSE}
+x <- tibble(input = input_16) %>% 
+  mutate(group = cumsum(input == ""))
+
+rules <- x %>% 
+  filter(group == 0) %>% 
+  separate(input,c("rule","values"),sep = ": ") %>% 
+  separate_rows(values, sep = " or ") %>% 
+  separate(values,c("start_value","end_value"),sep = "-",convert = TRUE) %>% 
+  mutate(range = map2(start_value,end_value,~.x:.y)) %>% 
+  select(-group) %>% 
+  group_by(rule) %>% 
+  summarise(range = list(range))
+
+your_ticket <- x %>% 
+  filter(group == 1, input!="",input!="your ticket:") %>% 
+  separate_rows(input, sep = ",", convert = TRUE) %>% 
+  mutate(field_id = row_number()) %>% 
+  select(-group)
+
+other_tickets <- x %>% 
+  filter(group == 2,input!="",input!="nearby tickets:") %>% 
+  mutate(ticket_id = row_number()) %>% 
+  separate_rows(input,sep = ",",convert = TRUE) %>% 
+  select(-group)
+
+```
+
+--- Problem 1 ---
+
+> Start by determining which tickets are completely invalid; these are tickets that contain values which aren't valid for any field. Ignore your ticket for now.
+>
+> Consider the validity of the nearby tickets you scanned. What is your ticket scanning error rate?
+
+```{r eval = FALSE}
+rule_range <- rules$range %>% unlist() %>% unique()
+
+check_invalid <- other_tickets %>% 
+  mutate(check = input %in% rule_range) %>% 
+  filter(!check)
+```
+```{r echo = FALSE}
+check_invalid <- structure(list(input = c(8L, 4L, 3L, 24L, 979L, 984L, 1L, 993L, 
+980L, 976L, 7L, 17L, 19L, 9L, 20L, 995L, 983L, 988L, 995L, 10L, 
+22L, 994L, 976L, 982L, 976L, 986L, 16L, 17L, 988L, 16L, 976L, 
+1L, 2L, 989L, 7L, 982L, 979L, 995L, 7L, 24L, 986L, 15L, 21L, 
+2L, 979L, 986L, 986L, 0L, 998L, 984L, 8L), ticket_id = c(2L, 
+13L, 23L, 25L, 29L, 34L, 35L, 43L, 51L, 53L, 54L, 62L, 65L, 72L, 
+74L, 75L, 84L, 85L, 97L, 99L, 102L, 105L, 114L, 115L, 120L, 128L, 
+130L, 134L, 140L, 144L, 146L, 153L, 154L, 156L, 160L, 164L, 168L, 
+172L, 174L, 176L, 184L, 188L, 192L, 193L, 196L, 198L, 209L, 219L, 
+225L, 236L, 238L), check = c(FALSE, FALSE, FALSE, FALSE, FALSE, 
+FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, 
+FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, 
+FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, 
+FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, 
+FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, 
+FALSE)), row.names = c(NA, -51L), class = c("tbl_df", "tbl", 
+"data.frame"))
+```
+```{r}
+head(check_invalid)
+
+sum(check_invalid$input)
+```
+
+--- Problem 2 ---
+
+> Using the valid ranges for each field, determine what order the fields appear on the tickets. The order is consistent between all tickets: if seat is the third field, it is the third field on every ticket, including your ticket.
+
+Looks straightforward enough: filter out the ticket ids that are invalid, then create a field_id and summarise the values for each field_id as a vector. 
+
+```{r eval = FALSE}
+valid_other <- other_tickets %>%
+  filter(!ticket_id %in% check_invalid$ticket_id) %>% 
+  group_by(ticket_id) %>% 
+  mutate(field_id = row_number()) %>% 
+  ungroup()
+
+field_summary <- valid_other %>%
+  arrange(input) %>% 
+  group_by(field_id) %>% 
+  summarise(values = list(input),
+            min = min(input,na.rm = TRUE),
+            max = max(input,na.rm = TRUE))
+```
+```{r echo = FALSE}
+field_summary <- structure(list(field_id = 1:6, values = list(c(50L, 55L, 56L, 
+60L, 65L, 66L, 67L, 68L, 84L, 84L, 89L, 90L, 92L, 135L, 137L, 
+139L, 147L, 156L, 160L, 161L, 163L, 167L, 170L, 170L, 171L, 172L, 
+174L, 179L, 184L, 188L, 194L, 201L, 206L, 207L, 211L, 211L, 216L, 
+216L, 218L, 218L, 219L, 220L, 221L, 245L, 250L, 252L, 259L, 261L, 
+269L, 271L, 271L, 272L, 274L, 277L, 277L, 280L, 280L, 281L, 283L, 
+288L, 301L, 302L, 302L, 307L, 310L, 311L, 312L, 318L, 322L, 325L, 
+329L, 331L, 339L, 341L, 342L, 344L, 345L, 347L, 357L, 357L, 365L, 
+366L, 369L, 370L, 378L, 380L, 383L, 384L, 385L, 386L, 389L, 398L, 
+399L, 399L, 402L, 402L, 403L, 416L, 443L, 445L, 447L, 447L, 455L, 
+458L, 482L, 482L, 483L, 489L, 491L, 492L, 493L, 493L, 494L, 495L, 
+496L, 500L, 506L, 507L, 507L, 516L, 517L, 521L, 534L, 547L, 556L, 
+556L, 556L, 560L, 564L, 565L, 568L, 569L, 574L, 587L, 591L, 593L, 
+595L, 606L, 616L, 628L, 629L, 629L, 631L, 631L, 645L, 651L, 653L, 
+654L, 654L, 662L, 668L, 670L, 670L, 694L, 709L, 719L, 721L, 744L, 
+778L, 788L, 788L, 793L, 796L, 812L, 812L, 825L, 827L, 827L, 843L, 
+844L, 846L, 851L, 854L, 854L, 855L, 875L, 875L, 880L, 889L, 890L, 
+892L, 897L, 900L, 902L, 903L, 905L, 906L, 909L, 915L, 916L), 
+    c(55L, 58L, 60L, 63L, 68L, 87L, 90L, 137L, 140L, 143L, 143L, 
+    146L, 147L, 149L, 153L, 153L, 153L, 154L, 157L, 165L, 174L, 
+    184L, 187L, 188L, 190L, 195L, 197L, 198L, 198L, 211L, 213L, 
+    215L, 216L, 237L, 241L, 244L, 245L, 252L, 265L, 270L, 274L, 
+    275L, 281L, 286L, 299L, 300L, 300L, 307L, 309L, 311L, 322L, 
+    322L, 324L, 330L, 334L, 338L, 338L, 339L, 341L, 343L, 346L, 
+    358L, 360L, 362L, 364L, 365L, 366L, 368L, 373L, 382L, 384L, 
+    388L, 390L, 391L, 396L, 397L, 402L, 402L, 406L, 448L, 452L, 
+    454L, 457L, 465L, 482L, 487L, 488L, 491L, 498L, 500L, 506L, 
+    509L, 509L, 519L, 524L, 527L, 527L, 529L, 530L, 532L, 535L, 
+    554L, 572L, 585L, 590L, 592L, 597L, 599L, 601L, 603L, 603L, 
+    605L, 606L, 622L, 628L, 631L, 631L, 632L, 640L, 641L, 650L, 
+    664L, 667L, 668L, 671L, 683L, 691L, 716L, 731L, 733L, 734L, 
+    734L, 734L, 736L, 740L, 746L, 773L, 775L, 777L, 780L, 782L, 
+    790L, 791L, 794L, 799L, 799L, 807L, 813L, 813L, 815L, 815L, 
+    817L, 820L, 822L, 822L, 823L, 831L, 854L, 855L, 856L, 857L, 
+    858L, 859L, 866L, 867L, 870L, 871L, 871L, 873L, 878L, 878L, 
+    882L, 891L, 894L, 897L, 904L, 906L, 914L, 915L, 916L, 919L, 
+    923L, 923L, 927L, 932L, 934L, 936L, 943L, 945L, 946L), c(50L, 
+    52L, 55L, 58L, 61L, 63L, 64L, 66L, 67L, 70L, 84L, 87L, 90L, 
+    136L, 145L, 151L, 153L, 161L, 164L, 176L, 181L, 187L, 189L, 
+    195L, 201L, 204L, 204L, 209L, 211L, 243L, 253L, 260L, 261L, 
+    263L, 265L, 266L, 266L, 268L, 270L, 270L, 271L, 272L, 277L, 
+    278L, 282L, 304L, 304L, 312L, 313L, 316L, 324L, 324L, 329L, 
+    332L, 332L, 341L, 350L, 352L, 356L, 357L, 364L, 366L, 366L, 
+    372L, 378L, 380L, 383L, 384L, 391L, 395L, 398L, 400L, 402L, 
+    405L, 414L, 416L, 443L, 452L, 453L, 454L, 454L, 455L, 456L, 
+    483L, 484L, 484L, 490L, 491L, 492L, 494L, 495L, 497L, 501L, 
+    514L, 526L, 529L, 530L, 531L, 536L, 551L, 561L, 566L, 573L, 
+    590L, 594L, 598L, 601L, 603L, 630L, 630L, 638L, 638L, 643L, 
+    645L, 646L, 648L, 648L, 654L, 658L, 659L, 691L, 698L, 699L, 
+    721L, 728L, 731L, 731L, 733L, 738L, 738L, 740L, 741L, 742L, 
+    746L, 774L, 779L, 787L, 789L, 797L, 798L, 799L, 800L, 802L, 
+    806L, 808L, 810L, 812L, 820L, 825L, 825L, 843L, 844L, 850L, 
+    851L, 853L, 853L, 856L, 858L, 858L, 861L, 866L, 876L, 884L, 
+    885L, 887L, 887L, 892L, 894L, 897L, 900L, 900L, 901L, 906L, 
+    908L, 910L, 910L, 914L, 921L, 927L, 928L, 929L, 930L, 931L, 
+    932L, 932L, 934L, 943L, 946L, 947L, 947L), c(60L, 66L, 71L, 
+    88L, 91L, 91L, 112L, 145L, 148L, 151L, 161L, 163L, 163L, 
+    165L, 174L, 176L, 177L, 178L, 178L, 178L, 179L, 183L, 195L, 
+    196L, 199L, 200L, 207L, 211L, 212L, 216L, 220L, 221L, 237L, 
+    249L, 249L, 249L, 250L, 257L, 262L, 265L, 270L, 280L, 283L, 
+    289L, 299L, 301L, 309L, 311L, 314L, 318L, 320L, 323L, 324L, 
+    326L, 328L, 329L, 332L, 332L, 333L, 334L, 342L, 346L, 348L, 
+    353L, 354L, 358L, 374L, 386L, 386L, 393L, 396L, 399L, 399L, 
+    401L, 404L, 409L, 413L, 415L, 447L, 452L, 458L, 481L, 485L, 
+    491L, 497L, 498L, 503L, 503L, 513L, 518L, 521L, 525L, 527L, 
+    532L, 532L, 532L, 534L, 534L, 539L, 547L, 559L, 561L, 566L, 
+    567L, 567L, 571L, 571L, 573L, 581L, 593L, 594L, 594L, 595L, 
+    596L, 602L, 627L, 628L, 629L, 630L, 634L, 638L, 649L, 650L, 
+    651L, 657L, 657L, 666L, 669L, 672L, 675L, 691L, 695L, 696L, 
+    696L, 697L, 712L, 721L, 722L, 725L, 728L, 729L, 729L, 734L, 
+    735L, 740L, 772L, 777L, 784L, 789L, 792L, 795L, 798L, 806L, 
+    807L, 809L, 812L, 813L, 814L, 821L, 822L, 822L, 827L, 832L, 
+    848L, 852L, 852L, 861L, 868L, 868L, 870L, 874L, 874L, 874L, 
+    881L, 886L, 888L, 890L, 895L, 899L, 911L, 913L, 914L, 917L, 
+    918L, 919L, 921L, 921L, 921L, 928L, 945L), c(51L, 52L, 53L, 
+    55L, 56L, 61L, 69L, 70L, 78L, 86L, 88L, 128L, 142L, 142L, 
+    153L, 153L, 156L, 160L, 175L, 175L, 176L, 177L, 178L, 180L, 
+    182L, 186L, 190L, 191L, 193L, 194L, 194L, 199L, 202L, 211L, 
+    212L, 228L, 246L, 256L, 260L, 268L, 271L, 273L, 273L, 276L, 
+    277L, 277L, 280L, 284L, 303L, 306L, 306L, 308L, 313L, 322L, 
+    322L, 322L, 324L, 325L, 328L, 332L, 334L, 336L, 355L, 356L, 
+    365L, 377L, 378L, 386L, 394L, 397L, 405L, 406L, 417L, 434L, 
+    443L, 448L, 451L, 452L, 454L, 468L, 488L, 495L, 505L, 505L, 
+    513L, 513L, 513L, 515L, 515L, 515L, 517L, 524L, 534L, 538L, 
+    539L, 548L, 557L, 557L, 562L, 570L, 572L, 578L, 586L, 587L, 
+    591L, 592L, 604L, 608L, 628L, 629L, 633L, 635L, 656L, 658L, 
+    668L, 674L, 699L, 706L, 719L, 723L, 733L, 737L, 737L, 741L, 
+    766L, 772L, 773L, 776L, 785L, 790L, 790L, 792L, 793L, 794L, 
+    798L, 798L, 800L, 802L, 802L, 803L, 804L, 804L, 806L, 824L, 
+    827L, 827L, 832L, 843L, 852L, 852L, 853L, 854L, 856L, 856L, 
+    859L, 864L, 865L, 866L, 867L, 867L, 871L, 871L, 873L, 876L, 
+    882L, 884L, 884L, 888L, 889L, 892L, 893L, 894L, 899L, 903L, 
+    904L, 904L, 905L, 906L, 913L, 920L, 921L, 923L, 923L, 926L, 
+    935L, 936L, 940L, 944L, 945L, 948L), c(52L, 53L, 55L, 65L, 
+    68L, 69L, 89L, 111L, 112L, 136L, 138L, 141L, 141L, 141L, 
+    143L, 153L, 161L, 162L, 163L, 166L, 171L, 172L, 175L, 184L, 
+    187L, 187L, 190L, 197L, 197L, 201L, 203L, 203L, 205L, 210L, 
+    217L, 218L, 221L, 244L, 256L, 259L, 264L, 266L, 266L, 269L, 
+    275L, 276L, 299L, 300L, 303L, 305L, 308L, 313L, 313L, 316L, 
+    316L, 318L, 322L, 325L, 329L, 338L, 342L, 343L, 344L, 348L, 
+    357L, 359L, 360L, 366L, 370L, 374L, 376L, 380L, 385L, 386L, 
+    388L, 395L, 398L, 401L, 402L, 411L, 416L, 444L, 447L, 450L, 
+    450L, 453L, 454L, 456L, 457L, 457L, 483L, 483L, 484L, 485L, 
+    485L, 492L, 494L, 499L, 500L, 501L, 503L, 503L, 508L, 510L, 
+    518L, 525L, 526L, 527L, 530L, 532L, 556L, 563L, 564L, 565L, 
+    565L, 565L, 573L, 586L, 596L, 596L, 596L, 596L, 597L, 599L, 
+    603L, 629L, 640L, 641L, 649L, 668L, 670L, 699L, 719L, 728L, 
+    730L, 730L, 730L, 742L, 745L, 745L, 745L, 746L, 772L, 774L, 
+    774L, 774L, 775L, 776L, 777L, 790L, 796L, 797L, 806L, 806L, 
+    808L, 811L, 813L, 815L, 819L, 825L, 844L, 855L, 859L, 860L, 
+    867L, 872L, 873L, 886L, 891L, 892L, 896L, 907L, 910L, 912L, 
+    914L, 917L, 917L, 918L, 918L, 918L, 919L, 923L, 925L, 925L, 
+    938L, 939L, 943L, 944L, 945L, 947L)), min = c(50L, 55L, 50L, 
+60L, 51L, 52L), max = c(916L, 946L, 947L, 945L, 948L, 947L)), row.names = c(NA, 
+-6L), class = c("tbl_df", "tbl", "data.frame"))
+
+```
+```{r}
+head(field_summary)
+```
+
+We can check all fields against all rules with crossing, which'll create one row for every rule x field - from there, run an %in% operator to check whether all values are in a range, and then filter to where these checks are TRUE. Then summarise this by the rule so that we can see what field_options there are for each rule
+
+```{r eval = FALSE}
+check_fields <- crossing(rules,field_summary) %>% 
+  mutate(range = map(range,unlist)) %>% 
+  mutate(check = map2_lgl(range,values,~all(.y %in% .x))) %>% 
+  filter(check)
+
+field_options <- check_fields %>% 
+  group_by(rule) %>% 
+  summarise(n = n(),field_id = list(field_id)) %>% 
+  ungroup() %>% 
+  arrange(n)
+```
+
+```{r echo = FALSE}
+field_options <- structure(list(rule = c("arrival location", "train", "arrival station", 
+"price", "arrival track", "wagon", "route", "departure time", 
+"departure station", "departure platform", "departure date", 
+"departure location", "departure track", "duration", "type", 
+"arrival platform", "zone", "seat", "class", "row"), n = 1:20, 
+    field_id = list(10L, c(6L, 10L), c(3L, 6L, 10L), c(3L, 6L, 
+    10L, 12L), c(3L, 6L, 10L, 12L, 16L), c(3L, 6L, 10L, 11L, 
+    12L, 16L), c(3L, 6L, 10L, 11L, 12L, 14L, 16L), c(3L, 6L, 
+    10L, 11L, 12L, 14L, 16L, 19L), c(1L, 3L, 6L, 10L, 11L, 12L, 
+    14L, 16L, 19L), c(1L, 3L, 6L, 10L, 11L, 12L, 13L, 14L, 16L, 
+    19L), c(1L, 3L, 6L, 10L, 11L, 12L, 13L, 14L, 16L, 19L, 20L
+    ), c(1L, 3L, 6L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 19L, 
+    20L), c(1L, 3L, 6L, 7L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 
+    19L, 20L), c(1L, 2L, 3L, 6L, 7L, 10L, 11L, 12L, 13L, 14L, 
+    15L, 16L, 19L, 20L), c(1L, 2L, 3L, 6L, 7L, 9L, 10L, 11L, 
+    12L, 13L, 14L, 15L, 16L, 19L, 20L), c(1L, 2L, 3L, 4L, 6L, 
+    7L, 9L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 19L, 20L), c(1L, 
+    2L, 3L, 4L, 6L, 7L, 8L, 9L, 10L, 11L, 12L, 13L, 14L, 15L, 
+    16L, 19L, 20L), c(1L, 2L, 3L, 4L, 6L, 7L, 8L, 9L, 10L, 11L, 
+    12L, 13L, 14L, 15L, 16L, 18L, 19L, 20L), c(1L, 2L, 3L, 4L, 
+    6L, 7L, 8L, 9L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 
+    19L, 20L), 1:20)), row.names = c(NA, -20L), class = c("tbl_df", 
+"tbl", "data.frame"))
+```
+```{r}
+field_options
+```
+
+Inspecting these options, we can see that there's only one option for arrival location, two options for train (one of which is the only option for arrival location), three options for arrival station (but two are in the previous etc) - and continuing the visual inspection shows this pattern carries forward for all twenty fields. 
+
+Writing a quick little loop here to assign the fields starting with the first one. 
+
+```{r eval = FALSE}
+unassigned <- field_options
+
+assigned <- tibble(rule = NULL, field_id = NULL)
+
+while(nrow(unassigned)>0){
+  
+  assigned <- unassigned %>% 
+    slice(1) %>% 
+    bind_rows(assigned,.)
+  
+  unassigned <- unassigned %>% 
+    tail(n = -1) %>% 
+    mutate(field_id = map(field_id, ~.x[!.x %in% assigned$field_id]))
+  
+}
+```
+```{r eval = FALSE}
+your_assignment <- assigned %>% 
+  mutate(field_id = map_dbl(field_id,unlist)) %>% 
+  left_join(your_ticket, by = c("field_id")) %>% 
+  filter(str_starts(rule,"departure"))
+```
+```{r echo = FALSE}
+your_assignment <- structure(list(rule = c("departure time", "departure station", 
+"departure platform", "departure date", "departure location", 
+"departure track"), n = 8:13, field_id = c(19, 1, 13, 20, 15, 
+7), input = c(193L, 61L, 197L, 157L, 181L, 89L)), row.names = c(NA, 
+-6L), class = c("tbl_df", "tbl", "data.frame"))
+```
+```{r}
+your_assignment
+  
+prod(your_assignment$input)
+```
+
+</details>
+
+## Day Seventeen
+
+<details>
+
+<summary> Conway's Game of Life was there in a previous day (day 11) - this one expanded into multiple dimensions. I wrote a brute force naive solution, went to bed, and gambled on it solving for when I woke up (which it did)! I then went back and trimmed it down to two minutes runtime, so that was pretty nice! </summary>
+
+
+--- Description ---
+
+> The experimental energy source is based on cutting-edge technology: a set of Conway Cubes contained in a pocket dimension! When you hear it's having problems, you can't help but agree to take a look.
+> 
+> The pocket dimension contains an infinite 3-dimensional grid. At every integer 3-dimensional coordinate (x,y,z), there exists a single cube which is either active or inactive.
+
+So essentially Conway's game of life again...but in three dimensions?
+
+--- Data ---
+
+```{r eval = FALSE}
+input_17 <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-17.txt")
+input_17_e <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-17-example-1.txt")
+```
+
+--- Cleaning ---
+
+Exploring a new part of R to me: arrays, which are vertically stacked matrices.
+
+```{r eval = FALSE}
+example_matrix <- tibble(x = input_17_e) %>%
+  mutate(x = str_split(x, "")) %>%
+  unnest_wider(x, names_sep = "_") %>%
+  mutate_all(~ case_when(.x == "#" ~ 1, TRUE ~ 0)) %>%
+  as.matrix()
+
+example_empty <- matrix(
+  data = rep(0, length(example_matrix)),
+  nrow = nrow(example_matrix),
+  ncol = ncol(example_matrix)
+)
+
+example_array <- c(example_empty, example_matrix, example_empty) %>%
+  array(dim = c(nrow(example_matrix), ncol(example_matrix), 3))
+
+input_matrix <- tibble(x = input_17) %>%
+  mutate(x = str_split(x, "")) %>%
+  unnest_wider(x, names_sep = "_") %>%
+  mutate_all(~ case_when(.x == "#" ~ 1, TRUE ~ 0)) %>%
+  as.matrix()
+
+input_empty <- matrix(
+  data = rep(0, length(input_matrix)), byrow = TRUE,
+  nrow = nrow(input_matrix),
+  ncol = ncol(input_matrix)
+)
+
+input_array <- c(input_empty, input_matrix, input_empty) %>%
+  array(dim = c(nrow(input_matrix), ncol(input_matrix), 3))
+```
+```{r echo = FALSE}
+example_array <- structure(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 
+1, 0, 0, 0, 0, 0, 0, 0, 0, 0), .Dim = c(3L, 3L, 3L))
+```
+
+Okay! So now we have the starting states of the example as `example_array` and the actual problem as `input_array`. We can access the dimensions of the arrays via 
+
+```{r}
+dim(example_array)
+```
+
+and access a specific layer with array[row,column,layer].
+
+```{r}
+example_array[1, 2, 2]
+```
+
+--- Problem 1 ---
+
+We can build out a list of indices with the dimensions, I think!
+
+```{r eval = FALSE}
+# array <- example_array
+
+get_indices <- function(array) {
+  dimensions <- dim(array)
+
+  actual_indices <- crossing(
+    x = seq_len(dimensions[[1]]),
+    y = seq_len(dimensions[[2]]),
+    z = seq_len(dimensions[[3]])
+  ) %>%
+    arrange(z, x, y) %>%
+    mutate(
+      value = pmap_dbl(list(x, y, z), ~ array[...]),
+      x = x + 1,
+      y = y + 1
+    )
+
+  indices <- crossing(
+    x = seq_len(dimensions[[1]] + 2),
+    y = seq_len(dimensions[[2]] + 2),
+    z = seq_len(dimensions[[3]])
+  ) %>%
+    arrange(z, x, y) %>%
+    left_join(actual_indices, by = c("x", "y", "z")) %>%
+    mutate_all(replace_na, 0)
+
+  return(indices)
+}
+
+example_indices <- get_indices(example_array)
+```
+
+Now to create a function to check the neighbouring indices and count nearby occupied cells.
+
+```{r eval = FALSE}
+
+# indices <- example_indices
+# x <- 1
+# y <- 2
+# z <- 2
+
+count_neighbours <- function(x, y, z, indices) {
+  x_max <- max(indices$x)
+  y_max <- max(indices$y)
+  z_max <- max(indices$z)
+
+  increments <- c(-1, 0, 1)
+
+  neighbours <- crossing(
+    x = increments + x,
+    y = increments + y,
+    z = increments + z
+  ) %>%
+    filter(
+      !(.data$x == .env$x & .data$y == .env$y & .data$z == .env$z),
+      between(.data$x, 1, x_max),
+      between(.data$y, 1, y_max),
+      between(.data$z, 1, z_max)
+    ) %>%
+    mutate(value = pmap_dbl(list(x, y, z), ~ indices$value[indices$x == ..1 & indices$y == ..2 & indices$z == ..3])) %>%
+    pull(value) %>%
+    sum()
+
+  return(neighbours)
+}
+
+example_neighbours <- example_indices %>%
+  mutate(neighbours = pmap_dbl(list(x, y, z), count_neighbours, .))
+```
+
+Now that we have the neighbours, we need to increment their values based on the rules. 
+
+```{r eval = FALSE}
+# indices <- example_neighbours
+
+apply_rules <- function(indices) {
+  x <- indices %>%
+    mutate(new_value = case_when(
+      value == 1 & neighbours %in% c(2, 3) ~ 1,
+      value == 1 ~ 0,
+      value == 0 & neighbours == 3 ~ 1,
+      TRUE ~ 0
+    ))
+  return(x)
+}
+
+example_count <- example_neighbours %>%
+  apply_rules()
+```
+
+(I was stumped for a while here as to why my puzzle input did not match up to the example, but consulting no-spoilers-reddit seems that they're dropping empty x/y dimensions which is quite annoying!)
+
+Now to increment the array in every direction (but sticking with a list of indices for now, I find that easier to work with mentally)
+
+```{r eval = FALSE}
+# indices <- example_count
+grow_indices <- function(indices) {
+  new_x <- max(indices$x + 2) %>% seq_len()
+  new_y <- max(indices$y + 2) %>% seq_len()
+  new_z <- max(indices$z + 2) %>% seq_len()
+
+  new_indices <- indices %>%
+    transmute(
+      x = x + 1,
+      y = y + 1,
+      z = z + 1,
+      value = new_value
+    )
+
+  indices <- crossing(
+    x = new_x,
+    y = new_y,
+    z = new_z
+  ) %>%
+    left_join(new_indices, by = c("x", "y", "z")) %>%
+    mutate(value = replace_na(value, 0))
+
+  return(indices)
+}
+# grow_indices(example_count)
+```
+Wrap it all into a caller function and for-loop.
+
+```{r eval = FALSE}
+
+# array <- example_array
+# times <- 6
+
+run_conwaycube <- function(array, times) {
+  indices <- get_indices(array)
+
+  for (i in seq_len(times)) {
+    indices <- indices %>%
+      mutate(neighbours = pmap_dbl(list(x, y, z), count_neighbours, .)) %>%
+      apply_rules() %>%
+      grow_indices()
+
+    message(paste(i, Sys.time()))
+  }
+
+  return(sum(indices$value))
+}
+
+run_conwaycube(input_array,6)
+```
+```
+1 2020-12-17 10:26:13
+2 2020-12-17 10:26:16
+3 2020-12-17 10:26:22
+4 2020-12-17 10:26:33
+5 2020-12-17 10:26:52
+6 2020-12-17 10:27:23
+
+280
+```
+
+--- Problem 2 ---
+
+FOUR DIMENSIONS?! (brain explodes)
+
+Actually, maybe I can just adjust my functions for a fourth dimension `w`
+
+```{r eval = FALSE}
+
+get_indices_4d <- function(array) {
+  
+  dimensions <- dim(array)
+  
+  actual_indices <- crossing(
+    x = seq_len(dimensions[[1]]),
+    y = seq_len(dimensions[[2]]),
+    z = seq_len(dimensions[[3]])
+  ) %>%
+    arrange(z, x, y) %>%
+    mutate(
+      value = pmap_dbl(list(x, y, z), ~ array[...]),
+      x = x + 1,
+      y = y + 1,
+      w = 2
+    )
+  
+  indices <- crossing(
+    x = seq_len(dimensions[[1]] + 2),
+    y = seq_len(dimensions[[2]] + 2),
+    z = seq_len(dimensions[[3]]),
+    w = seq_len(dimensions[[3]])
+  ) %>%
+    arrange(z, x, y, w) %>%
+    left_join(actual_indices, by = c("x", "y", "z", "w")) %>%
+    mutate_all(replace_na, 0)
+  
+  return(indices)
+}
+
+count_neighbours_4d <- function(x, y, z, w, indices) {
+  x_max <- max(indices$x)
+  y_max <- max(indices$y)
+  z_max <- max(indices$z)
+  w_max <- max(indices$w)
+  
+  increments <- c(-1, 0, 1)
+  
+  neighbours <- crossing(
+    x = increments + x,
+    y = increments + y,
+    z = increments + z,
+    w = increments + w
+  ) %>%
+    filter(
+      !(.data$x == .env$x & 
+          .data$y == .env$y & 
+          .data$z == .env$z & 
+          .data$w == .env$w),
+      between(.data$x, 1, x_max),
+      between(.data$y, 1, y_max),
+      between(.data$z, 1, z_max),
+      between(.data$w, 1, w_max)
+    ) %>%
+    mutate(
+      value = pmap_dbl(
+        list(x, y, z, w), 
+        ~ indices$value[indices$x == ..1 & 
+                          indices$y == ..2 & 
+                          indices$z == ..3 & 
+                          indices$w == ..4])) %>%
+    pull(value) %>%
+    sum()
+  
+  return(neighbours)
+}
+
+# apply rules doesn't change since rules are the same
+
+grow_indices_4d <- function(indices) {
+  new_x <- max(indices$x + 2) %>% seq_len()
+  new_y <- max(indices$y + 2) %>% seq_len()
+  new_z <- max(indices$z + 2) %>% seq_len()
+  new_w <- max(indices$w + 2) %>% seq_len()
+  
+  new_indices <- indices %>%
+    transmute(
+      x = x + 1,
+      y = y + 1,
+      z = z + 1,
+      w = w + 1,
+      value = new_value
+    )
+  
+  indices <- crossing(
+    x = new_x,
+    y = new_y,
+    z = new_z,
+    w = new_w
+  ) %>%
+    left_join(new_indices, by = c("x", "y", "z", "w")) %>%
+    mutate(value = replace_na(value, 0))
+  
+  return(indices)
+}
+
+run_conwaycube_4d <- function(array, times) {
+  
+  indices <- get_indices_4d(array)
+  
+  message(paste(Sys.time(), nrow(indices)))
+  
+  for (i in seq_len(times)) {
+    indices <- indices %>%
+      mutate(neighbours = pmap_dbl(list(x, y, z, w), count_neighbours_4d, .)) %>%
+      apply_rules() %>%
+      grow_indices_4d()
+    message(paste(i, Sys.time(), nrow(indices)))
+  }
+  return(sum(indices$value))
+}
+
+run_conwaycube_4d(input_array, 6)
+```
+```
+2020-12-17 02:01:36 900
+1 2020-12-17 02:01:41 3600
+2 2020-12-17 02:02:12 9604
+3 2020-12-17 02:04:46 20736
+4 2020-12-17 02:15:10 39204
+5 2020-12-17 02:50:04 67600
+6 2020-12-17 04:35:08 108900
+
+[1] 1696
+```
+
+Admittedly, I plugged this in and went to sleep - but it was the correct answer!
+
+--- Iterating on Problem 2 for speed ---
+
+Problem 2 takes quite some time to run. Trying a few approaches to trimming it down:
+
+Firstly, as Liam Y suggested in the R4DS Slack - arrange the neighbour function so that it's only checking neighbours that have positive integer values:
+
+```{r eval = FALSE}
+count_neighbours_4d <- function(indices){
+
+  filtered_indices <- indices %>%
+    filter(value == 1) # This should reduce the amount of iteration needed!
+
+  indices %>%
+    mutate(neighbours = pmap_dbl(list(x,y,z,w),check_each_neighbour,filtered_indices))
+}
+
+check_each_neighbour <- function(x, y, z, w, indices){
+
+  increments <- c(-1, 0, 1)
+
+  n <- crossing(
+    x = increments + x,
+    y = increments + y,
+    z = increments + z,
+    w = increments + w
+  ) %>%
+    filter(
+      !(.data$x == .env$x & 
+          .data$y == .env$y & 
+          .data$z == .env$z & 
+          .data$w == .env$w)
+    ) %>%
+    mutate(
+      value = pmap(list(.data$x,.data$y,.data$z,.data$w),
+                   ~(indices$value[indices$x == ..1 & indices$y == ..2 & indices$z == ..3 & indices$w == ..4]))) %>%
+    pull(value) %>%
+    unlist() %>%
+    sum(na.rm = TRUE)
+
+  return(n)
+}
+
+run_conwaycube_4d <- function(array, times) {
+  indices <- get_indices_4d(array)
+
+  message(paste(Sys.time(), nrow(indices)))
+
+  for (i in seq_len(times)) {
+    indices <- indices %>%
+      count_neighbours_4d() %>% 
+      apply_rules() %>%
+      grow_indices_4d()
+
+    message(paste(i, Sys.time(), nrow(indices)))
+  }
+
+  return(sum(indices$value))
+}
+
+run_conwaycube_4d(input_array, 6)
+```
+
+```
+2020-12-17 16:08:14 900
+1 2020-12-17 16:08:18 3600
+2 2020-12-17 16:08:38 9604
+3 2020-12-17 16:09:29 20736
+4 2020-12-17 16:11:39 39204
+5 2020-12-17 16:15:26 67600
+6 2020-12-17 16:25:28 108900
+
+[1] 1696
+```
+
+Just doing that much shrunk the run-time from 2 hours 35 minutes to ~17 minutes! I can do better though, I think - in Day 11's final approach, I arranged things into a matrix and approached it from there - I think I can definitely do the same here! (and also, add parallel processing because duh)
+
+```{r eval = FALSE}
+count_neighbours_4d <- function(indices){
+
+  v <- indices %>% 
+    arrange(w,z,y,x) %>% 
+    pull(value)
+  
+  a <- array(v,dim = c(max(indices$x),
+                       max(indices$y),
+                       max(indices$z),
+                       max(indices$w)))
+
+  i <- indices %>%
+    mutate(neighbours = future_pmap_dbl(.l = list(.data$x,.data$y,.data$z,.data$w),.f = check_each_neighbour,a = .env$a))
+
+  return(i)
+}
+
+check_each_neighbour <- function(x, y, z, w, a){
+
+  increments <- c(-1, 0, 1)
+
+  # browser()
+  
+  n <- crossing(
+    x = increments + x,
+    y = increments + y,
+    z = increments + z,
+    w = increments + w
+  ) %>%
+    filter(
+      !(.data$x == .env$x & 
+          .data$y == .env$y & 
+          .data$z == .env$z & 
+          .data$w == .env$w),
+      between(.data$x,1,dim(a)[[1]]),
+      between(.data$y,1,dim(a)[[2]]),
+      between(.data$z,1,dim(a)[[3]]),
+      between(.data$w,1,dim(a)[[4]]),
+    ) %>%
+    mutate(
+      value = pmap_dbl(
+        list(.data$x,.data$y,.data$z,.data$w),
+        ~a[..1,..2,..3,..4])) %>%
+    pull(value) %>%
+    unlist() %>%
+    sum(na.rm = TRUE)
+
+  return(n)
+}
+
+run_conwaycube_4d <- function(array, times) {
+  indices <- get_indices_4d(array)
+
+  message(paste(Sys.time(), nrow(indices)))
+
+  for (i in seq_len(times)) {
+    indices <- indices %>%
+      count_neighbours_4d() %>% 
+      apply_rules() %>%
+      grow_indices_4d()
+
+    message(paste(i, Sys.time(), nrow(indices)))
+  }
+
+  return(sum(indices$value))
+}
+
+run_conwaycube_4d(input_array, 6)
+
+```
+```
+2020-12-17 18:39:43 900
+1 2020-12-17 18:39:45 3600
+2 2020-12-17 18:39:48 9604
+3 2020-12-17 18:39:56 20736
+4 2020-12-17 18:40:13 39204
+5 2020-12-17 18:40:44 67600
+6 2020-12-17 18:41:39 108900
+[1] 1696
+```
+
+Shaving it down to two minutes runtime is extremely satisfying!
+
+</details>
+
+## Day Eighteen
+
+<details>
+<summary> I went to bed thinking that it was a regex problem and that I'd need to essentially write my own parser - but I eventually thought of tricking the R parser to evaluate in the order I wanted it to, and that was much less painful! </summary>
+
+--- Description ---
+
+> Unfortunately, it seems like this "math" follows different rules than you remember.
+> 
+> The homework (your puzzle input) consists of a series of expressions that consist of addition (+), multiplication (*), and parentheses ((...)). Just like normal math, parentheses indicate that the expression inside must be evaluated before it can be used by the surrounding expression. Addition still finds the sum of the numbers on both sides of the operator, and multiplication still finds the product.
+> 
+> However, the rules of operator precedence have changed. Rather than evaluating multiplication before addition, the operators have the same precedence, and are evaluated left-to-right regardless of the order in which they appear.
+
+--- Data ---
+
+```{r eval = FALSE}
+input_18 <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-18.txt")
+```
+
+--- Cleaning ---
+
+```{r eval = FALSE}
+operations <- tibble(x = input_18)
+```
+
+--- Problem 1 ---
+
+R doesn't have editable math operator precedence (which is a good thing!), but we can trick the R parser into evaluating `*` at the same level as `+` by string-replacing `*` with `-` and then switching the definition of `-` to be equal to `*`. 
+
+The R parser will read the operator list and decide which ones to do, and it knows that "+" is equal in precedence to "-". So it will evaluate them left to right, and it goes back to the new definition of "-" which is "*". 
+
+```{r eval = FALSE}
+`-` <- `*`
+  
+p1 <- operations %>% 
+  mutate(modified_x = str_replace_all(x,"\\*","\\-"),
+         output = map_dbl(modified_x,~ eval(parse(text = .x))))
+```
+```{r echo = FALSE}
+p1 <- structure(list(modified_x = c("9 - 8 + 2 + (4 - (2 - 2 + 9 - 2) - 9 - 3 - 8) + 8 - 5", 
+"8 - (9 + 5 + 5 - 6 + 8 - 3) - 5 - 7 - 4 + 9", "(9 + (2 - 6 + 7 - 5)) - (7 + 7 - 5 + (6 + 2 + 6) - (7 - 8 - 8 + 9)) + 4 - 2", 
+"((8 + 3 - 6 - 2) - 9 + 3) + 5 + 6 - 3", "6 - (9 + 6 - (7 + 4 + 2 + 5 + 6) - 7 + 3 - (5 - 8 - 6 + 6 - 7 - 8)) + (8 - 8 + 4) + (5 - (2 + 9) - 8) - 4 - 2", 
+"(8 - 6 + 8) + 6 - 8 - (9 - (6 + 8 - 3 + 8) + (7 - 9 - 6 - 3) - 3 + 8 - 4)"
+), output = c(112730, 409929, 7984712, 3606, 1668332768, 9443840
+)), row.names = c(NA, -6L), class = c("tbl_df", "tbl", "data.frame"
+))
+```
+```{r}
+head(p1)
+```
+```{r eval = FALSE}
+sum(p1$output)
+```
+```{r echo = FALSE}
+16332191652452
+```
+
+For extra credit, here's the abstract syntax tree for the first operation as written normally:
+
+```{r}
+lobstr::ast(expression(9 * 8 + 2 + (4 * (2 * 2 + 9 * 2) * 9 * 3 * 8) + 8 * 5))
+```
+and the revised version:
+
+```{r}
+lobstr::ast(expression(9 - 8 + 2 + (4 - (2 - 2 + 9 - 2) - 9 - 3 - 8) + 8 - 5))
+```
+
+--- Problem 2 ---
+
+Problem 2 is in the same vein but now just needs the `+` evaluated before the `*`, so we can do the same `*` to `-` swap and then now switch `+` to the `*` symbol, so that R thinks it is evaluated before the `-`. 
+
+```{r eval = FALSE}
+`-` <- `*`
+`*` <- `+`
+  
+p2 <- operations %>% 
+  mutate(modified_x = str_replace_all(x,"\\*","\\-"),
+         modified_x = str_replace_all(modified_x,"\\+","\\*"),
+         output = map_dbl(modified_x,~ eval(parse(text = .x))))
+```
+```{r echo = FALSE}
+p2 <- structure(list(modified_x = c("9 - 8 * 2 * (4 - (2 - 2 * 9 - 2) - 9 - 3 - 8) * 8 - 5", 
+"8 - (9 * 5 * 5 - 6 * 8 - 3) - 5 - 7 - 4 * 9", "(9 * (2 - 6 * 7 - 5)) - (7 * 7 - 5 * (6 * 2 * 6) - (7 - 8 - 8 * 9)) * 4 - 2", 
+"((8 * 3 - 6 - 2) - 9 * 3) * 5 * 6 - 3", "6 - (9 * 6 - (7 * 4 * 2 * 5 * 6) - 7 * 3 - (5 - 8 - 6 * 6 - 7 - 8)) * (8 - 8 * 4) * (5 - (2 * 9) - 8) - 4 - 2", 
+"(8 - 6 * 8) * 6 - 8 - (9 - (6 * 8 - 3 * 8) * (7 - 9 - 6 - 3) - 3 * 8 - 4)"
+), output = c(1711530, 2904720, 70399608, 4785, 4644889728, 481485312
+)), row.names = c(NA, -6L), class = c("tbl_df", "tbl", "data.frame"
+))
+```
+```{r}
+head(p2)
+```
+```{r eval = FALSE}
+sum(p2$output)
+```
+```{r echo = FALSE}
+351175492232654
+```
+
+The same "extra credit exercise":
+
+```{r}
+lobstr::ast(expression(9 * 8 + 2 + (4 * (2 * 2 + 9 * 2) * 9 * 3 * 8) + 8 * 5))
+```
+
+revised to:
+
+```{r}
+lobstr::ast(9 - 8 * 2 * (4 - (2 - 2 * 9 - 2) - 9 - 3 - 8) * 8 - 5)
+```
+
+</details>
+
+## Day Nineteen
+
+<details>
+<summary> This one was the regex problem that I feared in Day Eighteen's problem. Looping over the rules and substituting them worked okay in the first part, but I spent far too long trying to learn recursive regex and eventually reduced the problem down to hardcoded recursion. </summary>
+
+
+--- Description ---
+
+> They think their satellite has collected an image of a sea monster! Unfortunately, the connection to the satellite is having problems, and many of the messages sent back from the satellite have been corrupted.
+>
+> They sent you a list of the rules valid messages should obey and a list of received messages they've collected so far (your puzzle input).
+>
+> Your goal is to determine the number of messages that completely match rule 0.
+
+--- Data ---
+
+```{r eval = FALSE}
+input_19 <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-19.txt")
+
+input_19_e <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-19-e.txt")
+
+input_19_e2 <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-19-e2.txt")
+```
+
+--- Cleaning ---
+
+Seems nice to split the list of rules into its own tibble.
+
+```{r eval = FALSE}
+messages_e <- tibble(message = input_19_e) %>% 
+  mutate(type = cumsum(message == "")) %>% 
+  filter(type == 1,message !="") %>% 
+  select(-type)
+
+rules_e <- tibble(rule = input_19_e) %>% 
+  mutate(type = cumsum(rule == "")) %>% 
+  filter(type == 0) %>% 
+  select(-type) %>% 
+  separate(rule,into = c("rule_id","rule_desc"), sep = ": ")
+
+messages <- tibble(message = input_19) %>% 
+  mutate(type = cumsum(message == "")) %>% 
+  filter(type == 1,message !="") %>% 
+  select(-type)
+
+rules <- tibble(rule = input_19) %>% 
+  mutate(type = cumsum(rule == "")) %>% 
+  filter(type == 0) %>% 
+  select(-type) %>% 
+  separate(rule,into = c("rule_id","rule_desc"), sep = ": ")
+```
+
+--- Problem 1 ---
+
+> Your goal is to determine the number of messages that completely match rule 0. 
+
+Okay, so writing a function that loops over the rules, taking only complete rules (i.e. rules without numbers) and string-replacing them into their rule_id. Also need to add padding so that the rule id doesn't match individual digits, and need to add parentheses for rules that have an OR condition.
+
+```{r eval = FALSE}
+rule_recurse <- function(rules){
+  
+  rules <- rules %>% 
+    mutate(rule_desc = if_else(str_detect(rule_desc,"a|b"), 
+                               str_remove_all(rule_desc,'\\"'), 
+                               rule_desc),
+           rule_id = paste0(" ",rule_id," "),
+           rule_desc = paste0(" ",rule_desc," "),
+           rule_desc = if_else(str_detect(rule_desc,"\\|"),
+                               paste0(" ( ",rule_desc," ) "),
+                               rule_desc))
+  
+  while(any(str_detect(rules$rule_desc,"[0-9]"))){
+    
+    x <- rules %>% 
+      filter(!str_detect(rule_desc,"[0-9]"))
+    
+    for(i in seq_along(x$rule_id)){
+      rules$rule_desc <- str_replace_all(rules$rule_desc, x$rule_id[i], x$rule_desc[i])
+    }
+  }
+  
+  rules <- rules %>% 
+    mutate_all(str_remove_all," ") %>% 
+    mutate(rule_desc = paste0("^",rule_desc,"$"))
+  
+  return(rules)
+}
+ 
+rules_e1 <- rules_e %>% 
+  rule_recurse() %>% 
+  filter(rule_id == 0) %>% 
+  pull(rule_desc)
+
+messages_e1 <- messages_e %>% 
+  mutate(match = str_detect(message,rules_e1))
+
+p1_rules <- rules %>% 
+  rule_recurse() %>% 
+  filter(rule_id == 0) %>% 
+  pull(rule_desc)
+
+p1_messages <- messages %>% 
+  mutate(match = str_detect(message,p1_rules))
+
+sum(p1_messages$match)
+```
+```{r echo = FALSE}
+122
+```
+
+--- Problem 2 ---
+
+> Replace 8 and 11 with new rules that create looping - how to fix?
+
+Approach: "Pray to the regex gods and hope they find you worthy"
+
+Deconstructing the rules changes: 
+
+8 is `42 | 42 8` - so it starts as `42`, and then when replaced with itself becomes `42 42`, `42 42 42` etc - we can represent this as "one or more of" pretty easily: `42 +` handles that condition. 
+
+11 is trickier: `42 31 | 42 11 31` means plugging `42 31` recursively into the middle of another set of 42 and 31. I spent a reading through regex recursion on this one, went to bed, continued trying regex recursion on it, until I eventually decided to hardcode `42 31 | 42 42 31 31 | 42 42 42 31 31 31` etc for like ten iterations of the loop. (I tried fifty, and got a literal stack overflow error!) 
+
+![](https://i.imgur.com/eudI6NN.png)
+
+```{r eval = FALSE}
+messages_e2 <- tibble(message = input_19_e2) %>% 
+  mutate(type = cumsum(message == "")) %>% 
+  filter(type == 1,message !="") %>% 
+  select(-type)
+
+rules_e2 <- tibble(rule = input_19_e2) %>% 
+  mutate(type = cumsum(rule == "")) %>% 
+  filter(type == 0) %>% 
+  select(-type) %>% 
+  separate(rule,into = c("rule_id","rule_desc"), sep = ": ")
+
+rule_updater <- function(rules){
+  rules %>% 
+    mutate(
+      rule_desc = case_when(
+        rule_id == "8" ~ "42 +",
+        rule_id == "11" ~ 
+          paste(
+            map_chr(1:10, ~rep_len(42,.x) %>% paste(collapse = " ")),
+            map_chr(1:10, ~rep_len(31,.x) %>% paste(collapse = " ")),
+            collapse = " | "),
+        TRUE ~ rule_desc))
+}
+
+p2_rules_e <- rules_e2 %>% 
+  rule_updater() %>% 
+  rule_recurse() %>% 
+  filter(rule_id == 0) %>% 
+  pull(rule_desc)
+
+messages_p2_e <- messages_e2 %>%
+  mutate(match = str_detect(message,p2_rules_e))
+
+sum(messages_p2_e$match)
+```
+```{r echo = FALSE}
+12
+```
+```{r eval = FALSE}
+p2_rules <- rules %>% 
+  rule_updater() %>% 
+  rule_recurse() %>% 
+  filter(rule_id == 0) %>% 
+  pull(rule_desc)
+
+p2_messages <- messages %>% 
+  mutate(match = str_detect(message, p2_rules))
+
+sum(p2_messages$match)
+```
+```{r echo = FALSE}
+287
+```
+
+Working through the example only sort of helped: I got the example to be 12 but the actual problem ended up failing for hours. It was a good filter for bad solutions though, because when the example was wrong I knew not to bother with the actual problem. 
+
+</details>
+
+## Day Twenty
+
+<details>
+
+<summary> Jigsaw puzzle solving turned out to be quite arduous. I came away from the first part quite confident (cracking the top 1000 solves for part 1!) but obviously had taken the shortcut for finding the corners and didn't actually solve the puzzle tiles into a single matrix. Iterating over the rest of the puzzle took me the better part of the afternoon and evening. 
+
+I never felt entirely out of my depth, but it was definitely a slog for motivation. </summary>
+
+--- Description ---
+
+> The camera array consists of many cameras; rather than produce a single square image, they produce many smaller square image tiles that need to be reassembled back into a single image.
+>
+> Worse yet, the camera array appears to be malfunctioning: each image tile has been rotated and flipped to a random orientation. Your first task is to reassemble the original image by orienting the tiles so they fit together.
+
+--- Data ---
+
+```{r eval = FALSE}
+input_20 <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-20.txt")
+```
+
+--- Cleaning ---
+
+```{r eval = FALSE}
+
+tiles <- tibble(tile = input_20) %>%
+  mutate(id = if_else(str_starts(tile,"Tile"),tile,NA_character_),
+         id = parse_number(id)) %>%  
+  fill(id) %>% 
+  filter(tile!="",str_detect(tile,"Tile ",negate = TRUE)) %>%
+  mutate(tile = str_split(tile,"")) %>% 
+  group_by(id) %>% 
+  summarise(tile = list(unlist(tile))) %>% 
+  mutate(tile = map(tile,~matrix(.x,nrow = 10, ncol = 10, byrow = TRUE)))
+  
+```
+
+--- Problem 1 --- 
+
+Find corner tiles. 
+
+```{r eval = FALSE}
+tile_edges <- tiles %>% 
+  mutate(tile_edges = map(tile, 
+                          ~list(
+                            top = .x[1,], top_rev = rev(.x[1,]),
+                            bottom = .x[10,], bottom_rev = rev(.x[10,]),
+                            left = .x[,1], left_rev = rev(.x[,1]),
+                            right = .x[,10], right_rev = rev(.x[,10])))) %>% 
+  unnest_longer(tile_edges,indices_to = "border_position") %>% 
+  transmute(id,border_position,tile_edges = map_chr(tile_edges,paste,collapse = "")) 
+
+p1 <- tile_edges %>% 
+  group_by(tile_edges) %>% 
+  mutate(matches = n()-1) %>% 
+  ungroup() %>% 
+  group_by(id) %>% 
+  summarise(sum_matches = sum(matches)/2) %>% 
+  filter(sum_matches == 2)
+
+p1
+```
+```{r echo = FALSE}
+structure(list(id = c(1109, 1693, 2909, 3371), sum_matches = c(2, 
+2, 2, 2)), row.names = c(NA, -4L), class = c("tbl_df", "tbl", 
+"data.frame"))
+```
+```{r eval = FALSE}
+prod(p1$id)
+```
+```{r echo = FALSE}
+18411576553343
+```
+
+
+--- Problem 2 ---
+
+Assemble the picture and find the sea monster. 
+
+(Internal swearing as I only found the corners first and didn't actually do the joining bit, so time to catch up)
+
+```{r eval = FALSE}
+matching_edges <- tile_edges %>% 
+  group_by(tile_edges) %>% 
+  mutate(matches = n()-1, 
+         matching_tiles = list(id)) %>% 
+  ungroup() %>% 
+  filter(matches!=0) %>% 
+  mutate(matching_tiles = map2_dbl(matching_tiles,id,~.x[.x!=.y])) %>%
+  group_by(id) %>% 
+  mutate(matches = sum(matches)/2) %>% 
+  ungroup()
+
+edges <- matching_edges %>% 
+  filter(matches <= 3) %>% 
+  distinct(id,matches,matching_tiles) %>% 
+  filter(matching_tiles %in% .$id)
+
+corners <- matching_edges %>% 
+  filter(matches == 2)
+```
+
+```{r eval = FALSE}
+id_matrix <- matrix(numeric(),nrow = 12, ncol = 12)
+
+perimeter <- c(1109,1181)
+perimeter_options <- edges %>% 
+  filter(!matching_tiles %in% perimeter)
+
+while(nrow(perimeter_options)>0){
+ 
+  i <- length(perimeter)+1
+  
+  perimeter[i] <- perimeter_options %>% 
+    filter(id == tail(perimeter,1)) %>% 
+    pull(matching_tiles)
+  
+  perimeter_options <- perimeter_options %>% 
+    filter(!matching_tiles %in% perimeter)
+}
+
+id_matrix[1,] <- perimeter[1:12]
+id_matrix[,12] <- perimeter[12:23]
+id_matrix[12,] <- rev(perimeter[23:34])
+id_matrix[,1] <- c(1109,rev(perimeter[34:44]))
+
+rm(perimeter_options,perimeter)
+
+id_matrix
+```
+
+
+```{r echo = FALSE}
+structure(c(1109, 1487, 3319, 2423, 2161, 2999, 1069, 2371, 3821, 
+1523, 3637, 3371, 1181, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 
+2543, 2719, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 2749, 1373, 
+NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 3301, 1303, NA, NA, NA, 
+NA, NA, NA, NA, NA, NA, NA, 2141, 1637, NA, NA, NA, NA, NA, NA, 
+NA, NA, NA, NA, 1061, 3023, NA, NA, NA, NA, NA, NA, NA, NA, NA, 
+NA, 1597, 1447, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 2459, 
+1361, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 1759, 1019, NA, 
+NA, NA, NA, NA, NA, NA, NA, NA, NA, 2633, 1733, NA, NA, NA, NA, 
+NA, NA, NA, NA, NA, NA, 2207, 1693, 1609, 2861, 1867, 3229, 3313, 
+3677, 3833, 3779, 2819, 2917, 2909), .Dim = c(12L, 12L))
+```
+
+YAY WE HAVE THE PERIMETER! (Still a mountain to climb, but hey.)
+
+Filling in the middles by looking at the tile above and the tile to the left. 
+
+```{r eval = FALSE}
+middles <- matching_edges %>% 
+  filter(matches == 4) %>% 
+  distinct(id,matching_tiles)
+
+for(col in 2:11){
+  for(row in 2:11){
+    
+    up <- id_matrix[row-1,col]
+    left <- id_matrix[row,col-1]
+    
+    v <- middles %>% 
+      filter(matching_tiles %in% c(up,left)) %>% 
+      group_by(id) %>% 
+      summarise(n = n()) %>% 
+      filter(n == 2) %>% 
+      pull(id)
+    
+    middles <- middles %>% filter(id!=v)
+    
+    id_matrix[row,col] <- v 
+  }
+}
+
+rm(up, left, v)
+
+id_matrix
+```
+
+
+```{r echo = FALSE}
+structure(c(1109, 1487, 3319, 2423, 2161, 2999, 1069, 2371, 3821, 
+1523, 3637, 3371, 1181, 2441, 3257, 1213, 3019, 2843, 2557, 1553, 
+3491, 3329, 1997, 2543, 2719, 3671, 3863, 1559, 3881, 2083, 2777, 
+3727, 1783, 2677, 2221, 2749, 1373, 3221, 2593, 2969, 2411, 1789, 
+1049, 1249, 3877, 2953, 2467, 3301, 1303, 1367, 3089, 2621, 1619, 
+2131, 1993, 1607, 3413, 3463, 2287, 2141, 1637, 1097, 3181, 3739, 
+2081, 2521, 1423, 1741, 3659, 1171, 2551, 1061, 3023, 3761, 2273, 
+1193, 2617, 3137, 3931, 2683, 3517, 1627, 2897, 1597, 1447, 1601, 
+2699, 1823, 2707, 3673, 1153, 2039, 1879, 2789, 1747, 2459, 1361, 
+1091, 1429, 2531, 3527, 2377, 2663, 1327, 3583, 3203, 3967, 1759, 
+1019, 3253, 1697, 1489, 3467, 1123, 1201, 3011, 3191, 3461, 1657, 
+2633, 1733, 1667, 3691, 2549, 1439, 1847, 1129, 1033, 3533, 1103, 
+3299, 2207, 1693, 1609, 2861, 1867, 3229, 3313, 3677, 3833, 3779, 
+2819, 2917, 2909), .Dim = c(12L, 12L))
+```
+
+Okay! So we now have the location of each tile and now need to orient each tile correctly. Again starting from the top corner tile, now rotating and flipping the tile until it fits into the correct orientation. 
+
+Some helpers from Stack Overflow: https://stackoverflow.com/questions/16496210/rotate-a-matrix-in-r-by-90-degrees-clockwise
+
+```{r eval = FALSE}
+rotate_matrix <- function(x) t(x[nrow(x):1,])
+
+flip_matrix <- function(x) x[nrow(x):1,]
+
+```
+
+First, fill in leftmost column of the matrix, aligning top of new tile with bottom of previous tile.
+
+```{r eval = FALSE}
+correct_tiles <- tiles %>% 
+  filter(id == 1109)
+
+for(i in 2:12){
+  
+  i_id <- id_matrix[i,1]
+  up_id <- id_matrix[i-1,1]
+  
+  up_tile <- correct_tiles %>% 
+    filter(id == up_id) %>% 
+    pluck("tile", 1)
+  
+  up_bottom <- up_tile[10,] %>% paste(collapse = "")
+  
+  i_tile <- tiles %>% 
+    filter(id == i_id) %>% 
+    pluck("tile", 1)
+
+  i_list <- tibble(tile = list(
+    i_tile,
+    i_tile %>% rotate_matrix(),
+    i_tile %>% rotate_matrix() %>% rotate_matrix(),
+    i_tile %>% rotate_matrix() %>% rotate_matrix() %>% rotate_matrix(),
+    i_tile %>% flip_matrix(),
+    i_tile %>% flip_matrix() %>% rotate_matrix(),
+    i_tile %>% flip_matrix() %>% rotate_matrix() %>% rotate_matrix(),
+    i_tile %>% flip_matrix() %>% rotate_matrix() %>% rotate_matrix() %>% rotate_matrix()
+  )) %>% 
+    mutate(match = map_lgl(tile,~.x[1,] %>% paste(collapse = "") == up_bottom)) %>% 
+    filter(match)
+  
+  if(nrow(i_list)==0) stop()
+  
+  i_tile <- i_list$tile[[1]]
+  
+  correct_tiles <- tibble(id = i_id, tile = list(i_tile)) %>% 
+    bind_rows(correct_tiles,.)
+  
+}
+
+```
+
+Okay, now orient the top row by accessing the right hand side:
+
+```{r eval = FALSE}
+for(i in 2:12){
+  
+  i_id <- id_matrix[1,i]
+  left_id <- id_matrix[1,i-1]
+  
+  left_tile <- correct_tiles %>% 
+    filter(id == left_id) %>% 
+    pluck("tile", 1)
+  
+  left_right <- left_tile[,10] %>% paste(collapse = "")
+  
+  i_tile <- tiles %>% 
+    filter(id == i_id) %>% 
+    pluck("tile", 1)
+  
+  i_left <- i_tile[,1] %>% paste(collapse = "")
+  
+  i_list <- tibble(tile = list(
+    i_tile,
+    i_tile %>% rotate_matrix(),
+    i_tile %>% rotate_matrix() %>% rotate_matrix(),
+    i_tile %>% rotate_matrix() %>% rotate_matrix() %>% rotate_matrix(),
+    i_tile %>% flip_matrix(),
+    i_tile %>% flip_matrix() %>% rotate_matrix(),
+    i_tile %>% flip_matrix() %>% rotate_matrix() %>% rotate_matrix(),
+    i_tile %>% flip_matrix() %>% rotate_matrix() %>% rotate_matrix() %>% rotate_matrix()
+  )) %>% 
+    mutate(match = map_lgl(tile,~.x[,1] %>% paste(collapse = "") == left_right)) %>% 
+    filter(match)
+  
+  if(nrow(i_list)==0) stop()
+  
+  i_tile <- i_list$tile[[1]]
+  
+  correct_tiles <- tibble(id = i_id, tile = list(i_tile)) %>% 
+    bind_rows(correct_tiles,.)
+  
+}
+
+correct_tiles
+
+```
+
+Now reapply the vertical orienter for each remaining column:
+
+```{r eval = FALSE}
+for(c in 2:12){ # c is column
+  for(r in 2:12){ # r is row
+    
+    i_id <- id_matrix[r,c]
+    up_id <- id_matrix[r-1,c]
+    
+    up_tile <- correct_tiles %>% 
+      filter(id == up_id) %>% 
+      pluck("tile", 1)
+    
+    up_bottom <- up_tile[10,] %>% paste(collapse = "")
+    
+  i_tile <- tiles %>% 
+    filter(id == i_id) %>% 
+    pluck("tile", 1)
+
+  i_list <- tibble(tile = list(
+    i_tile,
+    i_tile %>% rotate_matrix(),
+    i_tile %>% rotate_matrix() %>% rotate_matrix(),
+    i_tile %>% rotate_matrix() %>% rotate_matrix() %>% rotate_matrix(),
+    i_tile %>% flip_matrix(),
+    i_tile %>% flip_matrix() %>% rotate_matrix(),
+    i_tile %>% flip_matrix() %>% rotate_matrix() %>% rotate_matrix(),
+    i_tile %>% flip_matrix() %>% rotate_matrix() %>% rotate_matrix() %>% rotate_matrix()
+  )) %>% 
+    mutate(match = map_lgl(tile,~.x[1,] %>% paste(collapse = "") == up_bottom)) %>% 
+    filter(match)
+  
+  if(nrow(i_list)==0) stop()
+  
+  i_tile <- i_list$tile[[1]]
+      
+  correct_tiles <- tibble(id = i_id, tile = list(i_tile)) %>% 
+    bind_rows(correct_tiles,.)
+  }
+}
+```
+
+Okay, so theoretically we now have a directory of correctly oriented tiles! Now to strip out the border rows from each tile:
+
+```{r eval = FALSE}
+borderless_tiles <- correct_tiles %>% 
+  mutate(tile = map(tile,~.x[2:9,2:9]))
+```
+
+And then row-bind each column together, then bind each column together into the final matrix.
+
+```{r eval = FALSE}
+tile_matrix <- matrix(character(), nrow = 96)
+
+for(c in 1:12){
+  column_matrix <- matrix(character(), ncol = 8)
+  
+  for(r in 1:12){
+    tile_id <- id_matrix[r,c]
+    
+    tile <- borderless_tiles %>% 
+      filter(id == tile_id) %>% 
+      pluck("tile",1)
+    
+    column_matrix <- rbind(column_matrix,tile)
+  }
+  
+  tile_matrix <- cbind(tile_matrix,column_matrix)
+}
+
+```
+
+Now to detect a seamonster! First, the monster:
+
+```{r eval = FALSE}
+monster <- tibble(x = c("                  # ", 
+                        "#    ##    ##    ###",
+                        " #  #  #  #  #  #   ")) %>% 
+  mutate(x = str_split(x,""),
+         row = row_number()) %>% 
+  unnest_wider(x, names_sep = "") %>% 
+  pivot_longer(cols = -row,names_to = "col") %>% 
+  mutate(col = parse_number(col)) %>% 
+  filter(value == "#")
+```
+
+Now, we need to loop over the tile matrix, looking at every 20-wide + 3-tall matrix to see if it's a monster. We'll need to do this for every iteration of the tile matrix (rotates and flips).
+
+```{r eval = FALSE}
+scan_tile_matrix_for_monsters <- function(tile_matrix,monster){
+  
+  monster_count <- 0
+  
+  for(c in 1:(ncol(tile_matrix)-19)){
+    
+    for(r in 1:(nrow(tile_matrix)-2)){
+      
+      x <- tile_matrix[r:(r+2),c:(c+19)]
+      
+      v <- map2_lgl(monster$row,monster$col, ~x[.x,.y]=="#") %>% all()
+      
+      if(v) monster_count <- monster_count + 1
+    }
+  }
+  
+  return(monster_count)
+}
+
+all_matrices <- list(
+  tile_matrix,
+  tile_matrix %>% rotate_matrix(),
+  tile_matrix %>% rotate_matrix() %>% rotate_matrix(),
+  tile_matrix %>% rotate_matrix() %>% rotate_matrix() %>% rotate_matrix(),
+  flip_matrix(tile_matrix),
+  flip_matrix(tile_matrix) %>% rotate_matrix(),
+  flip_matrix(tile_matrix) %>% rotate_matrix() %>% rotate_matrix(),
+  flip_matrix(tile_matrix) %>% rotate_matrix() %>% rotate_matrix() %>% rotate_matrix()
+  )
+
+monster_count <- map_dbl(all_matrices,scan_tile_matrix_for_monsters,monster)
+
+monster_count
+```
+
+```{r echo = FALSE}
+c(0, 0, 43, 0, 0, 0, 0, 0)
+```
+
+```{r eval = FALSE}
+sum(tile_matrix == "#") - (max(monster_count) * nrow(monster))
+```
+```{r echo = FALSE}
+2002
+```
+
+Whew, that was a doozy!
+
+</details>
