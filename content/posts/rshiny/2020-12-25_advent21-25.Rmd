@@ -35,11 +35,11 @@ I had never really written recursive functions before the few problems that need
 
 ```
 Day       Time   Rank       Time   Rank
- 25   08:29:27   8492   08:29:43   6475
- 24   09:43:07   9326   11:43:30   8737
- 23   09:54:26   9464   19:21:29   8927
- 22   09:22:55  11636   22:33:08  12116
- 21   19:54:17  11667   19:55:13  11415
+  25   08:29:27   8492   08:29:43   6475
+  24   09:43:07   9326   11:43:30   8737
+  23   09:54:26   9464   19:21:29   8927
+  22   09:22:55  11636   22:33:08  12116
+  21   19:54:17  11667   19:55:13  11415
 ```
 
 I was losing too much sleep and stopped really spending time on these at the midnight hour. On the whole, these five were pretty decent to solve - I had to read up on linked lists and hex grid coordinates. Optimising recursion on Day 22 was definitely tricky, but I was really pleased when I cracked it. 
