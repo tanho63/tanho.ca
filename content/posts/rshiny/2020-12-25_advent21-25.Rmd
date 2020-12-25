@@ -1,0 +1,650 @@
+---
+layout: single
+title: "Advent of Code 2020, Days 21-25"
+date:   2020-12-25
+summary: "Tackling the twenty-first through twenty-fifth days of AdventOfCode2020: Allergen Assessment, Combat Crabs, Crab Cups, Lobby Layout, and Combo Breaker!"
+type: rshiny
+menu:
+  sidebar:
+    name: 'AdventofCode 2020, 21-25'
+    identifier: adventcode2020-21-25
+    parent: rshiny
+url: /adventcode-2020-21-25
+hero: /images/rshiny/advent.jpg
+---
+
+```{r include = FALSE}
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(lubridate)
+})
+
+options(scipen = 999)
+
+knitr::opts_chunk$set(class.source = "language-r")
+```
+
+
+Looking back on Advent of Code now that I've cracked day 25 (on Christmas, no less), I can honestly say that I had a great time working through these. A vast majority of the problems I had some idea on how to solve (barring the one with Chinese Remainder Theorem) and when I got stuck I was able to deconstruct the solution from another language to understand their steps to solution and then implement it on my own in R. 
+
+As a data-oriented programmer I did think through the majority of the problems in tibbles, but one of the things I've learned is just getting way more comfortable with doing things in loops and vectors for programming efficency. Tibbles are great but not in terms of expensive/brute-force iterations - too many check steps and such. 
+
+I had never really written recursive functions before the few problems that needed it, but having these working examples really helped me think through the processes and I'm a lot more comfortable with recursion in R now. 
+
+## Stats
+
+```
+Day       Time   Rank       Time   Rank
+ 25   08:29:27   8492   08:29:43   6475
+ 24   09:43:07   9326   11:43:30   8737
+ 23   09:54:26   9464   19:21:29   8927
+ 22   09:22:55  11636   22:33:08  12116
+ 21   19:54:17  11667   19:55:13  11415
+```
+
+I was losing too much sleep and stopped really spending time on these at the midnight hour. On the whole, these five were pretty decent to solve - I had to read up on linked lists and hex grid coordinates. Optimising recursion on Day 22 was definitely tricky, but I was really pleased when I cracked it. 
+
+## Packages Used
+
+Nothing too exotic in this round, my default packages here were more than enough. 
+
+```{r eval = FALSE}
+
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(here)
+  library(glue)
+})
+
+```
+
+## Day Twenty One
+
+<details>
+<summary> Coming off of the nightmare of solving a jigsaw puzzle, this one turned out to be surprisingly...easy? Part two was definitely not much of an escalation. </summary>
+
+
+--- Data ---
+```{r}
+input_21 <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-21.txt")
+
+input_21_e <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-21-e.txt")
+
+```
+
+--- Cleaning ---
+
+```{r}
+ingredient_list <- tibble(i = input_21) %>% 
+  mutate(id = row_number()) %>% 
+  separate(i, into = c("ingredient","allergen"), sep = " \\(contains ") %>% 
+  separate_rows(ingredient,sep = " ") %>%
+  mutate(allergen = str_remove(allergen,"\\)")) %>% 
+  separate_rows(allergen,sep = ", ")
+```
+
+--- Problem 1 ---
+
+Count non-allergens. Spent some time thinking about this one, but basically I'm grouping by allergen and getting the ingredients that occur the most for each allergen. If it's a single ingredient, that's the one (and then eliminates that ingredient from being the allergen from any of the others). Loop through this to create a table of allergens. 
+
+```{r eval = FALSE}
+top_allergens <- ingredient_list %>% 
+  group_by(ingredient,allergen) %>% 
+  summarise(n = n())%>% 
+  group_by(allergen) %>% 
+  slice_max(n) %>% 
+  mutate(nn = n()) %>%  
+  arrange(nn,desc(n),allergen)
+
+allergen_options <- top_allergens
+
+allergen_df <- tibble()
+
+while(nrow(allergen_options)>0) {
+  
+  x <- allergen_options %>% 
+    filter(nn == 1) %>% 
+    select(ingredient, allergen)
+
+  allergen_df <- bind_rows(allergen_df, x)
+  
+  allergen_options <- allergen_options %>% 
+    filter(!ingredient %in% allergen_df$ingredient, !allergen %in% allergen_df$allergen) %>% 
+    group_by(allergen) %>% 
+    mutate(nn = n())
+}
+
+non_allergens <- ingredient_list %>% 
+  filter(!ingredient %in% allergen_df$ingredient) %>% 
+  distinct(ingredient,id)
+
+nrow(non_allergens)
+```
+```{r echo = FALSE}
+2428
+```
+
+--- Problem 2 ---
+
+...is only to arrange the allergens in order? what?
+
+```{r eval = FALSE}
+allergen_df %>% 
+  arrange(allergen) %>% 
+  pull(ingredient) %>% 
+  paste(collapse = ",")
+```
+```{r echo = FALSE}
+"bjq,jznhvh,klplr,dtvhzt,sbzd,tlgjzx,ctmbr,kqms"
+```
+...that was ... easy?!
+
+
+</details>
+
+## Day Twenty Two
+
+<details>
+<summary> The War cardgame was easy enough to implement on first glance, but the recursion really hit me hard. There were some really elegant approaches I saw later that I'd maybe like to go back to (caching the subgame results or something). </summary>
+
+
+--- Data ---
+
+```{r eval = FALSE}
+input_22 <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-22.txt")
+```
+
+--- Cleaning ---
+
+```{r eval = FALSE}
+cards <- tibble(card = input_22) %>% 
+  mutate(player = cumsum(str_detect(card,"Player"))) %>% 
+  filter(card!="",!str_detect(card,"Player")) %>% 
+  mutate(card = parse_number(card))
+
+player_1 <- cards %>% 
+  filter(player == 1) %>% 
+  pull(card)
+
+player_2 <- cards %>% 
+  filter(player == 2) %>% 
+  pull(card)
+```
+
+```{r eval = FALSE}
+draw_card <- function(player){ head(player,1) }
+remove_card <- function(player){ tail(player,-1) }
+```
+
+
+--- Problem 1 ---
+
+Combat == "War" in my card game lexicon. Okay, looks straightforward enough:
+
+```{r eval = FALSE}
+g1_player1 <- player_1
+g1_player2 <- player_2
+
+while(all(length(g1_player1)>0,length(g1_player2)>0)){
+  
+  card_p1 <- draw_card(g1_player1)
+  g1_player1 <- remove_card(g1_player1)
+  
+  card_p2 <- draw_card(g1_player2)
+  g1_player2 <- remove_card(g1_player2)
+  
+  if(card_p1 > card_p2) g1_player1 <- c(g1_player1,card_p1,card_p2)
+  
+  if(card_p2 > card_p1) g1_player2 <- c(g1_player2,card_p2,card_p1)
+  
+}
+
+g1_player1
+```
+```{r echo = FALSE}
+c(45, 13, 16, 8, 38, 27, 35, 24, 44, 18, 34, 17, 39, 21, 10, 
+  5, 33, 12, 31, 3, 15, 1, 50, 49, 26, 23, 48, 40, 43, 14, 42, 
+  11, 41, 30, 37, 19, 47, 32, 28, 20, 36, 29, 46, 7, 9, 6, 25, 
+  4, 22, 2)
+```
+```{r eval = FALSE}
+g1_player2
+```
+```{r echo = FALSE}
+0
+```
+```{r eval = FALSE}
+(g1_player1 * 50:1) %>% sum()
+
+```
+```{r echo = FALSE}
+33421
+```
+
+
+--- Problem 2 ---
+
+Recursive Combat? Le wot?
+
+Rules:
+
+- Game instantly ends in a win if a previous round within this game has the same cards in the same order in the same players decks, award win to player 1
+- Begin round as usual by drawing the card. 
+- If the number of cards remaining in the deck is more than the card they just drew, the winner of the round is determined by playing a new subgame of recursive combat. 
+- If the number of cards remaining in the deck is less than the card they just drew (for either), the winner of the round is the player with the higher value card. 
+
+Lmao wtf okay...(insert meme)
+
+```{r eval = FALSE}
+i <- 0
+recursive_combat <- function(player_1,player_2){
+
+  i<<-i+1
+  
+  # Hold the early exit game state
+  deck_states <- c()
+  
+  game_deck_player_1 <- player_1
+  game_deck_player_2 <- player_2
+  
+  game_winner <- NULL
+  
+  loop <- 1
+  
+  while(loop != 0){
+    
+    # check deck states
+    player_1_score <- sum(game_deck_player_1 * rev(seq_along(game_deck_player_1)))
+    player_2_score <- sum(game_deck_player_2 * rev(seq_along(game_deck_player_2)))
+    
+    this_deck <- paste(player_1_score,player_2_score,sep = "-")
+    
+    if(this_deck %in% deck_states) {
+      
+      game_winner <- "player_one" 
+      
+      break
+      
+    } else {
+      deck_states <- c(deck_states,this_deck)
+    }
+    
+    # draw cards
+    draw_player1 <- draw_card(game_deck_player_1)
+    game_deck_player_1 <- remove_card(game_deck_player_1)
+    
+    draw_player2 <- draw_card(game_deck_player_2)
+    game_deck_player_2 <- remove_card(game_deck_player_2)
+    
+    # Play recursive combat?
+    
+    if(length(game_deck_player_1)>=draw_player1 & length(game_deck_player_2)>=draw_player2) {
+      
+      round_winner <- recursive_combat(head(game_deck_player_1, draw_player1), 
+                                       head(game_deck_player_2, draw_player2))$game_winner
+      
+    } else {
+      round_winner <- ifelse(draw_player1 > draw_player2, "player_one", "player_two")
+    }
+    
+    if(round_winner == "player_one") game_deck_player_1 <- c(game_deck_player_1,draw_player1,draw_player2)
+    
+    if(round_winner == "player_two") game_deck_player_2 <- c(game_deck_player_2,draw_player2,draw_player1)
+
+    loop <- ifelse(length(game_deck_player_1) == 0 | length(game_deck_player_2) == 0,0,1)
+    
+  }
+  
+  if(is.null(game_winner)){
+    game_winner <- ifelse(length(game_deck_player_1) > length(game_deck_player_2), "player_one", "player_two")
+  }
+  
+  return(list(game_winner = game_winner,
+              player_1 = game_deck_player_1, 
+              player_2 = game_deck_player_2))
+}
+
+x <- recursive_combat(player_1,player_2)
+```
+```{r echo = FALSE}
+list(game_winner = "player_one", player_1 = c(18, 5, 47, 38, 
+49, 21, 34, 1, 45, 33, 32, 23, 39, 36, 27, 16, 2, 6, 43, 40, 
+42, 24, 10, 9, 35, 20, 11, 3, 41, 17, 29, 13, 28, 25, 50, 26, 
+37, 7, 46, 22, 15, 8, 44, 31, 14, 12, 48, 19, 30, 4), player_2 = numeric(0))
+```
+```{r eval = FALSE}
+sum(x$player_1 * rev(seq_along(x$player_1)))
+```
+```{r echo = FALSE}
+33651
+```
+
+</details>
+
+## Day Twenty Three
+
+<details>
+<summary> The first problem was no trouble, but the second problem definitely couldn't be brute forced. Learning about linked lists and puzzling through the implementation solved part two much more efficiently. </summary>
+
+
+--- Data ---
+
+```{r eval = FALSE}
+input_23 <- "496138527"
+```
+
+--- Cleaning ---
+
+```{r eval = FALSE}
+start_order <- str_split(input_23,"") %>% unlist %>% as.numeric
+```
+
+--- Problem 1 ---
+
+```{r eval = FALSE}
+p1 <- start_order
+
+for(i in 1:100){
+  
+  current_cup <- p1[1]
+  
+  picked_up <- p1[2:4]
+  
+  other_cups <- tail(p1, -4)
+  
+  if(all(current_cup < other_cups)) {
+    
+    destination_cup <- max(other_cups)
+    
+  } else {
+    
+    destination_cup <- max(other_cups[(current_cup - other_cups) > 0])
+    
+  }
+  d_loc <- which(other_cups == destination_cup)
+
+  p1 <- c(
+    head(other_cups,d_loc),
+    picked_up,
+    tail(other_cups,-d_loc),
+    current_cup
+    )
+    
+}
+
+one_loc <- which(p1 == 1)
+
+c(tail(p1,-one_loc),head(p1,one_loc-1)) %>% paste(collapse = "")
+```
+
+```{r echo = FALSE}
+"69425837"
+```
+
+
+--- Problem 2 ---
+
+Trying the naive solution first:
+
+```{r eval = FALSE}
+
+p2 <- c(start_order,seq.int(max(start_order),1000000))
+
+for(i in 1:1000000){
+  
+  current_cup <- p2[1]
+  
+  picked_up <- p2[2:4]
+  
+  other_cups <- tail(p2, -4)
+  
+  if(all(current_cup < other_cups)) {
+    
+    destination_cup <- max(other_cups) 
+    
+  } else {
+    
+    destination_cup <- max(other_cups[(current_cup - other_cups) > 0])
+    
+  }
+  d_loc <- which(other_cups == destination_cup)
+
+  p2 <- c(
+    head(other_cups,d_loc),
+    picked_up,
+    tail(other_cups,-d_loc),
+    current_cup
+    )
+}
+
+one_loc <- which(p2 == 1)
+
+p2[one_loc + c(1,2)]
+
+```
+
+Killing it for being too slow. 
+
+Attempt 2: trying to store the location of the next variable for each variable (as suggested by other languages' linked lists)
+
+```{r eval = FALSE}
+p2 <- c(start_order,seq.int(max(start_order)+1,1000000)) %>% as.integer()
+
+next_cups <- c(p2[-1],p2[1])
+cup_directory <- next_cups[order(p2)]
+
+current_cup <- p2[1]
+
+for (i in 1:10000000) {
+  
+  pickup_1 <- cup_directory[current_cup]
+  pickup_2 <- cup_directory[pickup_1]
+  pickup_3 <- cup_directory[pickup_2]
+  
+  destination_cup <- current_cup - 1:4
+  
+  destination_cup <- ifelse(
+    destination_cup <=0, 
+    max(cup_directory) + destination_cup, 
+    destination_cup)
+  
+  destination_cup <- destination_cup[!destination_cup %in% c(pickup_1,pickup_2,pickup_3)]
+  
+  destination_cup <- head(destination_cup, 1)
+  
+  cup_directory[current_cup] <- cup_directory[pickup_3]
+  # current now points to where third cup was pointing, removing three cups from loop
+  
+  cup_directory[pickup_3] <- cup_directory[destination_cup]
+  # third now points to where destination cup was pointing
+  
+  cup_directory[destination_cup] <- pickup_1
+  # destination cup now points at the first cup in the pickup
+  
+  current_cup <- cup_directory[current_cup]
+  # move pointer to where the current cup is pointing
+}
+
+x1 <- cup_directory[1]
+x2 <- cup_directory[x1]
+
+prod(x1,x2)
+```
+```{r echo = FALSE}
+218882971435
+```
+
+About three minutes to run the loop, so not bad!
+
+
+</details>
+
+## Day Twenty Four
+
+<details>
+<summary> Conway's game of life made a lot of appearances in this AOC! This variant had hexagonal grids, which puzzled me for a while until I found a good resource on coordinate systems for hex grids. </summary>
+
+
+--- Data ---
+
+```{r eval = FALSE}
+input_24 <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-24.txt")
+input_24_e <- read_lines("https://github.com/tanho63/advent_of_code/raw/master/2020/day-24-e.txt")
+```
+
+
+--- Cleaning ---
+
+Hex grids coordinates c/o https://www.redblobgames.com/grids/hexagons/
+```{r eval = FALSE}
+directions_e <- tibble(i = input_24_e) %>% 
+  mutate(i = str_extract_all(i,"se|sw|nw|ne|e|w"),
+         id = row_number()) %>% 
+  unnest_longer(i)
+
+directions <- tibble(i = input_24) %>% 
+  mutate(i = str_extract_all(i,"se|sw|nw|ne|e|w"),
+         id = row_number()) %>% 
+  unnest_longer(i)
+
+hex_coordinates <- list(e = c(1,-1,0),
+                        se = c(0,-1,1),
+                        sw = c(-1,0,1),
+                        w = c(-1,1,0),
+                        nw = c(0,1,-1),
+                        ne = c(1,0,-1)) %>% 
+  enframe() %>% 
+  unnest_wider(value,names_sep = "") %>% 
+  rename(dx = value1, dy = value2, dz = value3)
+
+```
+
+--- Problem 1 ---
+
+```{r eval = FALSE}
+tile_locations <- directions %>% 
+  left_join(hex_coordinates, by = c("i" = "name")) %>% 
+  group_by(id) %>% 
+  summarise(x = sum(dx),
+            y = sum(dy),
+            z = sum(dz)) %>% 
+  group_by(x,y,z) %>% 
+  summarise(n = n()) %>% 
+  ungroup()
+
+sum(tile_locations$n == 1)
+```
+```{r echo = FALSE}
+528
+```
+
+
+--- Problem 2 ---
+Another gd game of life problem?! FFS. Assuming that prev problem is day zero.
+
+```{r eval = FALSE}
+current_state <- tile_locations %>% 
+  mutate(colour = ifelse(n == 1, "black", "white")) %>% 
+  filter(colour == "black")
+
+get_tile <- function(x,y,z,day){
+  current_state$colour[current_state$x == x & current_state$y == y & current_state$z == z]
+}
+
+get_tile <- memoise::memoise(get_tile)
+
+get_adjacent_tiles <- function(x,y,z, day){
+  
+  nx <- hex_coordinates$dx + x
+  ny <- hex_coordinates$dy + y
+  nz <- hex_coordinates$dz + z
+  
+  neighbours <- pmap(list(nx,ny,nz),get_tile,day)
+  
+  sum(unlist(neighbours) == "black", na.rm = TRUE)
+  
+}
+
+for(day in 1:100){
+  
+  grid_range <- range(current_state[c('x','y','z')])
+  
+  search_grid <- seq.int(from = grid_range[1]-1, to = grid_range[2]+1) %>% 
+    crossing(x = ., y = ., z = .) %>% 
+    filter((x + y + z) == 0) %>%
+    left_join(
+      current_state %>% select(x,y,z,colour),
+      by = c("x","y","z")
+    ) %>% 
+    mutate(colour = replace_na(colour,"white"),
+           neighbours = pmap_dbl(list(x,y,z), get_adjacent_tiles, day),
+           new_colour = case_when(colour == "black" & (neighbours == 0 | neighbours > 2) ~ "white",
+                                  colour == "white" & (neighbours == 2) ~ "black",
+                                  TRUE ~ colour))
+  
+  current_state <- search_grid %>% 
+    select(x,y,z,colour = new_colour) %>% 
+    filter(colour == "black")
+  
+  if(day %% 10 == 0) message(day)
+  
+}
+
+nrow(current_state)
+```
+```{r echo = FALSE}
+4200
+```
+
+</details>
+
+## Day Twenty Five
+
+<details>
+<summary> This one took me an embarrassingly long time to read and understand, but once I finally groked it the programming itself was pretty straightforward. Part two was simply "make sure all the other problems are done" and that was a super nice little reward! </summary>
+
+
+--- Data ---
+
+```{r eval = FALSE}
+input_25 <- c(2069194,16426071)
+```
+
+--- Problem 1 --- 
+
+```{r eval = FALSE}
+find_loops <- function(input){
+  
+  goal_keys <- numeric(2)
+  v <- 1
+  i <- 0
+  
+  while(any(goal_keys %in% 0)){
+   i <- i+1
+   v <- (v * 7) %% 20201227
+   
+   if(v == input[1]) goal_keys[1] <- i
+   if(v == input[2]) goal_keys[2] <- i
+  }
+  
+  return(goal_keys)
+}
+
+loop_sizes <- find_loops(input_25)
+
+encrypt_key <- function(public_key,loop_size){
+  
+  v <- 1
+  
+  for(i in seq_len(loop_size)) v <- (v * public_key) %% 20201227
+  
+  v
+}
+
+encrypt_key(input_25[1],loop_sizes[2])
+```
+```{r echo = FALSE}
+11576351
+```
+
+</details>

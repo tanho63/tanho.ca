@@ -5,7 +5,19 @@
 }
 
 body {
-  font-family: "Exo 2";
+  font-family: "IBM Plex Sans Condensed";
+}
+h1,h2,h3,h4,h5 {
+  font-family: "Titillium Web";
+}
+
+
+pre,code{
+  font-family: "Jetbrains Mono";
+}
+
+.card-body{
+  text-align: left;
 }
 
 .initial-navbar .navbar-brand, .final-navbar .navbar-brand {
