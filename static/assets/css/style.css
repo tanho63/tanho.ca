@@ -11,9 +11,12 @@ h1,h2,h3,h4,h5 {
   font-family: "Titillium Web";
 }
 
-
 code{
-  font-family: "Fira Mono";
+  font-family: "IBM Plex Mono";
+}
+
+.navbar, .typing-carousel{
+  font-family: "Titillium Web";
 }
 
 .card-body{
