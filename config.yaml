@@ -19,9 +19,9 @@ markup:
     renderer:
       unsafe: true
   tableOfContents:
-    # startLevel:
-    # endLevel: 6
-    # ordered: false
+     startLevel: 2
+     endLevel: 2
+     ordered: false
 
 # Enable Google Analytics
 googleAnalytics: UA-36766776-2
@@ -31,6 +31,9 @@ enableEmoji: true
 
 # Custom parameters
 params:
+  description: "Tan Ho: R/Shiny, DynastyFF, Rowing"
+  images:
+    - images/main-logo.png
   background: images/rowing-background-1080p.jpg
   # Provide logos for your site. The inverted logo will be used in the initial
   # transparent navbar and the main logo will be used in the non-transparent navbar.
@@ -56,3 +59,11 @@ params:
 
 css: assets/css/style.css
 ignoreFiles: ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
+
+outputs:
+   home:
+   - HTML
+   - RSS
+   page:
+   - HTML
+   - RSS

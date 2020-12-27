@@ -18,14 +18,14 @@ company:
 # resume: "files/resume.pdf"
 
 # a summary about you
-summary: "I'm a data enthusiast who loves R/Shiny 🤩, DynastyFF and rowing. By day, I'm a data developer and analyst for ABIC in Ottawa, Canada. I started DynastyProcess.com and contribute at DLF and R4DS Slack Community. Away from my keyboard, I'm a rower and a lead coach for the Ottawa Rowing Club."
+summary: "I'm a data enthusiast who loves R/Shiny 🤩, DynastyFF and rowing. By day, I'm a data developer and analyst for ABIC Builds in Ottawa, Canada. I started [DynastyProcess.com](https://dynastyprocess.com) and contribute at [DLF](https://dynastyleaguefootball.com) and [R4DS Slack Community](https://r4ds.io). \n \n Away from my keyboard, I'm a rower and a lead coach for the Ottawa Rowing Club."
 
 # your social links
 # give as many as you want. use font-awesome for the icons.
 socialLinks:
 - name: Email
   icon: "fas fa-envelope"
-  url: "mailto:tan@tanho.ca"
+  url: "mailto:hello@tanho.ca"
 
 - name: Github
   icon: "fab fa-github"

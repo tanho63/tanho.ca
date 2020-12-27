@@ -10,7 +10,7 @@ menu:
     identifier: adventcode2020-21-25
     parent: rshiny
 url: /adventcode-2020-21-25
-hero: /images/rshiny/advent.jpg 
+hero: /images/rshiny/present.jpg 
 ---
 
 ```{r include = FALSE}

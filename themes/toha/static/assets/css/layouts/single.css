@@ -16,8 +16,8 @@ body {
 }
 
 .content-section {
-  flex: 80%;
-  max-width: 80%;
+  flex: 60%;
+  max-width: 60%;
   order: 2;
   /* background-color: lightseagreen; */
   padding: 0;
@@ -29,7 +29,7 @@ body {
   background: #e5e9f2;
 }
 .toc-section {
-  flex: 10%;
+  flex: 20%;
   order: 3;
   max-width: 20%;
   /* background-color: lightpink; */
@@ -64,7 +64,9 @@ body {
 }
 
 .toc ul {
+  list-style: none;
   padding-left: 0.5rem;
+  margin-bottom: 0rem;
   width: 100%;
 }
 
@@ -114,6 +116,8 @@ body {
 .author-profile img {
   height: 120px;
   width: 120px;
+  -o-object-fit: cover;
+     object-fit: cover;
   background-color: #f9fafc;
   padding: 5px;
 }
@@ -305,13 +309,17 @@ mark {
   text-align: right;
 }
 
+.languageSelector{
+  display: none;
+}
+
 /* ============= Device specific fixes ======= */
 
 /* Large screens such as TV */
 @media only screen and (min-width: 1824px) {
   .content-section {
-  flex: 80%;
-  max-width: 80%;
+    flex: 65%;
+    max-width: 65%;
   }
   .content-section .container {
     max-width: 100%;
@@ -368,8 +376,13 @@ mark {
   .navbar-toggler {
     display: block;
   }
+
   .navbar-collapse.lang-selector {
     display: none;
+  }
+
+  .languageSelector{
+    display: block;
   }
 
   .hero-area {
