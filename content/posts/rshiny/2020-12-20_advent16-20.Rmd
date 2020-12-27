@@ -2,7 +2,7 @@
 layout: single
 title: "Advent of Code 2020, Days 16-20"
 date:   2020-12-20
-summary: "Tackling the sixteenth through twentieth days of AdventOfCode2020: Ticket Translation, Conway Cubes, Operation Order, Monster Messages, Jurassic Jigsaw!"
+summary: "Tackling the sixteenth through twentieth days of Advent Of Code 2020: Ticket Translation, Conway Cubes, Operation Order, Monster Messages, Jurassic Jigsaw!"
 type: rshiny
 menu:
   sidebar:
