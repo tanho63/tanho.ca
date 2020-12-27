@@ -67,7 +67,7 @@ projects:
   logo: "images/projects/balance-scale.svg"
   role: Reviewer
   timeline: August 2019 - Present
-  url: "https://dynastyleaguefootball.com/tradeanalyzer"
+  url: "https://apps.dynastyleaguefootball.com/tradeanalyzer"
   summary: Maintain and review valuation algorithms for the DLF Trade Analyzer, including draft picks and devy values.
   tags: ["dlf"]
 
