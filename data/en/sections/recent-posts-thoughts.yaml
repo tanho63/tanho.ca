@@ -1,9 +1,9 @@
 # section information
 section:
-  name: Recent Posts
-  id: recent-posts-r
+  name: Recent Thoughts
+  id: recent-posts-thoughts
   enable: true
-  weight: 6
+  weight: 5
   showOnNavbar: false
   # Can optionally hide the title in sections
   # hideTitle: true
