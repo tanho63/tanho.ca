@@ -43,4 +43,4 @@ I've also lucked into a community in the TDM Discord where I feel comfortable ma
 
 The takeaway from the chapter, for me, is that I should continue to strive to surround myself with like-hearted people - on my Twitter feed, in my Discord/Slack communities, and in real in-person friend groups. I'm lucky to have the communities I'm in, and I'm very glad to be able to get drawn into debates amongst my like-hearted friends. 
 
-*I immensely recommend Austin Kleon and the Steal trilogy to everyone, ***especially*** those looking to "make it" as a creator, programmer, or data analyst.*
+*I immensely recommend Austin Kleon and the Steal trilogy to everyone, **especially** those looking to "make it" as a creator, programmer, or data analyst.*
