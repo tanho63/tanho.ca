@@ -19,7 +19,7 @@ url: /like-hearted
 
 Each year, I embark on a journey to re-read Austin Kleon's [Steal trilogy](https://austinkleon.com/books), and each time I read it, something new grabs my attention. I was struck today by this image from a chapter in Keep Going called "Like-Minded vs Like-Hearted":
 
-<img src="/images/thoughts/not_arguing.jpg" alt="not arguing" style="max-height: 350px;" />
+<img src="/images/thoughts/not_arguing.jpg" alt="not arguing" style="max-height: 50vh;" />
 
 *A pretty obvious callback to the Simpsons and their opening chalkboard gag!* 
 
