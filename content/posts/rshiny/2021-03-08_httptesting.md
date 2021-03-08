@@ -45,12 +45,12 @@ In consulting the available documentation, I came across [this GitHub issue](htt
 - Creating a function to redact the responses on capture
 - Manually pruning the captured responses
 - Refactor larger functions so that they can be tested on smaller chunks of data
-- Lastly (and least-optimally) - creating a separate data package that holds the response cache
+- Lastly (and least-optimally, in Neal's opinion) - creating a separate data package that holds the response cache
 
 I took a stab at each of these approaches, but one by one I had to discard them:
 
 - API responses for fantasy football platforms are subject to change on a pretty regular basis - I've had to rebuild the captured responses several times since I started developing this package in August 2020, and corner cases are unlikely to appear in the first 5-10 responses of data
-- Manually pruning the captured responses is unfeasible for similar reasons as above, but infinitely more time-consuming!
+- Manually pruning the captured responses is unfeasible for similar reasons as above, and is also infinitely more time-consuming!
 - I did try to refactor some of the larger/longer-running functions into smaller/more-testable units, especially since some of the APIs have options to limit and paginate. However, some of these requests were very difficult to paginate/limit, and some of the functions that I wanted to test needed to aggregate large amounts of data. I wanted the tests to be easily assessable via the naked eye. 
 
 Thus, I landed on creating a separate package of test data files as my best route forward. I briefly considered the idea of pushing the data package to CRAN - this would ensure that it would always be "accessible" to the CRAN package wherever accessed - but discarded the prospects of both getting an exemption on package size AND maintaining regular updates to the test data. Instead, I opted for a separate GitHub repository of test files, which I considered to be a relatively reliable place to store the data. 
