@@ -32,9 +32,9 @@ For `ffscrapr`, I think the most important of these are testing the code for dep
 
 ## Why not skip CRAN testing? 
 
-Many API packages skip all testing on CRAN - it's a hassle to maintain, and the risk of being booted from CRAN can outweigh the effort of making sure tests don't fail. I'm here to suggest otherwise! I think developers are missing out on one of CRAN's most important benefits, which is being a massive dependency testing suite. Packages are tested on so many different combinations of operating systems and R versions on a regular basis, and CRAN will also require your dependency packages to make sure that they don't break your package (and/or if they do, to give you advanced notice that it will break your package). This gives you time to make the appropriate changes to the package to accommodate the change! 
+Many API packages skip all testing on CRAN - it's a hassle to maintain, and the risk of being booted from CRAN can outweigh the effort of making sure tests don't fail. I'm here to suggest otherwise! I think developers are missing out on one of CRAN's most important benefits, which is being a massive dependency testing suite. Packages are tested on many different combinations of operating systems and R versions on a regular basis, and CRAN will also require your dependency packages to make sure that changes they make don't break your package (and/or if they do, to give you advanced notice that it will break your package). This gives you time to make the appropriate changes to the package to accommodate the change! 
 
-Skipping these tests on CRAN is doing yourself a disservice, in my opinion, especially with the development of packages like httptest (which I use) and alternatives like vcr/webmockr - I think the extra work in making the package CRAN-testable (at least, to make sure that your R code processes the responses properly) is worth doing. These packages essentially create local copies of the data that the API would return from your http query, and redirect your request to read from the local files instead of letting your request go through to the API - allowing you to test while holding the API responses constant.
+Skipping these tests on CRAN is doing yourself a disservice, in my opinion, especially with the development of packages like [httptest](https://enpiar.com/r/httptest/) (which I use) and alternatives like vcr/webmockr - I think the extra work in making the package CRAN-testable (at least, to make sure that your R code processes the responses properly) is worth doing. These packages essentially create local copies of the data that the API would return from your http query, and redirect your request to read from the local files instead of letting your request go through to the API - allowing you to test while holding the API responses constant.
 
 ## Storing mock data in a separate repository
 
@@ -51,7 +51,7 @@ I took a stab at each of these approaches, but one by one I had to discard them:
 
 - API responses for fantasy football platforms are subject to change on a pretty regular basis - I've had to rebuild the captured responses several times since I started developing this package in August 2020, and corner cases are unlikely to appear in the first 5-10 responses of data
 - Manually pruning the captured responses is unfeasible for similar reasons as above, and is also infinitely more time-consuming!
-- I did try to refactor some of the larger/longer-running functions into smaller/more-testable units, especially since some of the APIs have options to limit and paginate. However, some of these requests were very difficult to paginate/limit, and some of the functions that I wanted to test needed to aggregate large amounts of data. I wanted the tests to be easily assessable via the naked eye. 
+- I did try to refactor some of the larger/longer-running functions into smaller/more-testable units, especially since APIs frequently have options to limit and paginate. However, some of these requests were very difficult to configure in this fashion, and other functions that I wanted to test needed to aggregate large amounts of data. I wanted the tests to be easily evaluated via the naked eye. 
 
 Thus, I landed on creating a separate package of test data files as my best route forward. I briefly considered the idea of pushing the data package to CRAN - this would ensure that it would always be "accessible" to the CRAN package wherever accessed - but discarded the prospects of both getting an exemption on package size AND maintaining regular updates to the test data. Instead, I opted for a separate GitHub repository of test files, which I considered to be a relatively reliable place to store the data. 
 
@@ -138,4 +138,23 @@ I've had some problems with my PC's locale settings encoding the JSON oddly in t
 ## Testing the real APIs with GitHub Actions
 
 CRAN obviously cannot test the real APIs, because it cannot handle failures gracefully. Instead, I have [a GitHub Action that does this](https://github.com/dynastyprocess/ffscrapr/blob/main/.github/workflows/test-apis.yml) by running the package tests with the MOCK_BYPASS environment variable set to "true". Paired with a cron schedule of once a week, this successfully catches API changes and issues before users can find them, which helps me anticipate and start patching bugs more effectively.
+
+## Testivus wisdom
+
+
+> Embrace unit testing karma
+> 
+> Karma says:
+> 
+>  > “Do good things and good things will happen to you.
+> > 
+>  > Do them the way you know.
+> > 
+>  > Do them the way you like.”
+> 
+> Karma is flexible. Testing needs flexibility.
+> 
+> Karma thrives on creativity. Testing needs creativity.
+
+
 
