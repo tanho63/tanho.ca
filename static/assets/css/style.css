@@ -5,11 +5,19 @@
 }
 
 body {
-  font-family: "IBM Plex Sans Condensed", sans-serif;
+  font-family: "IBM Plex Sans", sans-serif;
 }
 
 h1,h2,h3,h4,h5 {
-  font-family: "Titillium Web", sans-serif;
+  font-family: "Bai Jamjuree", sans-serif;
+}
+
+h1,h2,h3,h4 {
+  font-weight: 700;
+}
+
+h5 {
+  font-weight: 500;
 }
 
 code{
@@ -17,7 +25,8 @@ code{
 }
 
 .navbar, .typing-carousel{
-  font-family: "Titillium Web";
+  font-family: "Bai Jamjuree";
+  font-weight: 500;
 }
 
 .card-body{
@@ -25,5 +34,5 @@ code{
 }
 
 .initial-navbar .navbar-brand, .final-navbar .navbar-brand {
-  font-weight: 400;
+  font-weight: 700;
 }

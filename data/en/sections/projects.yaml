@@ -23,6 +23,22 @@ buttons:
 
 # your projects
 projects:
+- name: "Livecoding Stream"
+  role: Twitch Stream
+  logo: "images/projects/videocam_circle.svg"
+  timeline: "March 2021 - Present"
+  url: https://twitch.tv/tanho_
+  summary: Streaming and sharing regularly about R, R packages, and R Shiny - live, on-stream! Currently Saturday evenings and Sunday afternoons.
+  tags: ["dp","open data", "r4ds"]
+
+- name: "ffscrapr"
+  logo: "images/projects/ffscrapr.svg"
+  role: "R CRAN Package"
+  timeline: "August 2020 - Present"
+  repo: https://github.com/dynastyprocess/ffscrapr
+  summary: An R package that accesses fantasy football league APIs and delivers tidy, ready-to-analyze data - v1.2.0 now on CRAN!
+  tags: ["dp","open data", "fantasy football"]
+
 - name: "DP Open Data"
   role: Data Repository
   logo: "images/projects/github.svg"
@@ -38,14 +54,6 @@ projects:
   url: https://apps.dynastyprocess.com/calculator
   summary: A free, mobile-first dynasty trade calculator app that serves over 40,000 monthly users.
   tags: ["dp","trade calculator", "shiny app", "fantasy football analysis"]
-
-- name: "ffscrapr"
-  logo: "images/projects/ffscrapr.svg"
-  role: "R CRAN Package"
-  timeline: "August 2020 - Present"
-  repo: https://github.com/dynastyprocess/ffscrapr
-  summary: An R package that accesses fantasy football league APIs and delivers tidy, ready-to-analyze data - v1.2.0 now on CRAN!
-  tags: ["dp","open data", "fantasy football"]
 
 - name: R4DS Book Clubs
   role: Maintainer
