@@ -7,6 +7,7 @@ image: "images/avatar.png"
 # give your some contact information. they will be used in the footer
 contactInfo:
   email: "hello@tanho.ca"
+  twitter: "https://twitter.com/_TanHo"
 
 # some summary about what you do
 summary:
