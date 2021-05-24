@@ -32,7 +32,7 @@ projects:
   tags: ["dp","open data", "r4ds"]
 
 - name: "ffscrapr"
-  logo: "images/projects/ffscrapr.svg"
+  logo: "images/projects/ffscrapr.png"
   role: "R CRAN Package"
   timeline: "August 2020 - Present"
   repo: https://github.com/dynastyprocess/ffscrapr
@@ -41,14 +41,14 @@ projects:
 
 - name: "DP Open Data"
   role: Data Repository
-  logo: "images/projects/github.svg"
+  logo: "images/projects/data-logo.png"
   timeline: "January 2019 - Present"
   repo: https://github.com/dynastyprocess/data
   summary: Automated pipelines that deliver high quality open data to support dynasty FF analysis and development.
   tags: ["dp","open data", "fantasy football"]
 
 - name: "Trade Calculator"
-  logo: "images/projects/analyze.svg"
+  logo: "images/projects/calc-logo.png"
   role: Shiny (mobile) App
   timeline: "March 2019 - Present"
   url: https://apps.dynastyprocess.com/calculator
