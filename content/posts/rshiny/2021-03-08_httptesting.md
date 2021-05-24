@@ -139,22 +139,22 @@ I've had some problems with my PC's locale settings encoding the JSON oddly in t
 
 CRAN obviously cannot test the real APIs, because it cannot handle failures gracefully. Instead, I have [a GitHub Action that does this](https://github.com/dynastyprocess/ffscrapr/blob/main/.github/workflows/test-apis.yml) by running the package tests with the MOCK_BYPASS environment variable set to "true". Paired with a cron schedule of once a week, this successfully catches API changes and issues before users can find them, which helps me anticipate and start patching bugs more effectively.
 
-## Testivus wisdom
+## Testivus
 
 
-> Embrace unit testing karma
+> ***Embrace unit testing karma***
 > 
 > Karma says:
 > 
->  > “Do good things and good things will happen to you.
+> > “Do good things and good things will happen to you.
 > > 
->  > Do them the way you know.
+> > Do them the way you know.
 > > 
->  > Do them the way you like.”
+> > Do them the way you like.”
 > 
 > Karma is flexible. Testing needs flexibility.
 > 
 > Karma thrives on creativity. Testing needs creativity.
 
-
+https://www.artima.com/weblogs/viewpost.jsp?thread=203994
 
