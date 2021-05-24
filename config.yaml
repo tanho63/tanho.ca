@@ -44,7 +44,7 @@ params:
     favicon: images/main-logo.png
 
   # GitHub repo URL of your site
-  gitRepo: https://github.com/tanho63/tanho-hugo
+  gitRepo: https://github.com/tanho63/tanho.ca
 
   # specify whether you want to write blog post or not
   enableBlogPost: true
