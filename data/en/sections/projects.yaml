@@ -36,7 +36,7 @@ projects:
   role: "R CRAN Package"
   timeline: "August 2020 - Present"
   repo: https://github.com/dynastyprocess/ffscrapr
-  summary: An R package that accesses fantasy football league APIs and delivers tidy, ready-to-analyze data - v1.2.0 now on CRAN!
+  summary: An R package that accesses fantasy football league APIs and delivers tidy, ready-to-analyze data - v1.4.2 now on CRAN!
   tags: ["dp","open data", "fantasy football"]
 
 - name: "DP Open Data"
