@@ -10,9 +10,6 @@ languages:
     languageName: English
     weight: 1
 
-# Force a locale to be use, really useful to develop the application ! Should be commented in production, the "weight" should rocks.
-# DefaultContentLanguage: fr
-
 # Allow raw html in markdown file
 markup:
   goldmark:
@@ -31,7 +28,7 @@ enableEmoji: true
 
 # Custom parameters
 params:
-  description: "Tan Ho: R/Shiny, DynastyFF, Rowing"
+  description: "Tan Ho • Data, R/Shiny, Fantasy Football, Rowing"
   images:
     - images/main-logo.png
   background: images/rowing-background-1080p.jpg
