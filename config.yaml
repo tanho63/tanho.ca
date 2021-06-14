@@ -41,7 +41,7 @@ params:
   logo:
     main: images/main-logo.png
     inverted: images/invert-logo.png
-    favicon: images/main-logo.png
+    favicon: images/hex-logo.png
 
   # GitHub repo URL of your site
   gitRepo: https://github.com/tanho63/tanho.ca
