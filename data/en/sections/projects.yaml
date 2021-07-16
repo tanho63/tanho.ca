@@ -55,12 +55,12 @@ projects:
   summary: A free, mobile-first dynasty trade calculator app that serves over 40,000 monthly users.
   tags: ["dp","trade calculator", "shiny app", "fantasy football analysis"]
 
-- name: R4DS Book Clubs
-  role: Maintainer
+- name: R4DS Slack Community
+  role: Mentor / Maintainer
   logo: "images/projects/book.svg"
   timeline: April 2020 - Present
-  repo: https://github.com/r4ds/bookclub-advanced_r
-  summary: Online/zoom book clubs where we read through advanced R data science and programming books - including [Advanced R](https://github.com/r4ds/bookclub-Advanced_R), [R Packages](https://github.com/r4ds/bookclub-rpkgs), and more.
+  url: https://r4ds.io/join
+  summary: A wonderful community of R programming and data science learners and mentors. Features fantastic book clubs, including ones for Advanced R, Tidymodels with R, Mastering Shiny, and more!
   tags: ["r4ds"]
 
 - name: "Other DynastyProcess Apps"
@@ -74,13 +74,13 @@ projects:
 - name: DLF Trade Analyzer
   logo: "images/projects/balance-scale.svg"
   role: Reviewer
-  timeline: August 2019 - Present
+  timeline: August 2019 - June 2021
   url: "https://apps.dynastyleaguefootball.com/tradeanalyzer"
   summary: Maintain and review valuation algorithms for the DLF Trade Analyzer, including draft picks and devy values.
   tags: ["dlf"]
 
 - name: DLF Auction App
-  timeline: "Jan 2020 - Present"
+  timeline: "Jan 2020 - June 2021"
   logo: "images/projects/dollar.svg"
   role: Shiny Apps
   url: "https://data.dynastyleaguefootball.com/auction-app"
@@ -88,7 +88,7 @@ projects:
   tags: ["dlf","dynasty league football", 'fantasy football analysis']
 
 - name: Lead Coach
-  timeline: "May 2018 - Present"
+  timeline: "May 2018 - Nov 2020"
   logo: "images/projects/bullhorn.svg"
   role: Ottawa Rowing Club
   url: "https://ottawarowingclub.com"
