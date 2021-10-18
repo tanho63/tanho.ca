@@ -16,7 +16,7 @@ menu:
 url: /eating-habits
 ---
 
-I stepped on the scale today and realized I had hit a milestone: I've lost fifty pounds since starting my weight loss efforts five months ago. It's a nice, if somewhat bittersweet milestone to hit on this weight loss journey - I recorded a pretty similar milestone in 2018 while going from 275 lbs to 200 lbs. Life happened (happens, I guess) and while a tad bitter, there's some comfort in the confidence that I'm capable of reaching my goals when I put the effort in.
+I stepped on the scale today and realized I had hit a milestone: I've lost fifty pounds since starting my weight loss efforts five months ago. It's a nice, if somewhat bittersweet milestone to hit on this weight loss journey - I recorded a pretty similar milestone in 2018 while going from 275 lbs to 200 lbs. Life happened (happens, I guess) and while I'm a tad bitter, there's some comfort in the confidence that I'm capable of reaching my goals when I put the effort in.
 
 I wanted to write down a mental model that I've been experimenting with around dieting, eating habits, and weight loss. While this post is not a formally qualified opinion and does not constitute medical advice, it is largely inspired by ideas from Peter Attia and I think it's a useful framework for me in understanding the many varied paths to the same goal. 
 
