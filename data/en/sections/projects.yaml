@@ -58,7 +58,7 @@ projects:
 - name: R4DS Slack Community
   role: Mentor / Maintainer
   logo: "images/projects/book.svg"
-  timeline: April 2020 - Present
+  timeline: February 2020 - Present
   url: https://r4ds.io/join
   summary: A wonderful community of R programming and data science learners and mentors. Features fantastic book clubs, including ones for Advanced R, Tidymodels with R, Mastering Shiny, and more!
   tags: ["r4ds"]
