@@ -8,7 +8,7 @@ section:
   template: sections/about.html
 
 # your designation
-designation: Data Developer & Analyst
+designation: Data Developer
 
 # your company information
 company:
@@ -19,28 +19,28 @@ company:
 # resume: "files/resume.pdf"
 
 # a summary about you
-summary: "I'm a data enthusiast who loves R/Shiny 🤩, DynastyFF 🏈, rowing 🚣‍♂️, and carving pumpkins 🎃. \n \n By day, I'm a data developer for ABIC Builds in Ottawa, Canada. I started [DynastyProcess.com](https://dynastyprocess.com) and [ffverse](https://ffverse.com), maintain [nflverse](https://github.com/nflverse), stream on [Twitch](https://twitch.tv/tanho_), and contribute at [R4DS Slack Community](https://r4ds.io). \n \n Away from my keyboard, I'm a rower and was previously a lead program coach for the Ottawa Rowing Club."
+summary: "I'm a data enthusiast who loves R/Shiny 🤩, DynastyFF 🏈,  and carving pumpkins 🎃. \n \n I started [DynastyProcess.com](https://dynastyprocess.com) and [ffverse](https://ffverse.com), maintain [nflverse](https://github.com/nflverse), stream on [Twitch](https://twitch.tv/tanho_), and contribute at [R4DS Slack Community](https://r4ds.io). \n \n Away from my keyboard, I enjoy rowing and was previously a lead program coach for the Ottawa Rowing Club."
 
 # your social links
 # give as many as you want. use font-awesome for the icons.
 socialLinks:
-- name: Twitter
-  icon: "fab fa-twitter"
-  url: "https://twitter.com/_tanho"
+- name: Twitch
+  icon: "fab fa-twitch"
+  url: "https://twitch.tv/tanho_"
 
 - name: Github
   icon: "fab fa-github"
   url: "https://www.github.com/tanho63"
 
-- name: Twitch
-  icon: "fab fa-twitch"
-  url: "https://twitch.tv/tanho_"
+- name: Twitter
+  icon: "fab fa-twitter"
+  url: "https://twitter.com/_tanho"
 
-- name: Email
-  icon: "fas fa-envelope"
-  url: "mailto:hello@tanho.ca"
 
 - name: LinkedIn
   icon: "fab fa-linkedin"
   url: "https://www.linkedin.com/tan-ho"
 
+- name: Email
+  icon: "fas fa-envelope"
+  url: "mailto:hello@tanho.ca"

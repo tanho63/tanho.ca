@@ -28,7 +28,7 @@ enableEmoji: true
 
 # Custom parameters
 params:
-  description: "Tan Ho • Data, R/Shiny, Fantasy Football, Rowing"
+  description: "Tan Ho • data enthusiast, fantasy football nerd, rstats programmer"
   images:
     - images/main-logo.png
   background: images/rowing-background-1080p.jpg

@@ -1,6 +1,6 @@
 # section information
 section:
-  name: Projects
+  name: Project Highlights
   id: projects
   enable: true
   weight: 4
@@ -18,10 +18,10 @@ buttons:
   filter: "shiny"
 - name: Open Data
   filter: "open data"
-- name: R4DS Slack Community
-  filter: "r4ds"
-- name: Ottawa Rowing Club
-  filter: "orc"
+# - name: R4DS Slack Community
+#   filter: "r4ds"
+# - name: Ottawa Rowing Club
+#   filter: "orc"
 
 # your projects
 projects:
@@ -38,7 +38,7 @@ projects:
   role: "R CRAN Package"
   timeline: "August 2020 - Present"
   repo: https://github.com/dynastyprocess/ffscrapr
-  summary: An R package that accesses fantasy football league APIs and delivers tidy, ready-to-analyze data - v1.4.6 now on CRAN!
+  summary: An R package that accesses fantasy football league APIs and delivers tidy, ready-to-analyze data!
   tags: ["dp", "open data", "fantasy football", "pkg"]
 
 - name: "DP Open Data"
@@ -73,26 +73,26 @@ projects:
   summary: Other Shiny apps created under the DynastyProcess label, including Crystal Ball and Expected Points tools.
   tags: ["dp", "shiny", "fantasy football analysis"]
 
-- name: DLF Trade Analyzer
-  logo: "images/projects/balance-scale.svg"
-  role: Reviewer
-  timeline: August 2019 - June 2021
-  url: "https://apps.dynastyleaguefootball.com/tradeanalyzer"
-  summary: Maintain and review valuation algorithms for the DLF Trade Analyzer, including draft picks and devy values.
-  tags: ["dlf", "data"]
+# - name: DLF Trade Analyzer
+#   logo: "images/projects/balance-scale.svg"
+#   role: Reviewer
+#   timeline: August 2019 - June 2021
+#   url: "https://apps.dynastyleaguefootball.com/tradeanalyzer"
+#   summary: Maintain and review valuation algorithms for the DLF Trade Analyzer, including draft picks and devy values.
+#   tags: ["dlf", "data"]
 
-- name: DLF Auction App
-  timeline: "Jan 2020 - June 2021"
-  logo: "images/projects/dollar.svg"
-  role: Shiny Apps
-  url: "https://data.dynastyleaguefootball.com/auction-app"
-  summary: A Shiny app that calculates startup auction values by leveraging DLF trade values.
-  tags: ["dlf","dynasty league football", 'fantasy football analysis', "shiny"]
+# - name: DLF Auction App
+#   timeline: "Jan 2020 - June 2021"
+#   logo: "images/projects/dollar.svg"
+#   role: Shiny Apps
+#   url: "https://data.dynastyleaguefootball.com/auction-app"
+#   summary: A Shiny app that calculates startup auction values by leveraging DLF trade values.
+#   tags: ["dlf","dynasty league football", 'fantasy football analysis', "shiny"]
 
-- name: Lead Coach
-  timeline: "May 2018 - Nov 2020"
-  logo: "images/projects/bullhorn.svg"
-  role: Ottawa Rowing Club
-  url: "https://ottawarowingclub.com"
-  summary: Coordinate, coach, and support the adult rowing programs.
-  tags: [orc]
+# - name: Lead Coach
+#   timeline: "May 2018 - Nov 2020"
+#   logo: "images/projects/bullhorn.svg"
+#   role: Ottawa Rowing Club
+#   url: "https://ottawarowingclub.com"
+#   summary: Coordinate, coach, and support the adult rowing programs.
+#   tags: [orc]
