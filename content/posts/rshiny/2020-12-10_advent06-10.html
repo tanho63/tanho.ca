@@ -7,7 +7,7 @@ type: rshiny
 menu:
   sidebar:
     name: 'AdventofCode 2020, 06-10'
-    identifier: adventcode2020-06-10
+    identifier: 2020-06-10-adventofcode
     parent: rshiny
 url: /adventcode-2020-06-10
 hero: /images/rshiny/chocolates.jpg
@@ -20,7 +20,7 @@ hero: /images/rshiny/chocolates.jpg
 <p>A few problems in this set really frustrated me - as you can see from the time differences.</p>
 <div id="statistics" class="section level2">
 <h2>Statistics</h2>
-<pre><code>## # A tibble: 5 x 6
+<pre><code>## # A tibble: 5 × 6
 ##     day time_1   rank_1 time_2   rank_2 timediff  
 ##   &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;drtn&gt;    
 ## 1     6 00:10:04   3730 00:15:20   2587   5.3 mins
@@ -42,7 +42,9 @@ hero: /images/rshiny/chocolates.jpg
 <div id="day-six" class="section level2">
 <h2>Day Six</h2>
 <details>
-<p><summary> I was elated to crack day six in a personal best time so far: <code>15:20</code>. I’ve settled into a “clean the data into a tibble” pattern before solving, and it seems to help! </summary></p>
+<summary>
+I was elated to crack day six in a personal best time so far: <code>15:20</code>. I’ve settled into a “clean the data into a tibble” pattern before solving, and it seems to help!
+</summary>
 <blockquote>
 <p>The form asks a series of 26 yes-or-no questions marked a through z. All you need to do is identify the questions for which anyone in your group answers “yes”. Since your group is just you, this doesn’t take very long.</p>
 <p>However, the person sitting next to you seems to be experiencing a language barrier and asks if you can help. For each of the people in their group, you write down the questions for which they answer “yes”, one per line. For example:</p>
@@ -64,7 +66,7 @@ hero: /images/rshiny/chocolates.jpg
          data = str_split(data,&quot;&quot;)) %&gt;% 
   unnest_longer(data)</code></pre>
 <pre class="r language-r"><code>head(df_surveys)</code></pre>
-<pre><code>## # A tibble: 6 x 3
+<pre><code>## # A tibble: 6 × 3
 ##   data  group_id passenger_id
 ##   &lt;chr&gt;    &lt;dbl&gt;        &lt;int&gt;
 ## 1 t            1            1
@@ -80,7 +82,7 @@ For each group, count the number of questions to which anyone answered “yes”
   summarise(count = length(unique(data))) %&gt;% 
   summarise(sum(count))</code></pre>
 <pre class="r language-r"><code>p1</code></pre>
-<pre><code>## # A tibble: 1 x 1
+<pre><code>## # A tibble: 1 × 1
 ##   `sum(count)`
 ##          &lt;int&gt;
 ## 1         6310</code></pre>
@@ -103,7 +105,9 @@ For each group, count the number of questions to which anyone answered “yes”
 <div id="day-seven" class="section level2">
 <h2>Day Seven</h2>
 <details>
-<p><summary> The first puzzle that really had me at an absolute loss and dire frustration. Pulled out parallel processing on it in the end and that saved the day, even after a few minutes of crunching. Foreshadowing future difficulties, obviously… </summary></p>
+<summary>
+The first puzzle that really had me at an absolute loss and dire frustration. Pulled out parallel processing on it in the end and that saved the day, even after a few minutes of crunching. Foreshadowing future difficulties, obviously…
+</summary>
 <p>— Data —</p>
 <pre class="r language-r"><code>input_07 &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-07.txt&quot;)</code></pre>
 <p>— Cleaning —</p>
@@ -121,7 +125,7 @@ For each group, count the number of questions to which anyone answered “yes”
                                str_remove(rule,as.character(rule_qty))),
          rule_colour = str_squish(rule_colour))</code></pre>
 <pre class="r language-r"><code>head(df_rules)</code></pre>
-<pre><code>## # A tibble: 6 x 4
+<pre><code>## # A tibble: 6 × 4
 ##   name           rule               rule_qty rule_colour     
 ##   &lt;chr&gt;          &lt;chr&gt;                 &lt;dbl&gt; &lt;chr&gt;           
 ## 1 vibrant purple 3 shiny lavender          3 shiny lavender  
@@ -177,7 +181,9 @@ children &lt;- find_children(&quot;shiny gold&quot;,df_rules)</code></pre>
 <div id="day-eight" class="section level2">
 <h2>Day Eight</h2>
 <details>
-<p><summary> I thought this problem was more manageable after (because of?) day seven’s difficulties. Good practice with looping and functions, I think. </summary></p>
+<summary>
+I thought this problem was more manageable after (because of?) day seven’s difficulties. Good practice with looping and functions, I think.
+</summary>
 <blockquote>
 <p>The boot code is represented as a text file with one instruction per line of text. Each instruction consists of an operation (acc, jmp, or nop) and an argument (a signed number like +4 or -20).</p>
 <ul>
@@ -199,7 +205,7 @@ children &lt;- find_children(&quot;shiny gold&quot;,df_rules)</code></pre>
                                          TRUE ~ instruction_id + 1L)) %&gt;% 
   select(instruction_id,instruction,qty,next_instruction_id)</code></pre>
 <pre class="r language-r"><code>head(df_codes)</code></pre>
-<pre><code>## # A tibble: 6 x 4
+<pre><code>## # A tibble: 6 × 4
 ##   instruction_id instruction   qty next_instruction_id
 ##            &lt;int&gt; &lt;chr&gt;       &lt;int&gt;               &lt;int&gt;
 ## 1              1 acc            17                   2
@@ -270,7 +276,7 @@ while(!error_switch){
 
 test_accumulator &lt;- run_accumulator(df_codes)</code></pre>
 <pre class="r language-r"><code>test_accumulator</code></pre>
-<pre><code>## # A tibble: 6 x 3
+<pre><code>## # A tibble: 6 × 3
 ##   status  accumulator next_id
 ##   &lt;chr&gt;         &lt;dbl&gt;   &lt;int&gt;
 ## 1 SUCCESS        1036     626
@@ -303,7 +309,7 @@ df_codelist &lt;- map(jmpnop_list,jmpnop_switcher,df_codes)
 
 x &lt;- future_map_dfr(df_codelist,run_accumulator)</code></pre>
 <pre class="r language-r"><code>x %&gt;% filter(status == &quot;SUCCESS&quot;)</code></pre>
-<pre><code>## # A tibble: 1 x 3
+<pre><code>## # A tibble: 1 × 3
 ##   status  accumulator next_id
 ##   &lt;chr&gt;         &lt;dbl&gt;   &lt;int&gt;
 ## 1 SUCCESS        1036     626</code></pre>
@@ -312,7 +318,9 @@ x &lt;- future_map_dfr(df_codelist,run_accumulator)</code></pre>
 <div id="day-nine" class="section level2">
 <h2>Day Nine</h2>
 <details>
-<p><summary> This one mentioned rolling windows, which led me to think of Davis Vaughan’s slider package. That helped my process a lot! </summary></p>
+<summary>
+This one mentioned rolling windows, which led me to think of Davis Vaughan’s slider package. That helped my process a lot!
+</summary>
 <p>— Description —</p>
 <blockquote>
 <p>XMAS starts by transmitting a preamble of 25 numbers. After that, each number you receive should be the sum of any two of the 25 immediately previous numbers. The two numbers will have different values, and there might be more than one such pair.</p>
@@ -330,7 +338,7 @@ df_cipher &lt;- tibble(num = input_09) %&gt;%
   mutate(rolling = slide(num,~.x,.before = 24, .complete = TRUE) %&gt;% lag()) %&gt;% 
   slice(-(1:25))</code></pre>
 <pre class="r language-r"><code>head(df_cipher)</code></pre>
-<pre><code>## # A tibble: 6 x 2
+<pre><code>## # A tibble: 6 × 2
 ##     num rolling   
 ##   &lt;dbl&gt; &lt;list&gt;    
 ## 1    30 &lt;dbl [25]&gt;
@@ -352,7 +360,7 @@ df_cipher &lt;- tibble(num = input_09) %&gt;%
                          pull(flag)))</code></pre>
 <pre class="r language-r"><code>problem_1 %&gt;% 
   filter(!rolling_sum)</code></pre>
-<pre><code>## # A tibble: 1 x 3
+<pre><code>## # A tibble: 1 × 3
 ##        num rolling    rolling_sum
 ##      &lt;dbl&gt; &lt;list&gt;     &lt;lgl&gt;      
 ## 1 10884537 &lt;dbl [25]&gt; FALSE</code></pre>
@@ -384,7 +392,7 @@ while(!success){
 cleanup_solution &lt;- test_solve %&gt;% 
   slice((which(test_solve$success)-size+1):which(test_solve$success))</code></pre>
 <pre class="r language-r"><code>cleanup_solution</code></pre>
-<pre><code>## # A tibble: 17 x 3
+<pre><code>## # A tibble: 17 × 3
 ##       num rolling_sum success
 ##     &lt;dbl&gt;       &lt;dbl&gt; &lt;lgl&gt;  
 ##  1 408514     6419520 FALSE  
@@ -411,7 +419,9 @@ cleanup_solution &lt;- test_solve %&gt;%
 <div id="day-ten" class="section level2">
 <h2>Day Ten</h2>
 <details>
-<p><summary> Another one for immense frustration. First problem was cracked in under eight minutes after some silly stumbling…and then the second half took me over two hours. </summary></p>
+<summary>
+Another one for immense frustration. First problem was cracked in under eight minutes after some silly stumbling…and then the second half took me over two hours.
+</summary>
 <p>— Data —</p>
 <pre class="r language-r"><code>input_10 &lt;- read_lines(&quot;https://github.com/tanho63/advent_of_code/raw/master/2020/day-10.txt&quot;)</code></pre>
 <p>— Cleaning —</p>
@@ -428,7 +438,7 @@ cleanup_solution &lt;- test_solve %&gt;%
 <pre class="r language-r"><code>p1 &lt;- df_adapters %&gt;% 
   count(diff)</code></pre>
 <pre class="r language-r"><code>p1</code></pre>
-<pre><code>## # A tibble: 2 x 2
+<pre><code>## # A tibble: 2 × 2
 ##    diff     n
 ##   &lt;dbl&gt; &lt;int&gt;
 ## 1     1    73
@@ -451,7 +461,7 @@ options(scipen = 999)</code></pre>
     ways = slide(adapter,~.x,.before = 3,.after = -1),
     ways = map2(ways,adapter,~.x[.x-.y&lt;=3]))</code></pre>
 <pre class="r language-r"><code>head(p2)</code></pre>
-<pre><code>## # A tibble: 6 x 2
+<pre><code>## # A tibble: 6 × 2
 ##   adapter ways           
 ##     &lt;dbl&gt; &lt;chr&gt;          
 ## 1     166 &quot;&quot;             
@@ -487,7 +497,7 @@ sum_ways &lt;- function(ways,adapter){
 p2_solve &lt;- p2 %&gt;% 
   mutate(total_ways = map2_dbl(ways,adapter,sum_ways))</code></pre>
 <pre class="r language-r"><code>tail(p2_solve)</code></pre>
-<pre><code>## # A tibble: 6 x 3
+<pre><code>## # A tibble: 6 × 3
 ##   adapter ways     total_ways
 ##     &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt;
 ## 1       7 10, 9, 8    5.67e13

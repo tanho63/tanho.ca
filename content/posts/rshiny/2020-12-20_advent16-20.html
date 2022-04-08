@@ -7,7 +7,7 @@ type: rshiny
 menu:
   sidebar:
     name: 'AdventofCode 2020, 16-20'
-    identifier: adventcode2020-16-20
+    identifier: 2020-16-20-adventcode
     parent: rshiny
 url: /adventcode-2020-16-20
 hero: /images/rshiny/gifts2.jpg
@@ -19,7 +19,7 @@ hero: /images/rshiny/gifts2.jpg
 <p>The completionist streak continues, despite ever-increasing puzzle difficulty and timelines. I’m finding myself more and more comfortable with using loops, despite previous hatred of them, and I think I’m being challenged to think about data structures and reducing my data structures to non-tibbles (i.e. matrices, vectors, lists) - which is faster to iterate over in large scale.</p>
 <p>I’m also thinking about things like copy on modify, parallel processing, and recursion! (and an uncomfortable dose of regex).</p>
 <p>Greatly enjoying it still, although I’m now limiting how long I stay up to 60-90 minutes.</p>
-<pre><code>## # A tibble: 5 x 5
+<pre><code>## # A tibble: 5 × 5
 ##     day time_1   rank_1 time_2   rank_2
 ##   &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;
 ## 1    20 00:43:06    948 21:39:22   6404
@@ -41,7 +41,9 @@ hero: /images/rshiny/gifts2.jpg
 <div id="day-sixteen" class="section level2">
 <h2>Day Sixteen</h2>
 <details>
-<p><summary> This one was pretty straightforward as a parse, clean, and map - felt lots better than day 15, but this would be quite rare for the next few days. </summary></p>
+<summary>
+This one was pretty straightforward as a parse, clean, and map - felt lots better than day 15, but this would be quite rare for the next few days.
+</summary>
 <p>— Description —</p>
 <blockquote>
 <p>Unfortunately, you can’t actually read the words on the ticket. You can, however, read the numbers, and so you figure out the fields these tickets must have and the valid ranges for values in those fields.</p>
@@ -86,7 +88,7 @@ check_invalid &lt;- other_tickets %&gt;%
   mutate(check = input %in% rule_range) %&gt;% 
   filter(!check)</code></pre>
 <pre class="r language-r"><code>head(check_invalid)</code></pre>
-<pre><code>## # A tibble: 6 x 3
+<pre><code>## # A tibble: 6 × 3
 ##   input ticket_id check
 ##   &lt;int&gt;     &lt;int&gt; &lt;lgl&gt;
 ## 1     8         2 FALSE
@@ -115,7 +117,7 @@ field_summary &lt;- valid_other %&gt;%
             min = min(input,na.rm = TRUE),
             max = max(input,na.rm = TRUE))</code></pre>
 <pre class="r language-r"><code>head(field_summary)</code></pre>
-<pre><code>## # A tibble: 6 x 4
+<pre><code>## # A tibble: 6 × 4
 ##   field_id values        min   max
 ##      &lt;int&gt; &lt;list&gt;      &lt;int&gt; &lt;int&gt;
 ## 1        1 &lt;int [190]&gt;    50   916
@@ -136,7 +138,7 @@ field_options &lt;- check_fields %&gt;%
   ungroup() %&gt;% 
   arrange(n)</code></pre>
 <pre class="r language-r"><code>field_options</code></pre>
-<pre><code>## # A tibble: 20 x 3
+<pre><code>## # A tibble: 20 × 3
 ##    rule                   n field_id  
 ##    &lt;chr&gt;              &lt;int&gt; &lt;list&gt;    
 ##  1 arrival location       1 &lt;int [1]&gt; 
@@ -181,7 +183,7 @@ while(nrow(unassigned)&gt;0){
   left_join(your_ticket, by = c(&quot;field_id&quot;)) %&gt;% 
   filter(str_starts(rule,&quot;departure&quot;))</code></pre>
 <pre class="r language-r"><code>your_assignment</code></pre>
-<pre><code>## # A tibble: 6 x 4
+<pre><code>## # A tibble: 6 × 4
 ##   rule                   n field_id input
 ##   &lt;chr&gt;              &lt;int&gt;    &lt;dbl&gt; &lt;int&gt;
 ## 1 departure time         8       19   193
@@ -197,7 +199,9 @@ while(nrow(unassigned)&gt;0){
 <div id="day-seventeen" class="section level2">
 <h2>Day Seventeen</h2>
 <details>
-<p><summary> Conway’s Game of Life was there in a previous day (day 11) - this one expanded into multiple dimensions. I wrote a brute force naive solution, went to bed, and gambled on it solving for when I woke up (which it did)! I then went back and trimmed it down to two minutes runtime, so that was pretty nice! </summary></p>
+<summary>
+Conway’s Game of Life was there in a previous day (day 11) - this one expanded into multiple dimensions. I wrote a brute force naive solution, went to bed, and gambled on it solving for when I woke up (which it did)! I then went back and trimmed it down to two minutes runtime, so that was pretty nice!
+</summary>
 <p>— Description —</p>
 <blockquote>
 <p>The experimental energy source is based on cutting-edge technology: a set of Conway Cubes contained in a pocket dimension! When you hear it’s having problems, you can’t help but agree to take a look.</p>
@@ -654,7 +658,9 @@ run_conwaycube_4d(input_array, 6)</code></pre>
 <div id="day-eighteen" class="section level2">
 <h2>Day Eighteen</h2>
 <details>
-<p><summary> I went to bed thinking that it was a regex problem and that I’d need to essentially write my own parser - but I eventually thought of tricking the R parser to evaluate in the order I wanted it to, and that was much less painful! </summary></p>
+<summary>
+I went to bed thinking that it was a regex problem and that I’d need to essentially write my own parser - but I eventually thought of tricking the R parser to evaluate in the order I wanted it to, and that was much less painful!
+</summary>
 <p>— Description —</p>
 <blockquote>
 <p>Unfortunately, it seems like this “math” follows different rules than you remember.</p>
@@ -667,84 +673,84 @@ run_conwaycube_4d(input_array, 6)</code></pre>
 <pre class="r language-r"><code>operations &lt;- tibble(x = input_18)</code></pre>
 <p>— Problem 1 —</p>
 <p>R doesn’t have editable math operator precedence (which is a good thing!), but we can trick the R parser into evaluating <code>*</code> at the same level as <code>+</code> by string-replacing <code>*</code> with <code>-</code> and then switching the definition of <code>-</code> to be equal to <code>*</code>.</p>
-<p>The R parser will read the operator list and decide which ones to do, and it knows that “+” is equal in precedence to “-”. So it will evaluate them left to right, and it goes back to the new definition of “-” which is "*".</p>
+<p>The R parser will read the operator list and decide which ones to do, and it knows that “+” is equal in precedence to “-”. So it will evaluate them left to right, and it goes back to the new definition of “-” which is “*“.</p>
 <pre class="r language-r"><code>`-` &lt;- `*`
   
 p1 &lt;- operations %&gt;% 
   mutate(modified_x = str_replace_all(x,&quot;\\*&quot;,&quot;\\-&quot;),
          output = map_dbl(modified_x,~ eval(parse(text = .x))))</code></pre>
 <pre class="r language-r"><code>head(p1)</code></pre>
-<pre><code>## # A tibble: 6 x 2
+<pre><code>## # A tibble: 6 × 2
 ##   modified_x                                                              output
 ##   &lt;chr&gt;                                                                    &lt;dbl&gt;
 ## 1 9 - 8 + 2 + (4 - (2 - 2 + 9 - 2) - 9 - 3 - 8) + 8 - 5                   1.13e5
 ## 2 8 - (9 + 5 + 5 - 6 + 8 - 3) - 5 - 7 - 4 + 9                             4.10e5
-## 3 (9 + (2 - 6 + 7 - 5)) - (7 + 7 - 5 + (6 + 2 + 6) - (7 - 8 - 8 + 9))~    7.98e6
+## 3 (9 + (2 - 6 + 7 - 5)) - (7 + 7 - 5 + (6 + 2 + 6) - (7 - 8 - 8 + 9))…    7.98e6
 ## 4 ((8 + 3 - 6 - 2) - 9 + 3) + 5 + 6 - 3                                   3.61e3
-## 5 6 - (9 + 6 - (7 + 4 + 2 + 5 + 6) - 7 + 3 - (5 - 8 - 6 + 6 - 7 - 8))~    1.67e9
-## 6 (8 - 6 + 8) + 6 - 8 - (9 - (6 + 8 - 3 + 8) + (7 - 9 - 6 - 3) - 3 + ~    9.44e6</code></pre>
+## 5 6 - (9 + 6 - (7 + 4 + 2 + 5 + 6) - 7 + 3 - (5 - 8 - 6 + 6 - 7 - 8))…    1.67e9
+## 6 (8 - 6 + 8) + 6 - 8 - (9 - (6 + 8 - 3 + 8) + (7 - 9 - 6 - 3) - 3 + …    9.44e6</code></pre>
 <pre class="r language-r"><code>sum(p1$output)</code></pre>
 <pre><code>## [1] 16332191652452</code></pre>
 <p>For extra credit, here’s the abstract syntax tree for the first operation as written normally:</p>
 <pre class="r language-r"><code>lobstr::ast(expression(9 * 8 + 2 + (4 * (2 * 2 + 9 * 2) * 9 * 3 * 8) + 8 * 5))</code></pre>
-<pre><code>## o-expression 
-## \-o-`+` 
-##   +-o-`+` 
-##   | +-o-`+` 
-##   | | +-o-`*` 
-##   | | | +-9 
-##   | | | \-8 
-##   | | \-2 
-##   | \-o-`(` 
-##   |   \-o-`*` 
-##   |     +-o-`*` 
-##   |     | +-o-`*` 
-##   |     | | +-o-`*` 
-##   |     | | | +-4 
-##   |     | | | \-o-`(` 
-##   |     | | |   \-o-`+` 
-##   |     | | |     +-o-`*` 
-##   |     | | |     | +-2 
-##   |     | | |     | \-2 
-##   |     | | |     \-o-`*` 
-##   |     | | |       +-9 
-##   |     | | |       \-2 
-##   |     | | \-9 
-##   |     | \-3 
-##   |     \-8 
-##   \-o-`*` 
-##     +-8 
-##     \-5</code></pre>
+<pre><code>## █─expression 
+## └─█─`+` 
+##   ├─█─`+` 
+##   │ ├─█─`+` 
+##   │ │ ├─█─`*` 
+##   │ │ │ ├─9 
+##   │ │ │ └─8 
+##   │ │ └─2 
+##   │ └─█─`(` 
+##   │   └─█─`*` 
+##   │     ├─█─`*` 
+##   │     │ ├─█─`*` 
+##   │     │ │ ├─█─`*` 
+##   │     │ │ │ ├─4 
+##   │     │ │ │ └─█─`(` 
+##   │     │ │ │   └─█─`+` 
+##   │     │ │ │     ├─█─`*` 
+##   │     │ │ │     │ ├─2 
+##   │     │ │ │     │ └─2 
+##   │     │ │ │     └─█─`*` 
+##   │     │ │ │       ├─9 
+##   │     │ │ │       └─2 
+##   │     │ │ └─9 
+##   │     │ └─3 
+##   │     └─8 
+##   └─█─`*` 
+##     ├─8 
+##     └─5</code></pre>
 <p>and the revised version:</p>
 <pre class="r language-r"><code>lobstr::ast(expression(9 - 8 + 2 + (4 - (2 - 2 + 9 - 2) - 9 - 3 - 8) + 8 - 5))</code></pre>
-<pre><code>## o-expression 
-## \-o-`-` 
-##   +-o-`+` 
-##   | +-o-`+` 
-##   | | +-o-`+` 
-##   | | | +-o-`-` 
-##   | | | | +-9 
-##   | | | | \-8 
-##   | | | \-2 
-##   | | \-o-`(` 
-##   | |   \-o-`-` 
-##   | |     +-o-`-` 
-##   | |     | +-o-`-` 
-##   | |     | | +-o-`-` 
-##   | |     | | | +-4 
-##   | |     | | | \-o-`(` 
-##   | |     | | |   \-o-`-` 
-##   | |     | | |     +-o-`+` 
-##   | |     | | |     | +-o-`-` 
-##   | |     | | |     | | +-2 
-##   | |     | | |     | | \-2 
-##   | |     | | |     | \-9 
-##   | |     | | |     \-2 
-##   | |     | | \-9 
-##   | |     | \-3 
-##   | |     \-8 
-##   | \-8 
-##   \-5</code></pre>
+<pre><code>## █─expression 
+## └─█─`-` 
+##   ├─█─`+` 
+##   │ ├─█─`+` 
+##   │ │ ├─█─`+` 
+##   │ │ │ ├─█─`-` 
+##   │ │ │ │ ├─9 
+##   │ │ │ │ └─8 
+##   │ │ │ └─2 
+##   │ │ └─█─`(` 
+##   │ │   └─█─`-` 
+##   │ │     ├─█─`-` 
+##   │ │     │ ├─█─`-` 
+##   │ │     │ │ ├─█─`-` 
+##   │ │     │ │ │ ├─4 
+##   │ │     │ │ │ └─█─`(` 
+##   │ │     │ │ │   └─█─`-` 
+##   │ │     │ │ │     ├─█─`+` 
+##   │ │     │ │ │     │ ├─█─`-` 
+##   │ │     │ │ │     │ │ ├─2 
+##   │ │     │ │ │     │ │ └─2 
+##   │ │     │ │ │     │ └─9 
+##   │ │     │ │ │     └─2 
+##   │ │     │ │ └─9 
+##   │ │     │ └─3 
+##   │ │     └─8 
+##   │ └─8 
+##   └─5</code></pre>
 <p>— Problem 2 —</p>
 <p>Problem 2 is in the same vein but now just needs the <code>+</code> evaluated before the <code>*</code>, so we can do the same <code>*</code> to <code>-</code> swap and then now switch <code>+</code> to the <code>*</code> symbol, so that R thinks it is evaluated before the <code>-</code>.</p>
 <pre class="r language-r"><code>`-` &lt;- `*`
@@ -755,82 +761,84 @@ p2 &lt;- operations %&gt;%
          modified_x = str_replace_all(modified_x,&quot;\\+&quot;,&quot;\\*&quot;),
          output = map_dbl(modified_x,~ eval(parse(text = .x))))</code></pre>
 <pre class="r language-r"><code>head(p2)</code></pre>
-<pre><code>## # A tibble: 6 x 2
+<pre><code>## # A tibble: 6 × 2
 ##   modified_x                                                              output
 ##   &lt;chr&gt;                                                                    &lt;dbl&gt;
 ## 1 9 - 8 * 2 * (4 - (2 - 2 * 9 - 2) - 9 - 3 - 8) * 8 - 5                   1.71e6
 ## 2 8 - (9 * 5 * 5 - 6 * 8 - 3) - 5 - 7 - 4 * 9                             2.90e6
-## 3 (9 * (2 - 6 * 7 - 5)) - (7 * 7 - 5 * (6 * 2 * 6) - (7 - 8 - 8 * 9))~    7.04e7
+## 3 (9 * (2 - 6 * 7 - 5)) - (7 * 7 - 5 * (6 * 2 * 6) - (7 - 8 - 8 * 9))…    7.04e7
 ## 4 ((8 * 3 - 6 - 2) - 9 * 3) * 5 * 6 - 3                                   4.78e3
-## 5 6 - (9 * 6 - (7 * 4 * 2 * 5 * 6) - 7 * 3 - (5 - 8 - 6 * 6 - 7 - 8))~    4.64e9
-## 6 (8 - 6 * 8) * 6 - 8 - (9 - (6 * 8 - 3 * 8) * (7 - 9 - 6 - 3) - 3 * ~    4.81e8</code></pre>
+## 5 6 - (9 * 6 - (7 * 4 * 2 * 5 * 6) - 7 * 3 - (5 - 8 - 6 * 6 - 7 - 8))…    4.64e9
+## 6 (8 - 6 * 8) * 6 - 8 - (9 - (6 * 8 - 3 * 8) * (7 - 9 - 6 - 3) - 3 * …    4.81e8</code></pre>
 <pre class="r language-r"><code>sum(p2$output)</code></pre>
 <pre><code>## [1] 351175492232654</code></pre>
 <p>The same “extra credit exercise”:</p>
 <pre class="r language-r"><code>lobstr::ast(expression(9 * 8 + 2 + (4 * (2 * 2 + 9 * 2) * 9 * 3 * 8) + 8 * 5))</code></pre>
-<pre><code>## o-expression 
-## \-o-`+` 
-##   +-o-`+` 
-##   | +-o-`+` 
-##   | | +-o-`*` 
-##   | | | +-9 
-##   | | | \-8 
-##   | | \-2 
-##   | \-o-`(` 
-##   |   \-o-`*` 
-##   |     +-o-`*` 
-##   |     | +-o-`*` 
-##   |     | | +-o-`*` 
-##   |     | | | +-4 
-##   |     | | | \-o-`(` 
-##   |     | | |   \-o-`+` 
-##   |     | | |     +-o-`*` 
-##   |     | | |     | +-2 
-##   |     | | |     | \-2 
-##   |     | | |     \-o-`*` 
-##   |     | | |       +-9 
-##   |     | | |       \-2 
-##   |     | | \-9 
-##   |     | \-3 
-##   |     \-8 
-##   \-o-`*` 
-##     +-8 
-##     \-5</code></pre>
+<pre><code>## █─expression 
+## └─█─`+` 
+##   ├─█─`+` 
+##   │ ├─█─`+` 
+##   │ │ ├─█─`*` 
+##   │ │ │ ├─9 
+##   │ │ │ └─8 
+##   │ │ └─2 
+##   │ └─█─`(` 
+##   │   └─█─`*` 
+##   │     ├─█─`*` 
+##   │     │ ├─█─`*` 
+##   │     │ │ ├─█─`*` 
+##   │     │ │ │ ├─4 
+##   │     │ │ │ └─█─`(` 
+##   │     │ │ │   └─█─`+` 
+##   │     │ │ │     ├─█─`*` 
+##   │     │ │ │     │ ├─2 
+##   │     │ │ │     │ └─2 
+##   │     │ │ │     └─█─`*` 
+##   │     │ │ │       ├─9 
+##   │     │ │ │       └─2 
+##   │     │ │ └─9 
+##   │     │ └─3 
+##   │     └─8 
+##   └─█─`*` 
+##     ├─8 
+##     └─5</code></pre>
 <p>revised to:</p>
 <pre class="r language-r"><code>lobstr::ast(9 - 8 * 2 * (4 - (2 - 2 * 9 - 2) - 9 - 3 - 8) * 8 - 5)</code></pre>
-<pre><code>## o-`-` 
-## +-o-`-` 
-## | +-9 
-## | \-o-`*` 
-## |   +-o-`*` 
-## |   | +-o-`*` 
-## |   | | +-8 
-## |   | | \-2 
-## |   | \-o-`(` 
-## |   |   \-o-`-` 
-## |   |     +-o-`-` 
-## |   |     | +-o-`-` 
-## |   |     | | +-o-`-` 
-## |   |     | | | +-4 
-## |   |     | | | \-o-`(` 
-## |   |     | | |   \-o-`-` 
-## |   |     | | |     +-o-`-` 
-## |   |     | | |     | +-2 
-## |   |     | | |     | \-o-`*` 
-## |   |     | | |     |   +-2 
-## |   |     | | |     |   \-9 
-## |   |     | | |     \-2 
-## |   |     | | \-9 
-## |   |     | \-3 
-## |   |     \-8 
-## |   \-8 
-## \-5</code></pre>
+<pre><code>## █─`-` 
+## ├─█─`-` 
+## │ ├─9 
+## │ └─█─`*` 
+## │   ├─█─`*` 
+## │   │ ├─█─`*` 
+## │   │ │ ├─8 
+## │   │ │ └─2 
+## │   │ └─█─`(` 
+## │   │   └─█─`-` 
+## │   │     ├─█─`-` 
+## │   │     │ ├─█─`-` 
+## │   │     │ │ ├─█─`-` 
+## │   │     │ │ │ ├─4 
+## │   │     │ │ │ └─█─`(` 
+## │   │     │ │ │   └─█─`-` 
+## │   │     │ │ │     ├─█─`-` 
+## │   │     │ │ │     │ ├─2 
+## │   │     │ │ │     │ └─█─`*` 
+## │   │     │ │ │     │   ├─2 
+## │   │     │ │ │     │   └─9 
+## │   │     │ │ │     └─2 
+## │   │     │ │ └─9 
+## │   │     │ └─3 
+## │   │     └─8 
+## │   └─8 
+## └─5</code></pre>
 </details>
 </div>
 <div id="day-nineteen" class="section level2">
 <h2>Day Nineteen</h2>
 <details>
-<p><summary> This one was the regex problem that I feared in Day Eighteen’s problem. Looping over the rules and substituting them worked okay in the first part, but I spent far too long trying to learn recursive regex and eventually reduced the problem down to hardcoded recursion. </summary></p>
+<summary>
+This one was the regex problem that I feared in Day Eighteen’s problem. Looping over the rules and substituting them worked okay in the first part, but I spent far too long trying to learn recursive regex and eventually reduced the problem down to hardcoded recursion.
+</summary>
 <p>— Description —</p>
 <blockquote>
 <p>They think their satellite has collected an image of a sea monster! Unfortunately, the connection to the satellite is having problems, and many of the messages sent back from the satellite have been corrupted.</p>
@@ -979,8 +987,10 @@ sum(p2_messages$match)</code></pre>
 <div id="day-twenty" class="section level2">
 <h2>Day Twenty</h2>
 <details>
-<p><summary> Jigsaw puzzle solving turned out to be quite arduous. I came away from the first part quite confident (cracking the top 1000 solves for part 1!) but obviously had taken the shortcut for finding the corners and didn’t actually solve the puzzle tiles into a single matrix. Iterating over the rest of the puzzle took me the better part of the afternoon and evening.</p>
-<p>I never felt entirely out of my depth, but it was definitely a slog for motivation. </summary></p>
+<summary>
+<p>Jigsaw puzzle solving turned out to be quite arduous. I came away from the first part quite confident (cracking the top 1000 solves for part 1!) but obviously had taken the shortcut for finding the corners and didn’t actually solve the puzzle tiles into a single matrix. Iterating over the rest of the puzzle took me the better part of the afternoon and evening.</p>
+I never felt entirely out of my depth, but it was definitely a slog for motivation.
+</summary>
 <p>— Description —</p>
 <blockquote>
 <p>The camera array consists of many cameras; rather than produce a single square image, they produce many smaller square image tiles that need to be reassembled back into a single image.</p>
@@ -1019,7 +1029,7 @@ p1 &lt;- tile_edges %&gt;%
   filter(sum_matches == 2)
 
 p1</code></pre>
-<pre><code>## # A tibble: 4 x 2
+<pre><code>## # A tibble: 4 × 2
 ##      id sum_matches
 ##   &lt;dbl&gt;       &lt;dbl&gt;
 ## 1  1109           2

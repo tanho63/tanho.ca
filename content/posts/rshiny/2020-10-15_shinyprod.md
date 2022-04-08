@@ -10,7 +10,7 @@ type: rshiny
 menu:
   sidebar:
     name: Explaining Shiny to IT
-    identifier: explainingshiny
+    identifier: 2020-10-15-explainingshiny
     parent: rshiny
 ---
 

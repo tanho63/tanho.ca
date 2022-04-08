@@ -7,7 +7,7 @@ type: rshiny
 menu:
   sidebar:
     name: 'AdventofCode 2020, 06-10'
-    identifier: adventcode2020-06-10
+    identifier: 2020-06-10-adventofcode
     parent: rshiny
 url: /adventcode-2020-06-10
 hero: /images/rshiny/chocolates.jpg

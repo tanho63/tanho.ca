@@ -7,7 +7,7 @@ type: rshiny
 menu:
   sidebar:
     name: 'Personal websites'
-    identifier: personalwebsites
+    identifier: 2022personalwebsites
     parent: rshiny
 url: /personalwebsites
 hero: /images/rshiny/painting.jpg

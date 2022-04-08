@@ -7,7 +7,7 @@ type: rshiny
 menu:
   sidebar:
     name: Shiny Window Titles
-    identifier: shinywindowtitles
+    identifier: 2020-10-22-shinywindowtitles
     parent: rshiny
 url: /shinywindowtitles
 hero: /images/rshiny/question.jpg

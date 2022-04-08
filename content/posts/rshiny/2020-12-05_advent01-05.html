@@ -7,7 +7,7 @@ type: rshiny
 menu:
   sidebar:
     name: 'AdventofCode 2020, 01-05'
-    identifier: adventcode2020-01-05
+    identifier: 2020-12-05-adventcode
     parent: rshiny
 url: /adventcode-2020-01-05
 hero: /images/rshiny/advent.jpg
@@ -20,7 +20,7 @@ hero: /images/rshiny/advent.jpg
 <p>I’d been sharing my code a day at a time, but I think I’m going to re-wrap these posts into five-problem chunks and reflect on them as I go. Days 1-5 have been well within my wheelhouse so far - generalizing the problem to the second step being relatively achievable every time and total solves being under an hour for the most part. I’m currently still hammering everything into a tibble and cleaning it first, which really does help me grok the solutions.</p>
 <div id="some-statistics-on-days-1-5" class="section level2">
 <h2>Some statistics on Days 1-5:</h2>
-<pre><code>## # A tibble: 5 x 6
+<pre><code>## # A tibble: 5 × 6
 ##     day time_1   rank_1 time_2   rank_2 timediff_to_2
 ##   &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;drtn&gt;       
 ## 1     5 07:15:37  26932 07:25:04  25548  9.4 mins    
@@ -43,7 +43,9 @@ hero: /images/rshiny/advent.jpg
 <div id="day-one" class="section level2">
 <h2>Day One</h2>
 <details>
-<p><summary> This was a bit of stream of consciousness, and I hadn’t had the experience with AoC enough to realize and be prepared to tackle a second extension problem immediately afterwards - I think you can see this change in my approach to solutions for later days. </summary></p>
+<summary>
+This was a bit of stream of consciousness, and I hadn’t had the experience with AoC enough to realize and be prepared to tackle a second extension problem immediately afterwards - I think you can see this change in my approach to solutions for later days.
+</summary>
 <p>— Day 1: Report Repair —</p>
 <blockquote>
 <p>After saving Christmas <a href="https://adventofcode.com/events">five years in a row</a>, you’ve decided to take a vacation at a nice resort on a tropical island. Surely, Christmas will go on without you.</p>
@@ -98,7 +100,7 @@ hero: /images/rshiny/advent.jpg
   filter(!is.na(expense.y))
 
 pair_2020</code></pre>
-<pre><code>## # A tibble: 2 x 3
+<pre><code>## # A tibble: 2 × 3
 ##   expense difference expense.y
 ##     &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;
 ## 1     586       1434      1434
@@ -118,7 +120,7 @@ pair_2020</code></pre>
   filter(total == 2020)
 
 triple_2020</code></pre>
-<pre><code>## # A tibble: 6 x 5
+<pre><code>## # A tibble: 6 × 5
 ##   first second third total   product
 ##   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
 ## 1   207    903   910  2020 170098110
@@ -136,7 +138,9 @@ triple_2020</code></pre>
 <div id="day-two" class="section level2">
 <h2>Day Two</h2>
 <details>
-<p><summary> This was a bit of an exercise in parsing, cleaning, and mapping, which was pretty comfortable for me. </summary></p>
+<summary>
+This was a bit of an exercise in parsing, cleaning, and mapping, which was pretty comfortable for me.
+</summary>
 <p>— Problem —</p>
 <blockquote>
 <p>To try to debug the problem, they have created a list (your puzzle input) of passwords (according to the corrupted database) and the corporate policy when that password was set.</p>
@@ -220,7 +224,9 @@ head(password_table_two)</code></pre>
 <div id="day-three" class="section level2">
 <h2>Day Three</h2>
 <details>
-<p><summary> I visualized this problem in a tibble format from the start, but instead of going back to the front I visualized binding more columns onto the table, which necessitated a while loop. Once there, it became a simpler subsetting problem. I did get tripped up forgetting to iterate from 1,1 instead of 0,0, and then there were some order of operations problems with going down two rows instead of one, but all in all not a terrible experience solving. </summary></p>
+<summary>
+I visualized this problem in a tibble format from the start, but instead of going back to the front I visualized binding more columns onto the table, which necessitated a while loop. Once there, it became a simpler subsetting problem. I did get tripped up forgetting to iterate from 1,1 instead of 0,0, and then there were some order of operations problems with going down two rows instead of one, but all in all not a terrible experience solving.
+</summary>
 <p>Day three!</p>
 <p>— Problem —</p>
 <blockquote>
@@ -236,7 +242,8 @@ head(password_table_two)</code></pre>
   unnest_wider(x,names_sep = &quot;_&quot;) %&gt;% 
   mutate_all(~case_when(.x == &quot;#&quot; ~ 1, .x == &quot;.&quot; ~ 0)) %&gt;% 
   as.matrix()</code></pre>
-<pre><code>## Parsed with column specification:
+<pre><code>## 
+## ── Column specification ────────────────────────────────────────────────────────
 ## cols(
 ##   x = col_character()
 ## )</code></pre>
@@ -268,7 +275,7 @@ indices &lt;- tibble(
   mutate(path = map2_dbl(row,column,~wide_matrix[.x,.y]))
   
 head(indices)</code></pre>
-<pre><code>## # A tibble: 6 x 3
+<pre><code>## # A tibble: 6 × 3
 ##     row column  path
 ##   &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt;
 ## 1     2      4     1
@@ -317,7 +324,7 @@ toboggan_paths &lt;- tibble(right = c(1,3,5,7,1),
   mutate(paths = map2_dbl(right,down,fn_slope,input_matrix))
 
 toboggan_paths</code></pre>
-<pre><code>## # A tibble: 5 x 3
+<pre><code>## # A tibble: 5 × 3
 ##   right  down paths
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ## 1     1     1    77
@@ -332,7 +339,9 @@ toboggan_paths</code></pre>
 <div id="day-four" class="section level2">
 <h2>Day Four</h2>
 <details>
-<p><summary> This one was immensely satisfying to crack - after applying my tibble cleaning on it, it was super easy to create the filters and counts as necessary, and super fast too! I still don’t consider myself a regex expert, but it turns out I know more than I think. </summary></p>
+<summary>
+This one was immensely satisfying to crack - after applying my tibble cleaning on it, it was super easy to create the filters and counts as necessary, and super fast too! I still don’t consider myself a regex expert, but it turns out I know more than I think.
+</summary>
 <p>— Problem Description —</p>
 <blockquote>
 <p>The automatic passport scanners are slow because they’re having trouble detecting which passports have all required fields. The expected fields are as follows:</p>
@@ -368,7 +377,7 @@ head(input_data)</code></pre>
   pivot_wider(names_from = key, values_from = value)
 
 head(df_passports)</code></pre>
-<pre><code>## # A tibble: 6 x 9
+<pre><code>## # A tibble: 6 × 9
 ##   passport_id iyr   cid   ecl   byr   hcl     eyr   hgt   pid      
 ##         &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    
 ## 1           1 2015  189   oth   1947  #6c4ab1 2026  174cm 526744288
@@ -383,7 +392,7 @@ head(df_passports)</code></pre>
   filter_all(~!is.na(.x))
 
 head(valid_p1)</code></pre>
-<pre><code>## # A tibble: 6 x 8
+<pre><code>## # A tibble: 6 × 8
 ##   passport_id iyr   ecl   byr   hcl     eyr   hgt   pid      
 ##         &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    
 ## 1           1 2015  oth   1947  #6c4ab1 2026  174cm 526744288
@@ -413,7 +422,7 @@ head(valid_p1)</code></pre>
   )
 
 head(valid_p2)</code></pre>
-<pre><code>## # A tibble: 6 x 8
+<pre><code>## # A tibble: 6 × 8
 ##   passport_id   iyr ecl     byr hcl       eyr hgt   pid      
 ##         &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;    
 ## 1           1  2015 oth    1947 #6c4ab1  2026 174cm 526744288
@@ -429,7 +438,9 @@ head(valid_p2)</code></pre>
 <div id="day-five" class="section level2">
 <h2>Day Five</h2>
 <details>
-<p><summary> As I said earlier, this one was not bad - I took my time to practice recursion, which came in handy later (on day seven, for example). I’m mostly just upset that I couldn’t recognize you could just convert to binary. </summary></p>
+<summary>
+As I said earlier, this one was not bad - I took my time to practice recursion, which came in handy later (on day seven, for example). I’m mostly just upset that I couldn’t recognize you could just convert to binary.
+</summary>
 <blockquote>
 <p>Instead of zones or groups, this airline uses binary space partitioning to seat people. A seat might be specified like FBFBBFFRLR, where F means “front”, B means “back”, L means “left”, and R means “right”.</p>
 <p>The first 7 characters will either be F or B; these specify exactly one of the 128 rows on the plane (numbered 0 through 127). Each letter tells you which half of a region the given seat is in. Start with the whole list of rows; the first letter indicates whether the seat is in the front (0 through 63) or the back (64 through 127). The next letter indicates which half of that region the seat is in, and so on until you’re left with exactly one row.</p>
@@ -470,7 +481,7 @@ search_function(&quot;FBFBBFF&quot;,0:127)</code></pre>
          seat_id = row * 8 + seat)
 
 head(df_boardingpasses)</code></pre>
-<pre><code>## # A tibble: 6 x 6
+<pre><code>## # A tibble: 6 × 6
 ##   input      row_string seat_string   row  seat seat_id
 ##   &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
 ## 1 FFBFBBBRLR FFBFBBB    RLR            23     5     189

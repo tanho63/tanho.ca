@@ -7,7 +7,7 @@ type: rshiny
 menu:
   sidebar:
     name: 'AdventofCode 2020, 11-15'
-    identifier: adventcode2020-11-15
+    identifier: 2020-11-15-adventofcode
     parent: rshiny
 url: /adventcode-2020-11-15
 hero: /images/rshiny/gifts.jpg
@@ -18,7 +18,7 @@ hero: /images/rshiny/gifts.jpg
 
 <p>Starting to feel the pressure as my lack of background in both mathematics and computer science starts to reveal itself. Solutions starting to really take a good chunk of time, so I’m starting to cap how long I can work on it before going to sleep (usually about an hour or two tops).</p>
 <p>I think this is really expanding my programming chops in terms of condensing for performance and concision - finding that solutions are less and less tibble-like as we go along.</p>
-<pre><code>## # A tibble: 5 x 5
+<pre><code>## # A tibble: 5 × 5
 ##     day time_1   rank_1 time_2   rank_2
 ##   &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;
 ## 1    15 00:22:52   2525 10:02:48  16739
@@ -48,7 +48,9 @@ hero: /images/rshiny/gifts.jpg
 <div id="day-eleven" class="section level2">
 <h2>Day Eleven</h2>
 <details>
-<p><summary> This one taught me that tibbles are very slow to iterate over, and that matrices were much better to access with the row/col indices. Once I got over that problem, the functions ran so much more beautifully! </summary></p>
+<summary>
+This one taught me that tibbles are very slow to iterate over, and that matrices were much better to access with the row/col indices. Once I got over that problem, the functions ran so much more beautifully!
+</summary>
 <p>— Description —</p>
 <blockquote>
 <p>All decisions are based on the number of occupied seats adjacent to a given seat (one of the eight positions immediately up, down, left, right, or diagonal from the seat). The following rules are applied to every seat simultaneously:</p>
@@ -229,7 +231,9 @@ while(total_change2!=0){
 <div id="day-twelve" class="section level2">
 <h2>Day Twelve</h2>
 <details>
-<p><summary> I vastly overcomplicated the solution on this a few times, but as I stopped and tried to simplify the solution became clearer. Good practice on functions, and drawing out hard copy pseudocode when necessary! </summary></p>
+<summary>
+I vastly overcomplicated the solution on this a few times, but as I stopped and tried to simplify the solution became clearer. Good practice on functions, and drawing out hard copy pseudocode when necessary!
+</summary>
 <p>— Description —</p>
 <blockquote>
 <p>The navigation instructions (your puzzle input) consists of a sequence of single-character actions paired with integer input values. After staring at them for a few minutes, you work out what they probably mean:</p>
@@ -436,7 +440,9 @@ for(i in seq_len(nrow(instructions))){
 <div id="day-thirteen" class="section level2">
 <h2>Day Thirteen</h2>
 <details>
-<p><summary> This one ended up outside of my domain in terms of numerology/mathematics, and I struggled miserably with this one for quite a long time. I had a naive solution written out, but eventually used the opportunity to learn how to query Wolfram Alpha API from R and pass it a system of equations to solve. </summary></p>
+<summary>
+This one ended up outside of my domain in terms of numerology/mathematics, and I struggled miserably with this one for quite a long time. I had a naive solution written out, but eventually used the opportunity to learn how to query Wolfram Alpha API from R and pass it a system of equations to solve.
+</summary>
 <p>— Description —</p>
 <blockquote>
 <p>Your notes (your puzzle input) consist of two lines. The first line is your estimate of the earliest timestamp you could depart on a bus. The second line lists the bus IDs that are in service according to the shuttle company; entries that show x must be out of service, so you decide to ignore them.</p>
@@ -465,7 +471,7 @@ bus_departures_e &lt;- tibble(id = input_13_e[[2]]) %&gt;%
                                     TRUE ~ next_departure)) %&gt;% 
   arrange(next_departure)</code></pre>
 <pre class="r language-r"><code>head(p1)</code></pre>
-<pre><code>## # A tibble: 6 x 2
+<pre><code>## # A tibble: 6 × 2
 ##      id next_departure
 ##   &lt;dbl&gt;          &lt;dbl&gt;
 ## 1   647        1006732
@@ -587,7 +593,9 @@ plaintext &lt;- resp_content %&gt;%
 <div id="day-fourteen" class="section level2">
 <h2>Day Fourteen</h2>
 <details>
-<p><summary> A much more approachable solution for me - definitely had much more of an idea of how the solution would/should play out. Got tripped up on R’s 32 bit defaults, but searching for a binary operations package led me to binaryLogic and it handled things nicely. A great feeling to solve after the misery of the previous day. </summary></p>
+<summary>
+A much more approachable solution for me - definitely had much more of an idea of how the solution would/should play out. Got tripped up on R’s 32 bit defaults, but searching for a binary operations package led me to binaryLogic and it handled things nicely. A great feeling to solve after the misery of the previous day.
+</summary>
 <p>Day fourteen - Docking Data!</p>
 <p>— Description —</p>
 <blockquote>
@@ -718,7 +726,7 @@ write_memory_two &lt;- function(instruction){
 }
 
 write_memory_two(instruction)</code></pre>
-<pre><code>## # A tibble: 8 x 2
+<pre><code>## # A tibble: 8 × 2
 ##   mem_locations mem_value
 ##           &lt;dbl&gt;     &lt;int&gt;
 ## 1            26       100
@@ -754,7 +762,9 @@ current_memory %&gt;%
 <div id="day-fifteen" class="section level2">
 <h2>Day Fifteen</h2>
 <details>
-<p><summary> Day Fifteen was a quick solve for part one, but part two ended up testing some computational/data structure limits! I kept condensing my part one solution, and eventually arrived on a pretty tight R loop. </summary></p>
+<summary>
+Day Fifteen was a quick solve for part one, but part two ended up testing some computational/data structure limits! I kept condensing my part one solution, and eventually arrived on a pretty tight R loop.
+</summary>
 <p>— Description —</p>
 <blockquote>
 <p>So, after the starting numbers, each turn results in that player speaking aloud either 0 (if the last number is new) or an age (if the last number is a repeat).</p>
