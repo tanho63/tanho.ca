@@ -8,12 +8,12 @@ section:
   template: sections/about.html
 
 # your designation
-designation: Data Developer
+#designation: Data Developer
 
 # your company information
-company:
-  name: ABIC Builds
-  url: "https://www.abicbuilds.com"
+#company:
+  #name: ABIC Builds
+  #url:  "https://www.abicbuilds.com"
 
 # your resume. this file path should be relative to you "static" directory
 # resume: "files/resume.pdf"
