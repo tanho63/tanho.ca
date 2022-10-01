@@ -8,12 +8,12 @@ section:
   template: sections/about.html
 
 # your designation
-#designation: Data Developer
+designation: ML Engineer
 
 # your company information
-#company:
-  #name: ABIC Builds
-  #url:  "https://www.abicbuilds.com"
+company:
+  name: Zelus Analytics
+  url:  "https://www.zelusanalytics.com"
 
 # your resume. this file path should be relative to you "static" directory
 # resume: "files/resume.pdf"
@@ -24,23 +24,19 @@ summary: "I'm a data enthusiast who loves R/Shiny 🤩, DynastyFF 🏈,  and car
 # your social links
 # give as many as you want. use font-awesome for the icons.
 socialLinks:
-- name: Twitch
-  icon: "fab fa-twitch"
-  url: "https://twitch.tv/tanho_"
 
 - name: Github
   icon: "fab fa-github"
   url: "https://www.github.com/tanho63"
-
 - name: Twitter
   icon: "fab fa-twitter"
   url: "https://twitter.com/_tanho"
-
-
+- name: Twitch
+  icon: "fab fa-twitch"
+  url: "https://twitch.tv/tanho_"
 - name: LinkedIn
   icon: "fab fa-linkedin"
   url: "https://www.linkedin.com/tan-ho"
-
 - name: Email
   icon: "fas fa-envelope"
   url: "mailto:hello@tanho.ca"
