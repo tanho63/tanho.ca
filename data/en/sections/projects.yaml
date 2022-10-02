@@ -53,8 +53,8 @@ projects:
   logo: "images/projects/calc-logo.png"
   role: Shiny (mobile) App
   timeline: "March 2019 - Present"
-  url: https://apps.dynastyprocess.com/calculator
-  summary: A free, mobile-first dynasty trade calculator app that serves over 70,000 monthly users.
+  url: https://calc.dynastyprocess.com
+  summary: A free, mobile-first dynasty trade calculator app that serves over 200,000 monthly users.
   tags: ["dp","trade calculator", "shiny", "fantasy football analysis"]
 
 - name: R4DS Slack Community
