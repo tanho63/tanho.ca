@@ -11,3 +11,5 @@ description: Personal site of Tan Ho
 customMenus:
 - name: Now
   url: /now
+- name: Pumpkins
+  url: /pumpkins
