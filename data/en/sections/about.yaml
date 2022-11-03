@@ -40,3 +40,6 @@ socialLinks:
 - name: Email
   icon: "fas fa-envelope"
   url: "mailto:hello@tanho.ca"
+- name: Mastodon
+  icon: "fab fa-mastodon"
+  url: "https://fosstodon.org/web/@tanho"
