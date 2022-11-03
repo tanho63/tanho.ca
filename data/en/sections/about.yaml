@@ -31,6 +31,9 @@ socialLinks:
 - name: Twitter
   icon: "fab fa-twitter"
   url: "https://twitter.com/_tanho"
+- name: Mastodon
+  icon: "fab fa-mastodon"
+  url: "https://fosstodon.org/web/@tanho"
 - name: Twitch
   icon: "fab fa-twitch"
   url: "https://twitch.tv/tanho_"
@@ -40,6 +43,3 @@ socialLinks:
 - name: Email
   icon: "fas fa-envelope"
   url: "mailto:hello@tanho.ca"
-- name: Mastodon
-  icon: "fab fa-mastodon"
-  url: "https://fosstodon.org/web/@tanho"
