@@ -33,7 +33,7 @@ socialLinks:
   url: "https://twitter.com/_tanho"
 - name: Mastodon
   icon: "fab fa-mastodon"
-  url: "https://fosstodon.org/web/@tanho"
+  url: "https://fosstodon.org/@tanho"
 - name: Twitch
   icon: "fab fa-twitch"
   url: "https://twitch.tv/tanho_"
