@@ -26,7 +26,7 @@
             {{ if eq .name "Email" }}
               <a href="mailto:{{ .url }}" target="/"><i class="{{ .icon }}"></i></a>
             {{ else }}
-              <a rel="me" href="{{ .url }}" target="/"><i class="{{ .icon }}"></i></a>
+              <a href="{{ .url }}" target="/"><i class="{{ .icon }}"></i></a>
             {{ end }}
           </li>
           {{ end }}
