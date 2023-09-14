@@ -8,7 +8,7 @@ section:
   template: sections/about.html
 
 # your designation
-designation: ML Engineer
+designation: ML Engineer II
 
 # your company information
 company:
@@ -19,27 +19,43 @@ company:
 # resume: "files/resume.pdf"
 
 # a summary about you
-summary: "I'm a data enthusiast who loves R/Shiny 🤩, DynastyFF 🏈,  and carving pumpkins 🎃. \n \n I started [DynastyProcess.com](https://dynastyprocess.com) and [ffverse](https://ffverse.com), maintain [nflverse](https://github.com/nflverse), stream on [Twitch](https://twitch.tv/tanho_), and contribute at [R4DS Slack Community](https://r4ds.io). \n \n Away from my keyboard, I enjoy rowing and was previously a lead program coach for the Ottawa Rowing Club."
+summary: | 
+  I'm a self-taught programmer who loves R, Shiny, fantasy football, and carving pumpkins 🎃.
 
+  By day, I'm an engineer for Zelus Soccer. I started [DynastyProcess.com](https://dynastyprocess.com) 
+  and [ffverse](https://ffverse.com), maintain [nflverse](https://github.com/nflverse), and mentor at 
+  [R4DS Slack Community](https://r4ds.io). 
+
+  In past lives, I have been a: residential property manager, construction data analyst, fantasy football 
+  writer, live-coding streamer, marathon rower, adult rowing coach, and more.
+
+  Away from my keyboard, I enjoy skiing, weightlifting, rowing, cooking, travelling, and hanging out with 
+  my dog Jasper.
+  
 # your social links
 # give as many as you want. use font-awesome for the icons.
 socialLinks:
-
 - name: Github
   icon: "fab fa-github"
   url: "https://www.github.com/tanho63"
-- name: Twitter
-  icon: "fab fa-twitter"
-  url: "https://twitter.com/_tanho"
+- name: nflverse Discord
+  icon: "fab fa-discord"
+  url: "https://discord.com/invite/5Er2FBnnQa"
+- name: Email
+  icon: "fas fa-envelope"
+  url: "mailto:hello@tanho.ca"
 - name: Mastodon
   icon: "fab fa-mastodon"
   url: "https://fosstodon.org/@tanho"
+- name: Twitter
+  icon: "fab fa-twitter"
+  url: "https://twitter.com/_tanho"
+- name: YouTube
+  icon: "fab fa-youtube"
+  url: "https://youtube.com/c/tanho"
 - name: Twitch
   icon: "fab fa-twitch"
   url: "https://twitch.tv/tanho_"
 - name: LinkedIn
   icon: "fab fa-linkedin"
   url: "https://www.linkedin.com/tan-ho"
-- name: Email
-  icon: "fas fa-envelope"
-  url: "mailto:hello@tanho.ca"
