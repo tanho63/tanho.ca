@@ -40,12 +40,8 @@ projects:
   timeline: "August 2020 - Present"
   url: https://ffverse.com
   summary: | 
-    A set of R packages and data pipelines for fantasy football, including:
-      - ffscrapr
-      - ffsimulator
-      - ffpros
-      - ffopportunity
-    and more. ffscrapr and ffsimulator are both on CRAN.
+    A set of R packages and data pipelines for fantasy football, including ffscrapr (CRAN), ffsimulator (CRAN), 
+    ffpros, ffopportunity, and more. 
   tags: ["dp", "open data", "fantasy football", "pkg"]
 
 - name: "DynastyProcess.com Trade Calculator"
@@ -61,16 +57,18 @@ projects:
   logo: "images/projects/book.svg"
   timeline: February 2020 - Present
   url: https://r4ds.io/join
-  summary: A wonderful community of R programming and data science learners and mentors. Features fantastic book clubs, including ones for Advanced R, Tidymodels with R, Mastering Shiny, and more!
+  summary: | 
+    A wonderful community of R programming and data science learners and mentors. 
+    Features fantastic book clubs, including ones for Advanced R, Tidymodels with R, Mastering Shiny, and more!
   tags: ["r4ds"]
 
-- name: "Livecoding Stream"
-  role: Twitch Stream
-  logo: "images/projects/videocam_circle.svg"
-  timeline: "March 2021 - May 2022"
-  url: https://youtube.com/c/tanho
-  summary: A pandemic project where I live-streamed 
-  tags: ["dp","open data", "r4ds", "pkg", "shiny"]
+# - name: "Livecoding Stream"
+#   role: Twitch Stream
+#   logo: "images/projects/videocam_circle.svg"
+#   timeline: "March 2021 - May 2022"
+#   url: https://youtube.com/c/tanho
+#   summary: A pandemic project where I live-streamed 
+#   tags: ["dp","open data", "r4ds", "pkg", "shiny"]
 
 # - name: DLF Trade Analyzer
 #   logo: "images/projects/balance-scale.svg"
