@@ -1,23 +1,21 @@
-# section information
 section:
   name: Project Highlights
   id: projects
   enable: true
   weight: 4
   showOnNavbar: false
-  # Can optionally hide the title in sections
   # hideTitle: true
 
-# filter buttons
-buttons:
-- name: All
-  filter: "all"
-- name: R Packages
-  filter: "pkg"
-- name: Shiny Apps
-  filter: "shiny"
-- name: Open Data
-  filter: "open data"
+## filter buttons
+#buttons:
+#- name: All
+#  filter: "all"
+#- name: R Packages
+#  filter: "pkg"
+#- name: Shiny Apps
+#  filter: "shiny"
+#- name: Open Data
+#  filter: "open data"
 # - name: R4DS Slack Community
 #   filter: "r4ds"
 # - name: Ottawa Rowing Club
@@ -25,54 +23,55 @@ buttons:
 
 # your projects
 projects:
-- name: "Livecoding Stream"
-  role: Twitch Stream
-  logo: "images/projects/videocam_circle.svg"
-  timeline: "March 2021 - Present"
-  url: https://twitch.tv/tanho_
-  summary: Streaming and sharing regularly about R, R packages, and R Shiny - live, on-stream! Currently Saturday evenings and Sunday afternoons.
-  tags: ["dp","open data", "r4ds", "pkg", "shiny"]
-
-- name: "ffscrapr"
-  logo: "images/projects/ffscrapr.png"
-  role: "R CRAN Package"
+- name: "nflverse"
+  logo: "https://github.com/dynastyprocess/graphics/raw/main/nflverse/nflverse-square.png"
+  role: "Data Pipelines and R Packages"
   timeline: "August 2020 - Present"
-  repo: https://github.com/dynastyprocess/ffscrapr
-  summary: An R package that accesses fantasy football league APIs and delivers tidy, ready-to-analyze data!
-  tags: ["dp", "open data", "fantasy football", "pkg"]
+  repo: https://github.com/nflverse/nflfastR
+  summary: |
+    A set of R packages and automated, open-data pipelines for public NFL analytics.
+  tags: ["nfl", "pkg"]
 
-- name: "DP Open Data"
-  role: Data Repository
-  logo: "images/projects/data-logo.png"
-  timeline: "January 2019 - Present"
-  repo: https://github.com/dynastyprocess/data
-  summary: Automated pipelines that deliver high quality open data to support dynasty FF analysis and development.
-  tags: ["dp","open data", "fantasy football"]
+- name: "ffverse"
+  logo: "https://github.com/dynastyprocess/graphics/raw/main/packages/ffverse/ffverse-square.png"
+  role: "R Packages"
+  timeline: "March 2021 - Present"
+  repo: "https://github.com/ffverse/ffscrapr"
+  summary: |
+    A set of R packages and data pipelines for fantasy football, including ffscrapr, ffsimulator, 
+    ffpros, ffopportunity, and more. 
+  tags: ["nfl", "pkg"]
 
-- name: "Trade Calculator"
+- name: "DynastyProcess Trade Calculator"
   logo: "images/projects/calc-logo.png"
   role: Shiny (mobile) App
   timeline: "March 2019 - Present"
-  url: https://calc.dynastyprocess.com
-  summary: A free, mobile-first dynasty trade calculator app that serves over 200,000 monthly users.
-  tags: ["dp","trade calculator", "shiny", "fantasy football analysis"]
+  url: "https://calc.dynastyprocess.com"
+  summary: |
+    A free, mobile-first dynasty trade calculator app that serves over 200,000 unique monthly users.
+  tags: ["nfl", "app", "shiny"]
 
 - name: R4DS Slack Community
   role: Mentor / Maintainer
   logo: "images/projects/book.svg"
   timeline: February 2020 - Present
-  url: https://r4ds.io/join
-  summary: A wonderful community of R programming and data science learners and mentors. Features fantastic book clubs, including ones for Advanced R, Tidymodels with R, Mastering Shiny, and more!
-  tags: ["r4ds"]
+  url: "https://r4ds.io/join"
+  summary: | 
+    A wonderful community of R programming and data science learners and mentors. 
 
-- name: "Other DynastyProcess Apps"
-  logo: "images/projects/apps.svg"
-  role: Shiny Apps
-  timeline: "March 2019 - Present"
-  url: https://dynastyprocess.com/apps
-  summary: Other Shiny apps created under the DynastyProcess label, including Crystal Ball and Expected Points tools.
-  tags: ["dp", "shiny", "fantasy football analysis"]
+    Features fantastic book clubs, including ones for Advanced R, Tidymodels with R, Mastering Shiny, and more!
+  tags: ["R"]
 
+- name: "Livecoding Stream"
+  role: Twitch Stream
+  logo: "images/projects/videocam_circle.svg"
+  timeline: "March 2021 - May 2022"
+  url: "https://youtube.com/c/tanho"
+  summary: | 
+    A pandemic project where I live-streamed personal/open-source R projects on a weekly basis. 
+    
+    I'm no longer actively streaming, but a few videos from this project are still up on my YouTube channel. 
+  tags: ["R"]
 # - name: DLF Trade Analyzer
 #   logo: "images/projects/balance-scale.svg"
 #   role: Reviewer
@@ -96,3 +95,11 @@ projects:
 #   url: "https://ottawarowingclub.com"
 #   summary: Coordinate, coach, and support the adult rowing programs.
 #   tags: [orc]
+
+#- name: "DP Open Data"
+#  role: Data Repository
+#  logo: "images/projects/data-logo.png"
+#  timeline: "January 2019 - Present"
+#  repo: https://github.com/dynastyprocess/data
+#  summary: Automated pipelines that deliver high quality open data to support dynasty FF analysis and development.
+#  tags: ["dp","open data", "fantasy football"]
