@@ -60,6 +60,7 @@ projects:
     A wonderful community of R programming and data science learners and mentors. 
 
     Features fantastic book clubs, including ones for Advanced R, Tidymodels with R, Mastering Shiny, and more!
+  tags: ["R"]
 
 - name: "Livecoding Stream"
   role: Twitch Stream
@@ -70,7 +71,7 @@ projects:
     A pandemic project where I live-streamed personal/open-source R projects on a weekly basis. 
     
     I'm no longer actively streaming, but a few videos from this project are still up on my YouTube channel. 
-
+  tags: ["R"]
 # - name: DLF Trade Analyzer
 #   logo: "images/projects/balance-scale.svg"
 #   role: Reviewer
