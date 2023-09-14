@@ -28,7 +28,7 @@ projects:
   role: "Data Pipelines and R Packages"
   timeline: "August 2020 - Present"
   repo: https://github.com/nflverse/nflfastR
-  summary: | 
+  summary: |
     A set of R packages and automated, open-data pipelines for public NFL analytics.
   tags: ["nfl", "pkg"]
 
@@ -36,8 +36,8 @@ projects:
   logo: "https://github.com/dynastyprocess/graphics/raw/main/packages/ffverse/ffverse-square.png"
   role: "R Packages"
   timeline: "March 2021 - Present"
-  repo: https://github.com/ffverse/ffscrapr
-  summary: | 
+  repo: "https://github.com/ffverse/ffscrapr"
+  summary: |
     A set of R packages and data pipelines for fantasy football, including ffscrapr, ffsimulator, 
     ffpros, ffopportunity, and more. 
   tags: ["nfl", "pkg"]
@@ -46,25 +46,26 @@ projects:
   logo: "images/projects/calc-logo.png"
   role: Shiny (mobile) App
   timeline: "March 2019 - Present"
-  url: https://calc.dynastyprocess.com
+  url: "https://calc.dynastyprocess.com"
   summary: |
     A free, mobile-first dynasty trade calculator app that serves over 200,000 unique monthly users.
-  tags: ["dp","trade calculator", "shiny", "fantasy football analysis"]
+  tags: ["nfl", "app", "shiny"]
 
 - name: R4DS Slack Community
   role: Mentor / Maintainer
   logo: "images/projects/book.svg"
   timeline: February 2020 - Present
-  url: https://r4ds.io/join
+  url: "https://r4ds.io/join"
   summary: | 
     A wonderful community of R programming and data science learners and mentors. 
+
     Features fantastic book clubs, including ones for Advanced R, Tidymodels with R, Mastering Shiny, and more!
 
 - name: "Livecoding Stream"
   role: Twitch Stream
   logo: "images/projects/videocam_circle.svg"
   timeline: "March 2021 - May 2022"
-  url: https://youtube.com/c/tanho
+  url: "https://youtube.com/c/tanho"
   summary: | 
     A pandemic project where I live-streamed personal/open-source R projects on a weekly basis. 
     
