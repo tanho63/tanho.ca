@@ -29,7 +29,7 @@ projects:
   logo: "https://github.com/dynastyprocess/graphics/raw/main/nflverse/nflverse-square.png"
   role: "Data Pipelines and R Packages"
   timeline: "August 2020 - Present"
-  url: https://ffverse.com
+  repo: https://github.com/nflverse/nflfastR
   summary: | 
     A set of R packages and automated, open-data pipelines for public NFL analytics.
   tags: ["nfl", "pkg"]
@@ -38,7 +38,7 @@ projects:
   logo: "https://github.com/dynastyprocess/graphics/raw/main/packages/ffverse/ffverse-square.png"
   role: "R Packages"
   timeline: "August 2020 - Present"
-  url: https://ffverse.com
+  repo: https://github.com/ffverse/ffscrapr
   summary: | 
     A set of R packages and data pipelines for fantasy football, including ffscrapr (CRAN), ffsimulator (CRAN), 
     ffpros, ffopportunity, and more. 
@@ -62,13 +62,13 @@ projects:
     Features fantastic book clubs, including ones for Advanced R, Tidymodels with R, Mastering Shiny, and more!
   tags: ["r4ds"]
 
-# - name: "Livecoding Stream"
-#   role: Twitch Stream
-#   logo: "images/projects/videocam_circle.svg"
-#   timeline: "March 2021 - May 2022"
-#   url: https://youtube.com/c/tanho
-#   summary: A pandemic project where I live-streamed 
-#   tags: ["dp","open data", "r4ds", "pkg", "shiny"]
+- name: "Livecoding Stream"
+  role: Twitch Stream
+  logo: "images/projects/videocam_circle.svg"
+  timeline: "March 2021 - May 2022"
+  url: https://youtube.com/c/tanho
+  summary: A pandemic project where I live-streamed 
+  tags: ["dp","open data", "r4ds", "pkg", "shiny"]
 
 # - name: DLF Trade Analyzer
 #   logo: "images/projects/balance-scale.svg"
