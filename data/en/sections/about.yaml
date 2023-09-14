@@ -8,11 +8,11 @@ section:
   template: sections/about.html
 
 # your designation
-designation: ML Engineer II
+designation: Engineer
 
 # your company information
 company:
-  name: Zelus Analytics
+  name: Zelus Analytics ⚽
   url:  "https://www.zelusanalytics.com"
 
 # your resume. this file path should be relative to you "static" directory
@@ -20,7 +20,7 @@ company:
 
 # a summary about you
 summary: | 
-  I'm a self-taught programmer who loves R, Shiny, fantasy football, and carving pumpkins 🎃.
+  I'm a self-taught programmer who loves R, Shiny, fantasy football, and carving pumpkins.
 
   By day, I'm an engineer for Zelus Soccer. I started [DynastyProcess.com](https://dynastyprocess.com) 
   and [ffverse](https://ffverse.com), maintain [nflverse](https://github.com/nflverse), and mentor at 
@@ -32,7 +32,9 @@ summary: |
   Away from my keyboard, I enjoy skiing, weightlifting, rowing, cooking, travelling, and hanging out with 
   my dog Jasper.
 
-  Here's what I'm [currently up to](/now)
+  ## What am I up to now?
+
+  See my [now page](/now)
   
 # your social links
 # give as many as you want. use font-awesome for the icons.
