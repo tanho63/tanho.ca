@@ -1,14 +1,12 @@
-# section information
 section:
   name: Project Highlights
   id: projects
   enable: true
   weight: 4
   showOnNavbar: false
-  # Can optionally hide the title in sections
   # hideTitle: true
 
-# filter buttons
+## filter buttons
 #buttons:
 #- name: All
 #  filter: "all"
@@ -37,19 +35,20 @@ projects:
 - name: "ffverse"
   logo: "https://github.com/dynastyprocess/graphics/raw/main/packages/ffverse/ffverse-square.png"
   role: "R Packages"
-  timeline: "August 2020 - Present"
+  timeline: "March 2021 - Present"
   repo: https://github.com/ffverse/ffscrapr
   summary: | 
-    A set of R packages and data pipelines for fantasy football, including ffscrapr (CRAN), ffsimulator (CRAN), 
+    A set of R packages and data pipelines for fantasy football, including ffscrapr, ffsimulator, 
     ffpros, ffopportunity, and more. 
-  tags: ["dp", "open data", "fantasy football", "pkg"]
+  tags: ["nfl", "pkg"]
 
-- name: "DynastyProcess.com Trade Calculator"
+- name: "DynastyProcess Trade Calculator"
   logo: "images/projects/calc-logo.png"
   role: Shiny (mobile) App
   timeline: "March 2019 - Present"
   url: https://calc.dynastyprocess.com
-  summary: A free, mobile-first dynasty trade calculator app that serves over 200,000 unique monthly users.
+  summary: |
+    A free, mobile-first dynasty trade calculator app that serves over 200,000 unique monthly users.
   tags: ["dp","trade calculator", "shiny", "fantasy football analysis"]
 
 - name: R4DS Slack Community
@@ -60,15 +59,16 @@ projects:
   summary: | 
     A wonderful community of R programming and data science learners and mentors. 
     Features fantastic book clubs, including ones for Advanced R, Tidymodels with R, Mastering Shiny, and more!
-  tags: ["r4ds"]
 
 - name: "Livecoding Stream"
   role: Twitch Stream
   logo: "images/projects/videocam_circle.svg"
   timeline: "March 2021 - May 2022"
   url: https://youtube.com/c/tanho
-  summary: A pandemic project where I live-streamed 
-  tags: ["dp","open data", "r4ds", "pkg", "shiny"]
+  summary: | 
+    A pandemic project where I live-streamed personal/open-source R projects on a weekly basis. 
+    
+    I'm no longer actively streaming, but a few videos from this project are still up on my YouTube channel. 
 
 # - name: DLF Trade Analyzer
 #   logo: "images/projects/balance-scale.svg"
