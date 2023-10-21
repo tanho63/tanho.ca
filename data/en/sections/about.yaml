@@ -20,16 +20,19 @@ company:
 
 # a summary about you
 summary: | 
-  I'm a self-taught programmer who loves R, Shiny, fantasy football, and carving pumpkins.
+  I'm a self-taught programmer who loves R, Shiny, fantasy football, and carving 
+  pumpkins.
 
   By day, I'm an engineer for Zelus Soccer. I started [DynastyProcess.com](https://dynastyprocess.com) 
-  and [ffverse](https://ffverse.com), maintain [nflverse](https://github.com/nflverse), and mentor at 
-  [R4DS Slack Community](https://r4ds.io). 
+  and [ffverse](https://ffverse.com), maintain [nflverse](https://github.com/nflverse), 
+  and mentor at [R4DS Slack Community](https://r4ds.io). 
 
-  In past lives, I have been a: residential property manager, construction data analyst, fantasy football 
-  writer, live-coding streamer, marathon rower, adult rowing coach, and more.
+  In past lives, I have been a: residential property manager, construction data 
+  analyst, fantasy football writer, live-coding streamer, marathon rower, adult 
+  rowing coach, and more.
 
-  Away from my keyboard, I enjoy skiing, lifting weights, cooking, and hanging out with my dog Jasper.
+  Away from my keyboard, I enjoy skiing, lifting weights, cooking, and hanging 
+  out with my dog Jasper.
 
   ##### What am I up to now?
 
@@ -61,4 +64,4 @@ socialLinks:
   url: "https://twitch.tv/tanho_"
 - name: LinkedIn
   icon: "fab fa-linkedin"
-  url: "https://www.linkedin.com/tan-ho"
+  url: "https://www.linkedin.com/in/tan-ho"
