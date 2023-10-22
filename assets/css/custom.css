@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Bai+Jamjuree&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap');
+
+h1,h2,h3,h4,h5,h6 {
+    font-family: Bai Jamjuree;
+}
+body {
+    font-family: IBM Plex Sans, sans-serif;
+}
+
+html {
+  font-size: 16pt;
+}
