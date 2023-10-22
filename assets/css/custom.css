@@ -10,3 +10,9 @@ body {
 html {
   font-size: 14 pt;
 }
+
+.prose a {
+  text-decoration: underline;
+  color: "#eee";
+  font-weight: 700;
+}
