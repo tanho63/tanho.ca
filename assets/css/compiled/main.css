@@ -1275,8 +1275,16 @@ select {
   pointer-events: auto;
 }
 
+.visible {
+  visibility: visible;
+}
+
 .invisible {
   visibility: hidden;
+}
+
+.collapse {
+  visibility: collapse;
 }
 
 .fixed {
@@ -2491,10 +2499,6 @@ select {
 
 .opacity-0 {
   opacity: 0;
-}
-
-.opacity-20 {
-  opacity: 0.2;
 }
 
 .opacity-30 {
