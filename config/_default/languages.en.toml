@@ -9,6 +9,7 @@ title = "Tan Ho"
   rtl = false
   dateFormat = "2006 Jan 2"
   logo = "img/main-logo.png"
+  images = "img/main-logo.png"
   # secondaryLogo = "img/secondary-logo.png"
   description = "Personal site of Tan Ho: r & shiny obsessive, pumpkin engineer, nfl nerd"
   # copyright = "Copy, _right?_ :thinking_face:"
