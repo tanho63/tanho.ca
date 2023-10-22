@@ -8,7 +8,7 @@ I'm a self-taught programmer who loves R, Shiny, fantasy football, and carving p
 I started [DynastyProcess.com](https://dynastyprocess.com) and [ffverse](https://ffverse.com), 
 maintain [nflverse](https://github.com/nflverse), and mentor at [R4DS Slack Community](https://r4ds.io). 
 
-In past lives, I have been: residential property manager, construction data 
+In past lives, I have been a: residential property manager, construction data 
 analyst, fantasy football writer, live-coding streamer, marathon rower, adult 
 rowing coach, and more.
 
