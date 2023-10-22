@@ -22,12 +22,12 @@
 
 [[main]]
   name = "Pumpkins"
-  url = "pumpkins"
+  url = "/pumpkins"
   weight = 30
 
 [[main]]
   name = "Now"
-  url = "now"
+  url = "/now"
   weight = 40
 
 #[[main]]
