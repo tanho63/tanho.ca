@@ -1,6 +1,6 @@
 ---
-title: "Hiya, I'm Tan"
-description: ""
+title: "Hiya, I'm Tan Ho"
+description: "r & shiny obsessive, pumpkin engineer, nfl nerd"
 ---
 
 I'm a self-taught programmer who loves R, Shiny, NFL, and carving pumpkins. By day, 
