@@ -1,5 +1,5 @@
 ---
-layout: single
+layout: simple
 title: "Pumpkin Carves"
 #hero: "/images/hero/pumpkins.jpg"
 date:   2013-10-31
