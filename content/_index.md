@@ -3,7 +3,8 @@ title: "Hiya, I'm Tan"
 description: ""
 ---
 
-I'm a self-taught programmer who loves R, Shiny, fantasy football, and carving pumpkins. By day, I'm an ML engineer for [Zelus Analytics](https://) Soccer. 
+I'm a self-taught programmer who loves R, Shiny, NFL, and carving pumpkins. By day, 
+I'm an ML Engineer for [Zelus Analytics](https://zelusanalytics.com) Soccer. 
 
 I started [DynastyProcess.com](https://dynastyprocess.com) and [ffverse](https://ffverse.com), 
 maintain [nflverse](https://github.com/nflverse), and mentor at [R4DS Slack Community](https://r4ds.io). 
