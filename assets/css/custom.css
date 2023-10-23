@@ -15,3 +15,7 @@ html {
   text-decoration: underline;
   font-weight: 700;
 }
+
+.prose {
+  --tw-prose-invert-body: rgba(var(--color-neutral-200), 1);
+}

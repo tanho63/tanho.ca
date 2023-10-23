@@ -29,7 +29,7 @@ disableImageOptimization = false
 
 [footer]
   showMenu = true
-  showCopyright = false
+  showCopyright = true
   showThemeAttribution = false
   showAppearanceSwitcher = true
   showScrollToTop = true
@@ -68,7 +68,7 @@ disableImageOptimization = false
   showTableOfContents = false
   # showRelatedContent = false
   # relatedContentLimit = 3
-  showTaxonomies = true
+  showTaxonomies = false
   showAuthorsBadges = false
   showWordCount = false
   # sharingLinks = [ "linkedin", "twitter", "reddit", "pinterest", "facebook", "email", "whatsapp", "telegram"]

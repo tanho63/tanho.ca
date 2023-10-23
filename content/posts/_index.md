@@ -4,6 +4,7 @@ description: "Thoughts, tutorials, and other topics"
 cascade:
   showComments: true
   showReadingTime: true
+  showTaxonomies: true
   showHero: true
-  heroStyle: background
+  heroStyle: basic
 ---

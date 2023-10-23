@@ -12,7 +12,9 @@ title = "Tan Ho"
   images = "img/main-logo.png"
   # secondaryLogo = "img/secondary-logo.png"
   description = "Personal site of Tan Ho: r & shiny obsessive, pumpkin engineer, nfl nerd"
-  # copyright = "Copy, _right?_ :thinking_face:"
+  copyright = """ \
+  © { year } Tan Ho. Unless otherwise specified, content is licensed with [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+  """
 
 [author]
    name = "Tan Ho"
