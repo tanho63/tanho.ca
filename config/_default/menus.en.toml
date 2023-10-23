@@ -12,12 +12,12 @@
 
 [[main]]
   name = "Posts"
-  #pageRef = "posts"
+  url = "/posts"
   weight = 10
 
 [[main]]
   name = "Talks"
-  #url = "talks"
+  url = "/talks"
   weight = 20
 
 [[main]]
