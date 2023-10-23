@@ -1,0 +1,73 @@
+languageCode = "en"
+languageName = "English"
+weight = 1
+title = "Tan Ho"
+
+[params]
+  displayName = "EN"
+  isoCode = "en"
+  rtl = false
+  dateFormat = "2006 Jan 2"
+  logo = "img/main-logo.png"
+  images = "img/main-logo.png"
+  # secondaryLogo = "img/secondary-logo.png"
+  description = "Personal site of Tan Ho: r & shiny obsessive, pumpkin engineer, nfl nerd"
+  copyright = """ \
+  © { year } Tan Ho. Unless otherwise specified, content is licensed with [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+  """
+
+[author]
+   name = "Tan Ho"
+   image = "img/avatar.jpg"
+   headline = [
+    "engineer @ zelus soccer",
+    "pumpkin sculptor",
+    "r & shiny obsessive",
+    "maintainer of nflverse and ffverse",
+    "mentor @ r4ds.io"
+   ]
+#   bio = "A little bit about you"
+   links = [
+     { github = "https://github.com/tanho63" },
+     { discord = "https://discord.com/invite/5Er2FBnnQa" },
+     { mastodon = "https://fosstodon.org/@tanho" },
+     { twitter = "https://twitter.com/_TanHo" },
+     { twitch = "https://twitch.tv/TanHo_" },
+     { youtube = "https://youtube.com/tanho" },
+     { linkedin = "https://linkedin.com/in/tan-ho" },
+     { ko-fi = "https://ko-fi.com/tanho" },
+     { envelope = "mailto:hello@tanho.ca" },
+#     { orcid = "https://orcid.org/0000-0001-8388-5155" },
+#     { link = "https://link-to-some-website.com/" },
+#     { amazon = "https://www.amazon.com/hz/wishlist/ls/wishlist-id" },
+#     { apple = "https://www.apple.com" },
+#     { blogger = "https://username.blogspot.com/" },
+#     { codepen = "https://codepen.io/username" },
+#     { dev = "https://dev.to/username" },
+#     { dribbble = "https://dribbble.com/username" },
+#     { facebook = "https://facebook.com/username" },
+#     { flickr = "https://www.flickr.com/photos/username/" },
+#     { foursquare = "https://foursquare.com/username" },
+#     { gitlab = "https://gitlab.com/username" },
+#     { google = "https://www.google.com/" },
+#     { hashnode = "https://username.hashnode.dev" },
+#     { instagram = "https://instagram.com/username" },
+#     { keybase = "https://keybase.io/username" },
+#     { kickstarter = "https://www.kickstarter.com/profile/username" },
+#     { lastfm = "https://lastfm.com/user/username" },
+#     { medium = "https://medium.com/username" },
+#     { microsoft = "https://www.microsoft.com/" },
+#     { patreon = "https://www.patreon.com/username" },
+#     { pinterest = "https://pinterest.com/username" },
+#     { reddit = "https://reddit.com/user/username" },
+#     { researchgate = "https://www.researchgate.net/profile/username" },
+#     { slack = "https://workspace.url/team/userid" },
+#     { snapchat = "https://snapchat.com/add/username" },
+#     { soundcloud = "https://soundcloud.com/username" },
+#     { stack-overflow = "https://stackoverflow.com/users/userid/username" },
+#     { steam = "https://steamcommunity.com/profiles/userid" },
+#     { telegram = "https://t.me/username" },
+#     { tiktok = "https://tiktok.com/@username" },
+#     { tumblr = "https://username.tumblr.com" },
+#     { whatsapp = "https://wa.me/phone-number" },
+   ]

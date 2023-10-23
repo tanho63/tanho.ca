@@ -1,0 +1,18 @@
+{{ $id := delimit (slice "gallery" .Ordinal now.UnixNano) "-" }}
+{{ $images := .Page.Resources.Match (.Get "images") }}
+
+<div id="{{ $id }}">
+  {{ range $images }}
+  <img src="{{ . }}" class="grid-w50 lg:grid-w33">
+  {{ end }}
+</div>
+
+<script>
+  $(window).on("load", function () {
+    $('#{{ $id }}').packery({
+      percentPosition: true,
+      gutter: 5,
+      resize: true
+    });
+  })
+</script>

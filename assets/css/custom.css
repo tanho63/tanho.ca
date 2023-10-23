@@ -1,0 +1,21 @@
+
+h1,h2,h3,h4,h5,h6,.font-header {
+    font-family: Bai Jamjuree, sans-serif;
+}
+
+body {
+    font-family: IBM Plex Sans, sans-serif;
+}
+
+html {
+  font-size: 14 pt;
+}
+
+.prose a {
+  text-decoration: underline;
+  font-weight: 700;
+}
+
+.prose {
+  --tw-prose-invert-body: rgba(var(--color-neutral-200), 1);
+}
