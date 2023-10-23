@@ -3,3 +3,4 @@
 .RData
 public
 themes/blowfish/exampleSite
+.hugo_build.lock
