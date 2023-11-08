@@ -12,7 +12,7 @@ defaultContentLanguage = "en"
 enableRobotsTXT = true
 paginate = 10
 summaryLength = 0
-ignoreFiles = ["_archive/toha"]
+ignoreFiles = ["_archive"]
 buildDrafts = false
 buildFuture = false
 
