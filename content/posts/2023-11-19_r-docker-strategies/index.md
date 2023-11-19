@@ -1,6 +1,6 @@
 ---
 title: R + Docker Strategies
-summary: Some personal best practices for writing effective Dockerfiles for R
+summary: Some collected best practices for writing effective Dockerfiles for R
 date: 2023-11-19
 draft: true
 tags:
@@ -8,6 +8,16 @@ tags:
   - devops
   - docker
 ---
+
+{{< alert >}} 
+
+## To Do
+
+- add example Dockerfiles
+- flesh out body text 
+- rearrange into more useful post
+
+{{</alert>}}
 
 Docker+R best practices for developer happiness and smaller/faster image builds.
 
