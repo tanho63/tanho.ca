@@ -2,19 +2,18 @@
 layout: single
 title:  "Like-Hearted"
 date:   2021-03-04
-categories: thoughts
+tags: 
+  - thoughts
 summary: "Curating your feed, finding your friend groups, and getting into online arguments."
 url: /like-hearted
 showHero: true
-heroStyle: basic
-images: 
-  - "messaging.jpg"
+heroStyle: background
 ---
 *Curating your feed, finding your friend groups, and getting into online arguments*
 
 Each year, I embark on a journey to re-read Austin Kleon's [Steal trilogy](https://austinkleon.com/books), and each time I read it, something new grabs my attention. I was struck today by this image from a chapter in Keep Going called "Like-Minded vs Like-Hearted":
 
-<img src="/images/thoughts/not_arguing.jpg" alt="not arguing" style="max-height: 50vh;" />
+<img src="featured.jpg" alt="not arguing" style="max-height: 50vh;" />
 
 *A pretty obvious callback to the Simpsons and their opening chalkboard gag!* 
 

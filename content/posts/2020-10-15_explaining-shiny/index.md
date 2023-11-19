@@ -3,10 +3,13 @@ layout: single
 title: "Q & A: Explaining Shiny to Your IT Team"
 date:   2020-10-15
 url: /explainingshiny
-# hero: /images/rshiny/discussing.jpg
 summary: "Helping present the business architecture for Shiny in production to a relatively technical (but not R-based) crowd"
 published: true
-categories: rshiny
+tags: 
+  - r
+  - shiny
+  - r4ds-slack
+heroStyle: background
 ---
 
 I greatly enjoy the R4DS Slack Community (found at [r4ds.io/join](r4ds.io/join)!) - and spend a fair bit of time answering questions, especially about Shiny! This is the first in a series of posts where I curate some of the more interesting questions and answers I've found (and sometimes answered).
