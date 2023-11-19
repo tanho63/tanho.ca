@@ -6,4 +6,5 @@ cascade:
   showReadingTime: true
   showTaxonomies: true
   showHero: true
+  heroStyle: background
 ---

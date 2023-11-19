@@ -19,3 +19,13 @@ html {
 .prose {
   --tw-prose-invert-body: rgba(var(--color-neutral-200), 1);
 }
+
+.max-w-fit, .max-w-prose {
+    max-width: 100%;
+}
+
+@media (min-width: 1024px) {
+    .lg\:flex-row {
+        flex-direction: column;
+    }
+}

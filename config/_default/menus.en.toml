@@ -16,7 +16,7 @@
   weight = 10
 
 [[main]]
-  name = "Talks"
+  name = "Talks & Tutorials"
   url = "/talks"
   weight = 20
 

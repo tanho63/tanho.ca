@@ -2,7 +2,8 @@
 layout: single
 title:  "Like-Hearted"
 date:   2021-03-04
-categories: thoughts
+tags: 
+  - thoughts
 summary: "Curating your feed, finding your friend groups, and getting into online arguments."
 url: /like-hearted
 showHero: true

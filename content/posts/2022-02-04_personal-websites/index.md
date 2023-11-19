@@ -2,7 +2,8 @@
 title: "blogdown, distill, and personal websites with R"
 date:   2022-02-04
 summary: "Some thoughts on blogdown, distill, and getting started with your first website in R"
-categories: rshiny
+tags: 
+  - r
 url: /personal-websites-with-r
 heroStyle: big
 ---

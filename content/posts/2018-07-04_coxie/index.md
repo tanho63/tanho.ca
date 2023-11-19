@@ -5,8 +5,8 @@ url: /rowing-coxie
 # hero: "/images/rowing/coxie.jpg"
 summary: "Congratulations, you're in charge. Your rowers expect you to be clear, prepared, and commanding - speak up!"
 date: 2018-07-04
-categories: rowing
-heroStyle: big
+tags: 
+  - rowing
 showTableOfContents: true
 ---
 

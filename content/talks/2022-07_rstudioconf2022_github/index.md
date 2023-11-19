@@ -7,5 +7,9 @@ date: 2022-07-27
 tags: 
  - "talks"
  - "rstudioconf2022"
+ - r
 heroStyle: background
 ---
+
+## Recording
+{{< youtube wzcz4xNGeTI >}}
