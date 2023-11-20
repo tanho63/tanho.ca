@@ -1,16 +1,19 @@
 ---
-title: "Pivot Trick: names_to -> .value"
-summary: "One of my favourite tidyr tips that I've shared over and over again"
+title: "tidyr pivot tricks: names_to -> .value"
+summary: "A tidyr tip for extracting data from column names that I've used and shared a lot, now transcribed from Twitter"
 date: 2023-11-19
 url: /pivot-trick
 tags:
  - r
  - tips
+heroStyle: background
 ---
 
 {{< alert "twitter" >}}
-Transcribing [one](https://twitter.com/_tanho/status/1415100126272577536) of my 
-more popular Twitter posts into a website post now that I'm mostly off of Twitter. 
+I originally shared this tip for extracting data from column names as a
+[tweet](https://twitter.com/_tanho/status/1415100126272577536), and I've found 
+myself sharing it over and over again since. Here's a quick transcription now that 
+I'm no longer on Twitter.
 {{</ alert >}}
 
 One of my favourite data-wrangling tricks is [tidyr::pivot_longer's](https://tidyr.tidyverse.org/reference/pivot_longer.html) 
@@ -27,10 +30,6 @@ and you want this ending dataframe:
 
 How do you extract the characters (Fred, Velma, Daphnie, Shaggy, Scooby) from the
 column names into a `character` column?
-
-{{< alert "circle-info" >}}
-TLDR: Full gist [here](https://gist.github.com/tanho63/50d9b323e29165ad3e027bc3cf1c5926).
-{{</ alert >}}
 
 Past me: hmm, well, I can pivot_longer, then separate the name, then pivot_wider again?
 
@@ -69,4 +68,31 @@ one_line <- x %>%
 
 You can read more about this pivot_longer feature in this [tidyr vignette](https://tidyr.tidyverse.org/articles/pivot.html#multiple-observations-per-row).
 
+## Full Code
 
+```r
+library(tidyverse)
+
+scooby_data <- read.csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-13/scoobydoo.csv")
+
+x <- 
+  scooby_data %>% 
+  select(season, title, 
+    starts_with("caught"),
+    starts_with("captured"),
+    starts_with("unmask"),
+    starts_with("snack"),
+    -contains("other"),
+    -contains("not")) %>% 
+  filter(title!= "Wrestle Maniacs")
+
+three_lines <- x %>% 
+  pivot_longer(cols = -c("season","title")) %>% 
+  separate(name,into = c("action","character"), sep = "_") %>% 
+  pivot_wider(names_from = "action", values_from = "value")
+
+one_line <- x %>% 
+  pivot_longer(cols = -c("season","title"), names_to = c(".value","character"), names_sep = "_")
+```
+
+[Original gist](https://gist.github.com/tanho63/50d9b323e29165ad3e027bc3cf1c5926) for reference.
