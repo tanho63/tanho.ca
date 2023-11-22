@@ -1,7 +1,7 @@
 ---
 title: "tidyr pivot tricks: names_to -> .value"
 summary: "A tidyr tip for extracting data from column names that I've used and shared a lot, now transcribed from Twitter"
-date: 2023-11-19
+date: 2023-11-21
 url: /pivot-trick
 tags:
  - r
@@ -22,11 +22,47 @@ One of my favourite data-wrangling tricks is [tidyr::pivot_longer's](https://tid
 
 Let's say you have this starting dataframe:
 
-![A snippet of the raw Scooby Doo data from the TidyTuesday dataset, showing columns caught_fred, captured_fred, unmask_fred, snack_fred, caught_daphnie, captured_daphne, unmask_daphne etc. The goal is to transform this into a dataframe per character (one row for fred, one row for daphne, etc )](start_dataframe.png)
-
+```
+# A tibble: 601 × 22
+   season title       caught_fred caught_daphnie caught_velma caught_shaggy
+   <chr>  <chr>       <chr>       <chr>          <chr>        <chr>        
+ 1 1      What a Nig… FALSE       FALSE          FALSE        TRUE         
+ 2 1      A Clue for… FALSE       FALSE          FALSE        TRUE         
+ 3 1      Hassle in … FALSE       FALSE          FALSE        FALSE        
+ 4 1      Mine Your … TRUE        FALSE          FALSE        FALSE        
+ 5 1      Decoy for … FALSE       FALSE          FALSE        FALSE        
+ 6 1      What the H… TRUE        FALSE          FALSE        FALSE        
+ 7 1      Never Ape … TRUE        FALSE          FALSE        FALSE        
+ 8 1      Foul Play … FALSE       FALSE          FALSE        FALSE        
+ 9 1      The Backst… FALSE       FALSE          FALSE        TRUE         
+10 1      Bedlam in … FALSE       FALSE          FALSE        TRUE         
+# ℹ 591 more rows
+# ℹ 16 more variables: caught_scooby <chr>, captured_fred <chr>,
+#   captured_daphnie <chr>, captured_velma <chr>, captured_shaggy <chr>,
+#   captured_scooby <chr>, unmask_fred <chr>, unmask_daphnie <chr>,
+#   unmask_velma <chr>, unmask_shaggy <chr>, unmask_scooby <chr>,
+#   snack_fred <chr>, snack_daphnie <chr>, snack_velma <chr>,
+#   snack_shaggy <chr>, snack_scooby <chr>
+# ℹ Use `print(n = ...)` to see more rows
+```
 and you want this ending dataframe:
-
-![The end goal dataframe, with one row for each of fred, daphne, velma, shaggy, and scooby per episode and columns for captured, caught, unmask, or snack.](end_dataframe.png)
+```
+# A tibble: 3,005 × 7
+   season title                     character caught captured unmask snack
+   <chr>  <chr>                     <chr>     <chr>  <chr>    <chr>  <chr>
+ 1 1      What a Night for a Knight fred      FALSE  FALSE    FALSE  TRUE 
+ 2 1      What a Night for a Knight daphnie   FALSE  FALSE    FALSE  FALSE
+ 3 1      What a Night for a Knight velma     FALSE  FALSE    FALSE  FALSE
+ 4 1      What a Night for a Knight shaggy    TRUE   FALSE    FALSE  FALSE
+ 5 1      What a Night for a Knight scooby    TRUE   FALSE    TRUE   FALSE
+ 6 1      A Clue for Scooby Doo     fred      FALSE  TRUE     TRUE   FALSE
+ 7 1      A Clue for Scooby Doo     daphnie   FALSE  TRUE     FALSE  FALSE
+ 8 1      A Clue for Scooby Doo     velma     FALSE  TRUE     FALSE  TRUE 
+ 9 1      A Clue for Scooby Doo     shaggy    TRUE   FALSE    FALSE  FALSE
+10 1      A Clue for Scooby Doo     scooby    FALSE  FALSE    FALSE  FALSE
+# ℹ 2,995 more rows
+# ℹ Use `print(n = ...)` to see more rows
+```
 
 How do you extract the characters (Fred, Velma, Daphnie, Shaggy, Scooby) from the
 column names into a `character` column?
@@ -42,7 +78,23 @@ three_lines <- x %>%
 
 returns
 
-![output of previous code example, looks like goal dataframe](three_step_output.png)
+```
+# A tibble: 3,005 × 7
+   season title                     character caught captured unmask snack
+   <chr>  <chr>                     <chr>     <chr>  <chr>    <chr>  <chr>
+ 1 1      What a Night for a Knight fred      FALSE  FALSE    FALSE  TRUE 
+ 2 1      What a Night for a Knight daphnie   FALSE  FALSE    FALSE  FALSE
+ 3 1      What a Night for a Knight velma     FALSE  FALSE    FALSE  FALSE
+ 4 1      What a Night for a Knight shaggy    TRUE   FALSE    FALSE  FALSE
+ 5 1      What a Night for a Knight scooby    TRUE   FALSE    TRUE   FALSE
+ 6 1      A Clue for Scooby Doo     fred      FALSE  TRUE     TRUE   FALSE
+ 7 1      A Clue for Scooby Doo     daphnie   FALSE  TRUE     FALSE  FALSE
+ 8 1      A Clue for Scooby Doo     velma     FALSE  TRUE     FALSE  TRUE 
+ 9 1      A Clue for Scooby Doo     shaggy    TRUE   FALSE    FALSE  FALSE
+10 1      A Clue for Scooby Doo     scooby    FALSE  FALSE    FALSE  FALSE
+# ℹ 2,995 more rows
+# ℹ Use `print(n = ...)` to see more rows
+```
 
 This seems to work okay! 
 
@@ -62,11 +114,78 @@ one_line <- x %>%
   )
 ```
 
-![output of one liner, for confirmation](one_step_output.png)
+```
+# A tibble: 3,005 × 7
+   season title                     character caught captured unmask snack
+   <chr>  <chr>                     <chr>     <chr>  <chr>    <chr>  <chr>
+ 1 1      What a Night for a Knight fred      FALSE  FALSE    FALSE  TRUE 
+ 2 1      What a Night for a Knight daphnie   FALSE  FALSE    FALSE  FALSE
+ 3 1      What a Night for a Knight velma     FALSE  FALSE    FALSE  FALSE
+ 4 1      What a Night for a Knight shaggy    TRUE   FALSE    FALSE  FALSE
+ 5 1      What a Night for a Knight scooby    TRUE   FALSE    TRUE   FALSE
+ 6 1      A Clue for Scooby Doo     fred      FALSE  TRUE     TRUE   FALSE
+ 7 1      A Clue for Scooby Doo     daphnie   FALSE  TRUE     FALSE  FALSE
+ 8 1      A Clue for Scooby Doo     velma     FALSE  TRUE     FALSE  TRUE 
+ 9 1      A Clue for Scooby Doo     shaggy    TRUE   FALSE    FALSE  FALSE
+10 1      A Clue for Scooby Doo     scooby    FALSE  FALSE    FALSE  FALSE
+# ℹ 2,995 more rows
+# ℹ Use `print(n = ...)` to see more rows
+```
 
 **Why use many line when one line do trick?**
 
 You can read more about this pivot_longer feature in this [tidyr vignette](https://tidyr.tidyverse.org/articles/pivot.html#multiple-observations-per-row).
+
+## Bonus: data.table equivalent
+
+{{< tweet user="hadleywickham" id="1500244970845974532">}}
+
+I learned later (from Hadley quote-tweeting my thread) that this feature was 
+inspired by a similar feature in `data.table`, so in the completionist spirit I 
+went to track down it's done there. As it turns out, it was in development as of 
+October 2020, merged to main in May 2021, and still hasn't made it onto CRAN :rolling_eyes:.
+(Can leave the discussion of data.table governance and horrible backlog for another time).
+
+In any case, **with the main branch of rdatatable/data.table 
+[as of today](https://github.com/Rdatatable/data.table/tree/6b9d559606767562f7f7dd4c7842a9e4a9fb597c)**, 
+here's how you could do this pivot trick:
+
+```r
+# requires development version of data.table
+rlang::check_installed("data.table (>= 1.14.9)")
+data.table::data.table(x) |> 
+  data.table::melt(
+    # uses `sep = "_"` to identify which columns to pivot (i.e. anything with an _)
+    # as well as to identify how to process the column names (i.e. split with sep "_")
+    #  
+    # measure() is not actually exported but is silently identified/parsed under the hood
+    # 
+    # new column names (i.e. character) are provided unquoted/as bare symbols
+    # value.name is equivalent to tidyr's `.value`
+    measure.vars = measure(value.name, character, sep = "_")
+  )
+```
+
+```
+      season                                title character caught captured unmask  snack
+      <char>                               <char>    <char> <char>   <char> <char> <char>
+   1:      1            What a Night for a Knight      fred  FALSE    FALSE  FALSE   TRUE
+   2:      1                A Clue for Scooby Doo      fred  FALSE     TRUE   TRUE  FALSE
+   3:      1                 Hassle in the Castle      fred  FALSE    FALSE   TRUE   TRUE
+   4:      1               Mine Your Own Business      fred   TRUE    FALSE   TRUE  FALSE
+   5:      1                Decoy for a Dognapper      fred  FALSE    FALSE  FALSE  FALSE
+  ---                                                                                    
+3001:      2 The Dreaded Remake of Jekyll & Hyde!    scooby  FALSE    FALSE  FALSE  FALSE
+3002:  Movie         Happy Halloween, Scooby-Doo!    scooby  FALSE    FALSE  FALSE  FALSE
+3003:  Movie  Scooby-Doo! The Sword and the Scoob    scooby  FALSE    FALSE  FALSE  FALSE
+3004:      2              Dark Diner of Route 66!    scooby   TRUE    FALSE  FALSE  FALSE
+3005:      2                      Total Jeopardy!    scooby  FALSE    FALSE  FALSE  FALSE
+```
+
+This definitely seems less intuitive / a lot more automagical (in a bad way)
+than the tidyr equivalent, so I'd probably stay away from this even if it were 
+on CRAN at this minute, which seems a little ... unlikely ... for a while yet. 
+
 
 ## Full Code
 
@@ -93,6 +212,19 @@ three_lines <- x %>%
 
 one_line <- x %>% 
   pivot_longer(cols = -c("season","title"), names_to = c(".value","character"), names_sep = "_")
+  
+rlang::check_installed("data.table (>= 1.14.9)")
+data.table::data.table(x) |> 
+  data.table::melt(
+    # uses `sep = "_"` to identify which columns to pivot (i.e. anything with an _)
+    # as well as to identify how to process the column names (i.e. split with sep "_")
+    #  
+    # measure() is not actually exported but is silently identified/parsed under the hood
+    # 
+    # new column names (i.e. character) are provided unquoted/as bare symbols
+    # value.name is equivalent to tidyr's `.value`
+    measure.vars = measure(value.name, character, sep = "_")
+  )
 ```
 
 [Original gist](https://gist.github.com/tanho63/50d9b323e29165ad3e027bc3cf1c5926) for reference.
