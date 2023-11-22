@@ -1,5 +1,5 @@
 ---
-title: "tidyr pivot tricks: names_to -> .value"
+title: "tidyr pivot trick: names_to -> .value"
 summary: "A tidyr tip for extracting data from column names that I've used and shared a lot, now transcribed from Twitter"
 date: 2023-11-21
 url: /pivot-trick
@@ -12,13 +12,15 @@ heroStyle: background
 {{< alert "twitter" >}}
 I originally shared this tip for extracting data from column names as a
 [tweet](https://twitter.com/_tanho/status/1415100126272577536), and I've found 
-myself sharing it over and over again since. Here's a quick transcription now that 
+myself sharing it over and over again since. Here's a brief transcription now that 
 I'm no longer on Twitter.
 {{</ alert >}}
 
 One of my favourite data-wrangling tricks is [tidyr::pivot_longer's](https://tidyr.tidyverse.org/reference/pivot_longer.html) 
 `names_to` & `.value` sentinel - use-cases don't come up often, but it's so deeply
 :sparkles: **satisfying** :sparkles: when it does!
+
+## Scenario
 
 Let's say you have this starting dataframe:
 
@@ -67,7 +69,8 @@ and you want this ending dataframe:
 How do you extract the characters (Fred, Velma, Daphnie, Shaggy, Scooby) from the
 column names into a `character` column?
 
-Past me: hmm, well, I can pivot_longer, then separate the name, then pivot_wider again?
+## Past me
+Hmm, well, I can pivot_longer, then separate the name, then pivot_wider again?
 
 ```r
 three_lines <- x %>% 
@@ -75,9 +78,6 @@ three_lines <- x %>%
   separate(name,into = c("action","character"), sep = "_") %>% 
   pivot_wider(names_from = "action", values_from = "value")
 ```
-
-returns
-
 ```
 # A tibble: 3,005 × 7
    season title                     character caught captured unmask snack
@@ -98,7 +98,7 @@ returns
 
 This seems to work okay! 
 
-**But what if I told you there's a one-liner for this exact situation?**
+## But what if I told you there's a one-liner for this exact situation?
 
 pivot_longer has a "names_to" argument that takes a special "sentinel value" 
 called `".value"` - it immediately re-pivots the columns so that "character" 
@@ -141,31 +141,30 @@ You can read more about this pivot_longer feature in this [tidyr vignette](https
 {{< tweet user="hadleywickham" id="1500244970845974532">}}
 
 I learned later (from Hadley quote-tweeting my thread) that this feature was 
-inspired by a similar feature in `data.table`, so in the completionist spirit I 
-went to track down it's done there. As it turns out, it was in development as of 
-October 2020, merged to main in May 2021, and still hasn't made it onto CRAN :rolling_eyes:.
-(Can leave the discussion of data.table governance and horrible backlog for another time).
+inspired by a similar feature in `data.table`, so I wanted to track down how it 
+would be done there. As it turns out, kind of difficult because the feature isn't
+in the CRAN version: it was in development as of October 2020, merged to main in 
+May 2021, and still hasn't made it onto CRAN because of some data.table governance
+issues (which I won't comment on in this post, that's a whole can of worms for another
+time).
 
 In any case, **with the main branch of rdatatable/data.table 
 [as of today](https://github.com/Rdatatable/data.table/tree/6b9d559606767562f7f7dd4c7842a9e4a9fb597c)**, 
-here's how you could do this pivot trick:
+here's how you could do the same pivot trick:
 
 ```r
 # requires development version of data.table
 rlang::check_installed("data.table (>= 1.14.9)")
 data.table::data.table(x) |> 
   data.table::melt(
-    # uses `sep = "_"` to identify which columns to pivot (i.e. anything with an _)
-    # as well as to identify how to process the column names (i.e. split with sep "_")
-    #  
-    # measure() is not actually exported but is silently identified/parsed under the hood
-    # 
-    # new column names (i.e. character) are provided unquoted/as bare symbols
-    # value.name is equivalent to tidyr's `.value`
+    id.vars = c("season", "title"),
+    # measure() is not actually exported but is silently parsed under the hood by melt()
+    # - uses `sep = "_"` to identify & process the column names (i.e. split with sep "_")
+    # - new column names (i.e. character) are provided unquoted
+    # - value.name is equivalent to tidyr's `.value`
     measure.vars = measure(value.name, character, sep = "_")
   )
 ```
-
 ```
       season                                title character caught captured unmask  snack
       <char>                               <char>    <char> <char>   <char> <char> <char>
@@ -181,10 +180,6 @@ data.table::data.table(x) |>
 3004:      2              Dark Diner of Route 66!    scooby   TRUE    FALSE  FALSE  FALSE
 3005:      2                      Total Jeopardy!    scooby  FALSE    FALSE  FALSE  FALSE
 ```
-
-This definitely seems less intuitive / a lot more automagical (in a bad way)
-than the tidyr equivalent, so I'd probably stay away from this even if it were 
-on CRAN at this minute, which seems a little ... unlikely ... for a while yet. 
 
 
 ## Full Code
@@ -216,13 +211,11 @@ one_line <- x %>%
 rlang::check_installed("data.table (>= 1.14.9)")
 data.table::data.table(x) |> 
   data.table::melt(
-    # uses `sep = "_"` to identify which columns to pivot (i.e. anything with an _)
-    # as well as to identify how to process the column names (i.e. split with sep "_")
-    #  
-    # measure() is not actually exported but is silently identified/parsed under the hood
-    # 
-    # new column names (i.e. character) are provided unquoted/as bare symbols
-    # value.name is equivalent to tidyr's `.value`
+    id.vars = c("season", "title"),
+    # measure() is not actually exported but is silently parsed under the hood by melt()
+    # - uses `sep = "_"` to identify & process the column names (i.e. split with sep "_")
+    # - new column names (i.e. character) are provided unquoted/as bare symbols
+    # - value.name is equivalent to tidyr's `.value`
     measure.vars = measure(value.name, character, sep = "_")
   )
 ```
