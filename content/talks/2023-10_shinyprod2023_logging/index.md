@@ -14,7 +14,7 @@ heroStyle: background
 
 ## Recording
 
-TBD
+{{< youtube id="wbUXrK_YWfI" >}}
 
 ## Materials
 
