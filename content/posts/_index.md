@@ -13,7 +13,8 @@ Assorted musings, journalling in public, and more.
 
 ## Tags
 
-- [TanTalks](/tags/talks)
-- [Tantorials](/tags/tantorials/)
 - [R](/tags/r/)
 - [Shiny](/tags/shiny/)
+- [Videos](/tags/videos/)
+- [TanTalks](/tags/talks/)
+- [Tantorials](/tags/tantorials/)
