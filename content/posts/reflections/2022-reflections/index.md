@@ -1,21 +1,12 @@
 ---
 layout: single
-title:  "Now - December 2022"
+title:  "Reflections on 2022"
 date:   2022-12-29
-categories: [Now]
-tags: [Now]
-# images: '/images/hero/reflect.jpg'
-# hero: '/images/hero/reflect.jpg'
+tags: 
+  - reflections
 summary: "A year of breakthroughs, travelling, and trading off priorities."
-menu:
-  sidebar:
-    name: 'Now - 2022-12'
-    identifier: now-2022-12
-    parent: now-archives
-type: thoughts
+showComments: false
 ---
-
-{{< now >}}
 
 2022 is in the books: a year of highs, lows, breaking through comfort zones, and losing ground on things I’d been working on in past years. 
 

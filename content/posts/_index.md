@@ -8,3 +8,12 @@ cascade:
   showHero: true
   heroStyle: background
 ---
+
+Assorted musings, journalling in public, and more.
+
+## Tags
+
+- [TanTalks](/tags/talks)
+- [Tantorials](/tags/tantorials/)
+- [R](/tags/r/)
+- [Shiny](/tags/shiny/)

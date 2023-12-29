@@ -1,21 +1,12 @@
 ---
 layout: single
-title:  "Now - December 2021"
+title:  "Reflections on 2021"
 date:   2021-12-29
-categories: [Now]
-tags: [Now]
-# images: '/images/hero/camera.jpg'
-# hero: '/images/hero/camera.jpg'
-summary: "Reflecting on a year of successes, failures, and plenty of frustration"
-menu:
-  sidebar:
-    name: 'Now - 2021-12'
-    identifier: now-2021-12
-    parent: now-archives
-type: thoughts
+tags: 
+  - reflections
+summary: "Reflecting on a year of streaming, fasting, pandemic isolation, and more."
+showComments: false
 ---
-
-{{< now >}}
 
 Another year in the books. 2021 seemed to have it all: ups and downs, twists and turns, successes and failures, and plenty of frustration. In that spirit, some reflections on both the good and the bad:
 
