@@ -45,6 +45,8 @@ with Gordon at [Von Helmick Knives](https://www.vonhelmickknives.com/) - super
 cool experience and one I've wanted to do ever since I saw Kenji Lopez Alt promote 
 it. Super recommend if you're ever in the Portland area.
 
+![In-progress knife](knife.jpg)
+
 Travels aren't over yet - in November I'll be visiting Pittsburgh (for CMSAC and 
 a Steelers game) and San Francisco immediately afterwards (for the annual Soccer 
 onsite, and catching a 49ers game while there as well). I'm looking forward to these
