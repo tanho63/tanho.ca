@@ -88,3 +88,27 @@ distance with local friends. It's been three years since I last rowed and been a
 significant part of that friend circle, and it's been about six years since I was 
 last in a serious relationship. I'm feeling the spectre of loneliness more and 
 more, and it's something I need to work on in 2024. 
+
+## Thinking about 2024
+
+In 2022, I reflected that
+
+> I’m recognizing that in a broader sense, I can only focus on one or two areas 
+at a time. In past years, it’s been one or some of: losing weight, improving 
+physical shape/condition, programming skill/personal projects, social/friends. 
+This year it seems that my gains were in career development and networking/notability, 
+and I lost ground in weight, friend networks, and in personal projects. It seems 
+obvious that we can only prioritize one or two things at a time, but I’m frustrated 
+that it feels out of my control to choose what those things are, and I’m frustrated 
+that it’s so all-or-nothing in terms of past progress.
+
+In 2023, it feels like I carried on in the same paths as 2022 and pushed those
+extremes even further, rather than trying to consciously rebalance my priorities.
+Career development seemed the path of least resistance and I maximized that at 
+the expense of so many other things that would have been beneficial. 
+
+In 2024 I need to consciously fight this tendency to take the easiest path and 
+to more consciously balance my priorities. I'm tired of this being the
+central narrative of my annual reflections. I'm tired of feeling lonely. I'm 
+tired of telling myself I need to lose weight and be more fit. I'm tired of 
+looking at all the side projects I want to do and not doing them. 
