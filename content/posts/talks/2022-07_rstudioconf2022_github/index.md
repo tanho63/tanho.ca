@@ -5,9 +5,10 @@ summary: |
   by leveraging GitHub packages, Actions, and Releases
 date: 2022-07-27
 tags: 
- - "talks"
- - "rstudioconf2022"
+ - talks
+ - rstudioconf2022
  - r
+ - videos
 heroStyle: background
 ---
 

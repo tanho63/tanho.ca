@@ -5,3 +5,4 @@ public
 themes/blowfish/exampleSite
 .hugo_build.lock
 resources/_gen
+node_modules

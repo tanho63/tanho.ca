@@ -7,6 +7,7 @@ tags:
   - twitch
   - r
   - devops
+  - videos
 url: /tantorial-shiny-server
 ---
 

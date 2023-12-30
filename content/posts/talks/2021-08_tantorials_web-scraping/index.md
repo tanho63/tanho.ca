@@ -6,6 +6,7 @@ tags:
   - tantorials
   - twitch
   - r
+  - videos
 url: /tantorial-webscraping
 ---
 
