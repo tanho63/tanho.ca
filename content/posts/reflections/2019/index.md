@@ -23,7 +23,7 @@ In the same way that 2018 was a year of rebuilding my personal life, 2019 was a
 year of reinventing my professional life - in May I lost my job in sudden and 
 humiliating fashion. 
 
-I was coming off of [a lot of personal successes](/posts/reflections/2018-reflections) 
+I was coming off of [a lot of personal successes](/posts/reflections/2018) 
 (physically, socially) in 2018, and my professional life had become an afterthought 
 at this point...which must have been part of the impetus for what happened (I'll 
 never know). I was still pretty vulnerable and fragile at this point, and losing 
