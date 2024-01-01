@@ -1,7 +1,7 @@
 languageCode = "en"
 languageName = "English"
 weight = 1
-title = "Tan Ho"
+title = "TanHo.ca"
 
 [params]
   displayName = "EN"
@@ -17,7 +17,7 @@ title = "Tan Ho"
   """
 
 [author]
-   name = "Tan"
+   name = "Tan Ho"
    image = "img/avatar.jpg"
    headline = [
     "engineer @ zelus soccer",
