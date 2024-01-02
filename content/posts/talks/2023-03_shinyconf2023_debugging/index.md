@@ -1,5 +1,5 @@
 ---
-title: "DIY Pest Control: Effectively Debugging Shiny Apps"
+title: "Effectively Debugging Shiny Apps"
 layout: single
 summary: | 
   A talk given virtually at Shiny Conf 2023 on some effective patterns for 
@@ -20,4 +20,3 @@ heroStyle: background
 ## Materials
 
 https://github.com/tanho63/talk_shinyconf2023_debugging
-

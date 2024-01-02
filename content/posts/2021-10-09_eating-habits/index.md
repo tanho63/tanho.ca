@@ -5,7 +5,7 @@ summary: "Thoughts on 'dieting' from someone who has now lost over fifty pounds.
 date:   2021-10-09
 tags: [thoughts]
 url: /eating-habits
-heroStyle: card
+heroStyle: big
 ---
 
 I stepped on the scale today and realized I had hit a milestone: I've lost fifty
