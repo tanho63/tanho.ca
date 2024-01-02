@@ -4,7 +4,7 @@
 {{- if or $.IsHome $.IsSection -}}
 {{- $pages = $pctx.RegularPages -}}
 {{- else -}}
-{{- $pages = $pctx.Pages -}}
+{{- $pages := $pctx.Pages -}}
 {{- end -}}
 {{- $limit := .Site.Config.Services.RSS.Limit -}}
 {{- if ge $limit 1 -}}
@@ -27,7 +27,8 @@
     {{- with .OutputFormats.Get "RSS" -}}
     {{ printf "<atom:link href=%q rel=\"self\" type=%q />" .Permalink .MediaType | safeHTML }}
     {{- end -}}
-    {{ range $pages }}
+    <!-- Tan: only allow RSS feed of content/posts/ folder, not now-archive or pumpkins -->
+    {{ range (where $pages ".Section" "posts") }}
     <item>
       <title>{{ .Title }}</title>
       <link>{{ .Permalink }}</link>
