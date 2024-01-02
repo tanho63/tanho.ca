@@ -21,10 +21,10 @@ mental model for understanding the many varied paths to the same goal.
 
 ### Levers to use towards a caloric deficit
 
-> Lever (noun): 
+> **lever** (noun): 
 > 1. A long handle used to operate a machine or control panel.
-> 2. A simple machine consisting of a straight, rigid bar and a fulcrum or axis, used
-> to multiply force to do heavy work.
+> 2. A simple machine consisting of a straight, rigid bar and a fulcrum, used
+> to multiply mechanical force to do more work.
 
 Losing weight involves consuming less calories than you expend over a significant 
 amount of time[^1] - aka "caloric deficit". In most cases (and especially among 
@@ -33,8 +33,8 @@ bigger driver of caloric deficits than purely exercising (although exercise is
 good and useful). So let's define for ourselves the work (in a mechanical sense)
 as being "eating a caloric deficit".
 
-Now that the work is defined, we can frame all "diets" as three types of levers 
-(in the simple-machines sense above) that we can apply force (i.e. effort, time,
+Now that we've defined work, we can frame all "diets" as three types of levers 
+(in the "simple machines" sense above) that we can apply force (i.e. effort, time,
 discipline) to: ***what*** you eat, ***when*** you eat, and ***how much*** you 
 eat.
 
@@ -49,18 +49,18 @@ eat.
   a keto diet and being ruthless about cutting out carbs. 
 
 - **When you eat** covers all kinds of fasting - intermittent, extended, or
- otherwise. The primary mechanism here is eating fewer meals, so while you do eat
- to fullness you end up eating less calories than you would have if you'd eaten
- three meals. In practice your appetite is also somewhat diminished (or your
- stomach "shrinks") so your fullness threshold happens more quickly and at a lower
- calorie threshold. This can also work on a broader scale as I'm doing right now
- in 2021, where over the course of a seven day week I fast on three days - 
- effectively reducing my calorie intake by 40%. 
+  otherwise. The primary mechanism here is eating fewer meals, so while you do eat
+  to fullness you end up eating less calories than you would have if you'd eaten
+  three meals. In practice your appetite is also somewhat diminished (or your
+  stomach "shrinks") so your fullness threshold happens more quickly and at a lower
+  calorie threshold. This can also work on a broader scale as I'm doing right now
+  in 2021, where over the course of a seven day week I fast on three days - 
+  effectively reducing my calorie intake by 40%. 
 
 - **How much you eat** covers calorie, macro, or portion control for each meal.
- If this is the only lever you're pulling, you're doing the classic "track your
- calories at each meal" methodology and being precise about how much you take in
- at each meal - think of classic apps like My Fitness Pal, IIFYM etc. 
+  If this is the lever you're using, you're doing the classic "track your calories
+  at each meal" methodology and being precise about how much you take in at each
+  meal - think of classic apps like My Fitness Pal, IIFYM etc. 
 
 All three of these levers, when properly applied[^2] within the goal of caloric
 deficit, successfully lead to weight loss over time with adherence. If you use 
@@ -77,14 +77,14 @@ meal - I can eat until I'm full when I do eat and eat whatever I'm craving.
 
 You can apply force on these levers with varying degrees of intensity (fasting 
 for longer, reducing portion sizes more, cutting out more foods), and you can 
-use one, two, or three levers at a time. It is mentally draining to force two or
+use one, two, or three levers at a time. It is mentally draining to use two or
 all three levers intensely at once - i.e. keto + one meal a day is very tough to
 stick to, as I've found out - it could be doable in the short term as a treatment
 but feels so unsustainable as a long term plan. 
 
 If you can strive to put consistent effort into just one of these levers at a time, 
 you should be able to stick to that pattern for a longer period of time - and 
-adherence to a caloric deficit leads to successful weight loss!
+adherence to a caloric deficit leads to more successful weight loss.
 
 [^1]: There are some other hypotheses about why obesity exists, including the 
 carbohydrate-insulin model, but I don't personally find them very convincing 
