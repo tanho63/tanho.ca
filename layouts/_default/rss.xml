@@ -27,14 +27,15 @@
     {{- with .OutputFormats.Get "RSS" -}}
     {{ printf "<atom:link href=%q rel=\"self\" type=%q />" .Permalink .MediaType | safeHTML }}
     {{- end -}}
-    <!-- Tan: only allow RSS feed of content/posts/ folder, not now-archive or pumpkins -->
-    {{ range (where $pages ".Section" "posts") }}
+    <!-- Tan: only allow RSS feed of content/posts/ and content/pumpkins folder, not now-archive -->
+    {{ range (where .Site.Pages ".Section" "like" "posts|pumpkins") }}
     <item>
       <title>{{ .Title }}</title>
       <link>{{ .Permalink }}</link>
       <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
       {{ with .Site.Author.email }}<author>{{.}}{{ with $.Site.Author.name }} ({{.}}){{end}}</author>{{end}}
       <guid>{{ .Permalink }}</guid>
+      <!-- Tan: use .Content instead of .Summary to allow RSS readers to consume full-text -->
       <description>{{ .Content | html }}</description>
       {{ range ( where .Site.RegularPages ".RelPermalink" .RelPermalink | first 1 ) }}
         {{- $images := .Resources.ByType "image" -}}
