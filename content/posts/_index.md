@@ -1,6 +1,7 @@
 ---
 title: "Posts"
-description: "Thoughts, tutorials, and other topics"
+description: "Thoughts, takes, talks, tutorials...just tantastic topics!"
+date: 2000-01-01
 cascade:
   showComments: true
   showReadingTime: true
@@ -9,12 +10,10 @@ cascade:
   heroStyle: background
 ---
 
-Assorted musings, journalling in public, and more.
-
 ## Tags
 
 - [R](/tags/r/)
 - [Shiny](/tags/shiny/)
 - [Videos](/tags/videos/)
-- [TanTalks](/tags/talks/)
-- [Tantorials](/tags/tantorials/)
+- [Talks](/tags/talks/)
+- [Tutorials](/tags/tantorials/)

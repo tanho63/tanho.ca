@@ -3,7 +3,7 @@ title: Web Scraping with rvest
 summary: A tutorial on scraping with rvest and browser dev tools
 date: 2021-07-19
 tags:
-  - tantorials
+  - tutorials
   - twitch
   - r
   - videos
