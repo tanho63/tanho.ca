@@ -1,5 +1,5 @@
 {{- $index := slice -}}
-{{ range (where .Site.Pages ".Section" "like" "posts|pumpkins") }}
+{{ range (where (where .Site.Pages ".Section" "like" "posts|pumpkins") "Kind" "page") }}
   {{- $section := .Site.GetPage "section" .Section -}}
   {{- $index = $index | append (dict
     "date" (.Date | time.Format (.Site.Language.Params.dateFormat | default ":date_long"))

@@ -28,7 +28,7 @@
     {{ printf "<atom:link href=%q rel=\"self\" type=%q />" .Permalink .MediaType | safeHTML }}
     {{- end -}}
     <!-- Tan: only allow RSS feed of content/posts/ and content/pumpkins folder, not now-archive -->
-    {{ range (where .Site.Pages ".Section" "like" "posts|pumpkins") }}
+    {{ range (where (where .Site.Pages ".Section" "like" "posts|pumpkins") "Kind" "page") }}
     <item>
       <title>{{ .Title }}</title>
       <link>{{ .Permalink }}</link>
