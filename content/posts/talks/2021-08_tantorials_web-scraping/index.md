@@ -4,9 +4,8 @@ summary: A tutorial on scraping with rvest and browser dev tools
 date: 2021-07-19
 tags:
   - tutorials
-  - twitch
-  - r
   - videos
+  - r
 url: /tantorial-webscraping
 ---
 

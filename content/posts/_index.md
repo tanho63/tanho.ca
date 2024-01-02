@@ -9,11 +9,3 @@ cascade:
   showHero: true
   heroStyle: background
 ---
-
-## Tags
-
-- [R](/tags/r/)
-- [Shiny](/tags/shiny/)
-- [Videos](/tags/videos/)
-- [Talks](/tags/talks/)
-- [Tutorials](/tags/tantorials/)

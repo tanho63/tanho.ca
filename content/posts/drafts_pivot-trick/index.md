@@ -6,7 +6,8 @@ url: /pivot-trick
 draft: true
 tags:
  - r
- - tips
+ - r-tips
+ - tweet-highlights
 heroStyle: background
 ---
 

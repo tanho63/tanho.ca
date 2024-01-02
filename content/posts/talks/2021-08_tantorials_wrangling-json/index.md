@@ -4,9 +4,8 @@ summary: A tutorial on wrangling JSON and lists into tibbles
 date: 2021-08-02
 tags:
   - tutorials
-  - twitch
-  - r
   - videos
+  - r
 url: /tantorial-json
 ---
 
