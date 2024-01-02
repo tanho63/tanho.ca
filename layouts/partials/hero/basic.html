@@ -6,11 +6,11 @@
 {{- with $featured -}}
     {{ if $disableImageOptimization }}
         {{ with . }}
-            <div class="w-full h-36 md:h-56 lg:h-72 rounded-xl single_hero_basic nozoom" style="background-image:url({{ .RelPermalink }});"></div>
+            <div class="w-full h-36 md:h-56 lg:h-72 mt-4 rounded-3xl single_hero_basic nozoom" style="background-image:url({{ .RelPermalink }});"></div>
         {{ end }}
     {{ else }}
         {{ with .Resize "1200x" }}
-            <div class="w-full h-36 md:h-56 lg:h-72 rounded-xl single_hero_basic nozoom" style="background-image:url({{ .RelPermalink }});"></div>
+            <div class="w-full h-36 md:h-56 lg:h-72 mt-4 rounded-3xl single_hero_basic nozoom" style="background-image:url({{ .RelPermalink }});"></div>
         {{ end }}
     {{ end }}
 {{- end -}}
