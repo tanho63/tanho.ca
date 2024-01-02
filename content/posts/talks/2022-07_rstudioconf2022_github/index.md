@@ -6,9 +6,8 @@ summary: |
 date: 2022-07-27
 tags: 
  - talks
- - rstudioconf2022
- - r
  - videos
+ - r
 heroStyle: background
 ---
 

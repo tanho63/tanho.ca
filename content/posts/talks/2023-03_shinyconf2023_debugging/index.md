@@ -2,15 +2,14 @@
 title: "DIY Pest Control: Effectively Debugging Shiny Apps"
 layout: single
 summary: | 
-  A talk given at Shiny Conf 2023 on some effective patterns for debugging Shiny
-  apps
+  A talk given virtually at Shiny Conf 2023 on some effective patterns for 
+  debugging Shiny apps
 date: 2023-03-17
 tags: 
- - "talks"
- - "shinyconf2023"
- - r
- - shiny
+ - talks
  - videos
+ - shiny
+ - r
 heroStyle: background
 ---
 

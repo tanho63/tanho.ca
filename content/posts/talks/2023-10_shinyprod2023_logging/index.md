@@ -5,11 +5,10 @@ summary: |
   logging strategies for R and Shiny.
 date: 2023-10-13
 tags: 
- - "talks"
- - "shinyprod2023"
- - r
- - shiny
+ - talks
  - videos
+ - shiny
+ - r
 heroStyle: background
 ---
 
