@@ -7,4 +7,5 @@ cascade:
   showTaxonomies: false
   showHero: true
   heroStyle: background
+  showBreadcrumbs: false
 ---
