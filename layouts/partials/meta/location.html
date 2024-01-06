@@ -1,4 +1,4 @@
-<span title="Updated From">
-  Updated from: {{ .Params.location | markdownify | emojify }}
+<span title="Updated from">
+from: {{- .Params.location | markdownify | emojify -}}
 </span>
 {{- /* Trim EOF */ -}}
