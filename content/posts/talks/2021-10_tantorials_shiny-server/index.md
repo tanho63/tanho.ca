@@ -7,6 +7,7 @@ tags:
   - tutorials
   - videos
   - r
+  - shiny
 url: /tantorial-shiny-server
 ---
 
