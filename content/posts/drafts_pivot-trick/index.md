@@ -3,7 +3,7 @@ title: "tidyr pivot trick: names_to -> .value"
 summary: |
   A tidyr tip for extracting data from column names that I've used and shared a 
   lot, now transcribed from Twitter
-date: 2023-11-21
+date: 2024-01-31
 url: /pivot-trick
 draft: true
 tags:
@@ -149,16 +149,15 @@ inspired by a similar feature in `data.table`, so I wanted to track down how it
 would be done there. As it turns out, kind of difficult because the feature isn't
 in the CRAN version: it was in development as of October 2020, merged to main in
 May 2021, and still hasn't made it onto CRAN because of some data.table governance
-issues (which I won't comment on in this post, that's a whole can of worms for
-another time).
+issues which seem to finally have been resolved
 
 In any case, **with the main branch of rdatatable/data.table 
 [as of today](https://github.com/Rdatatable/data.table/tree/6b9d559606767562f7f7dd4c7842a9e4a9fb597c)**, 
 here's how you could do the same pivot trick:
 
 ```r
-# requires development version of data.table
-rlang::check_installed("data.table (>= 1.14.9)")
+# requires development version of data.table and/or 1.15.0+ 
+rlang::check_installed("data.table (>= 1.14.99)")
 data.table::data.table(x) |> 
   data.table::melt(
     id.vars = c("season", "title"),
