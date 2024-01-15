@@ -14,11 +14,11 @@ Another year in the books. 2021 seemed to have it all: ups and downs, twists and
 
 -   I burnt out to rock bottom several times and slumped into deep and empty depressions, unable to get out of bed. 
 
--   I took up a (rather strict) extended [fasting schedule](https://tanho.ca/posts/now-archive/2021-07-16-now/) (two 36 hour fasts each week) and went from 285 pounds to 235 pounds. It was hard and lonely at times, but effective and felt maintainable. I'd like to get into the 180s still, and would be very pleased with continuing that pattern next year.
+-   I took up a (rather strict) extended [fasting schedule](https://tanho.ca/now-archive/2021-07-16-now/) (two 36 hour fasts each week) and went from 285 pounds to 235 pounds. It was hard and lonely at times, but effective and felt maintainable. I'd like to get into the 180s still, and would be very pleased with continuing that pattern next year.
 
--   I [stopped rowing and coaching](https://tanho.ca/posts/now-archive/2021-07-16-now/#no) this year. I felt unappreciated and found myself dreading the start of the season, which eventually (along with being depressed at the time) pushed me to finally let it go. The relief has been welcome. I'm not sure I'm back next year - might pick up some other sport instead - frisbee? soccer? rugby? martial arts? crossfit? I'll come back to rowing eventually, once I've really cleared my head and can learn to enjoy the sport for the sport itself.
+-   I [stopped rowing and coaching](https://tanho.ca/now-archive/2021-07-16-now/#no) this year. I felt unappreciated and found myself dreading the start of the season, which eventually (along with being depressed at the time) pushed me to finally let it go. The relief has been welcome. I'm not sure I'm back next year - might pick up some other sport instead - frisbee? soccer? rugby? martial arts? crossfit? I'll come back to rowing eventually, once I've really cleared my head and can learn to enjoy the sport for the sport itself.
 
--   I [travelled to London](https://tanho.ca/posts/now-archive/2021-11-15-now/) for my birthday and enjoyed my first trip in a few years. Getting to see Liverpool play at Anfield was an incredible experience, as was seeing Les Miserables in theatres - but I also really enjoyed eating my way through London's restaurants and food markets!
+-   I [travelled to London](https://tanho.ca/now-archive/2021-11-15-now/) for my birthday and enjoyed my first trip in a few years. Getting to see Liverpool play at Anfield was an incredible experience, as was seeing Les Miserables in theatres - but I also really enjoyed eating my way through London's restaurants and food markets!
 
 -   I picked up freelance work and bit off a lot more than I could chew, burning out quickly. I do like the variety and think I might try to do more of it next year, if I can better manage my time and energy.
 
