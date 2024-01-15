@@ -1,5 +1,5 @@
 ---
-title: "Effectively Debugging Shiny Apps"
+title: "Debugging Shiny Apps"
 layout: single
 summary: | 
   A talk given virtually at Shiny Conf 2023 on some effective patterns for 
