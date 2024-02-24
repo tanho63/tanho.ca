@@ -1,10 +1,11 @@
 ---
 title: "Posts"
-description: "Thoughts, tutorials, and other topics"
+description: "Thoughts, takes, talks, tutorials...just tantastic topics!"
+date: 2000-01-01
 cascade:
   showComments: true
   showReadingTime: true
   showTaxonomies: true
   showHero: true
-  heroStyle: background
+  heroStyle: basic
 ---

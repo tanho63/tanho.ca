@@ -16,8 +16,8 @@
   weight = 10
 
 [[main]]
-  name = "Talks & Tutorials"
-  url = "/talks"
+  name = "Talks"
+  url = "/tags/talks"
   weight = 20
 
 [[main]]

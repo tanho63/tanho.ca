@@ -1,13 +1,13 @@
 languageCode = "en"
 languageName = "English"
 weight = 1
-title = "Tan Ho"
+title = "TanHo.ca"
 
 [params]
   displayName = "EN"
   isoCode = "en"
   rtl = false
-  dateFormat = "2006 Jan 2"
+  dateFormat = "2006 Jan 02"
   logo = "img/main-logo.png"
   images = "img/main-logo.png"
   # secondaryLogo = "img/secondary-logo.png"

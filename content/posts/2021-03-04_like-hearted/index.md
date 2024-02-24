@@ -7,15 +7,20 @@ tags:
 summary: "Curating your feed, finding your friend groups, and getting into online arguments."
 url: /like-hearted
 showHero: true
-heroStyle: background
 ---
 *Curating your feed, finding your friend groups, and getting into online arguments*
 
 Each year, I embark on a journey to re-read Austin Kleon's [Steal trilogy](https://austinkleon.com/books), and each time I read it, something new grabs my attention. I was struck today by this image from a chapter in Keep Going called "Like-Minded vs Like-Hearted":
 
-<img src="featured.jpg" alt="not arguing" style="max-height: 50vh;" />
-
-*A pretty obvious callback to the Simpsons and their opening chalkboard gag!* 
+<figure>
+<img 
+ src="arguing.jpg" 
+ alt="I WILL NOT ARGUE WITH STRANGERS ON THE INTERNET (repeated text on chalkboard)" 
+ style="max-height: 40vh;" 
+ class="rounded-3xl"
+ />
+ <figcaption>Modern day Bart Simpson would totally be punished with this </figcaption>
+ </figure>
 
 Like many people, I'm not immune to getting drawn into online arguments - just ask the folks on the [Dynasty Movement](https://twitter.com/dynasty_discord) Discord server about my many different soapboxes - so reading this immediately after having been drawn into a particularly vivid discussion hit a little closer to home. 
 

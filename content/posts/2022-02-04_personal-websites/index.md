@@ -5,7 +5,6 @@ summary: "Some thoughts on blogdown, distill, and getting started with your firs
 tags: 
   - r
 url: /personal-websites-with-r
-heroStyle: big
 ---
 
 I've recently been [asked three times](https://twitter.com/drob/status/928447584712253440) 

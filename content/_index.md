@@ -1,5 +1,5 @@
 ---
-title: "Hiya, I'm Tan Ho"
+title: "Hiya, I'm Tan"
 description: "r & shiny obsessive, pumpkin engineer, nfl nerd"
 ---
 
