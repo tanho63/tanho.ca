@@ -3,14 +3,9 @@ R development:
 - Every R project is a package
 - Every shiny app is a package
 - Does this function belong in my package?
----
-docker
-- simple ways to decrease image size (chaining!)
-- simple ways to manage dependencies / install pkgs
-- builder images for dummies
----
-misc
+
 - How I build a mapping of player IDs
+- some of my best practices for using Docker with R
 - setting up my home server
 - write a post to update my guide on setting up your own Shiny Server VM
   - and maybe re-record the video as well?
