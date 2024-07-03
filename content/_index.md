@@ -3,7 +3,7 @@ title: "Hiya, I'm Tan"
 description: "r & shiny obsessive, pumpkin engineer, nfl nerd"
 ---
 
-I'm a self-taught programmer who loves R, Shiny, NFL, and carving pumpkins. By day, 
+I'm a self-taught programmer who loves R, Shiny, NFL, and [carving pumpkins](/pumpkins). By day, 
 I'm an ML Engineer for [Zelus Analytics](https://zelusanalytics.com) Soccer. 
 
 I started [DynastyProcess](https://dynastyprocess.com) and [ffverse](https://ffverse.com), 
