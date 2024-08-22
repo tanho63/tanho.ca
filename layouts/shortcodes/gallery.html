@@ -2,7 +2,7 @@
 {{ $images := .Page.Resources.Match (.Get "images") }}
 
 <div id="{{ $id }}">
-  {{ range $images }}
+  {{ range sort ($images) "Name" "desc" }}
   <img src="{{ . }}" class="grid-w50 lg:grid-w33">
   {{ end }}
 </div>
