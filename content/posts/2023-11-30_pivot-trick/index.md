@@ -148,7 +148,7 @@ inspired by a similar feature in `data.table`, so I wanted to track down how it
 would be done there. As it turns out, kind of difficult because the feature isn't
 in the CRAN version: it was in development as of October 2020, merged to main in
 May 2021, and still hasn't made it onto CRAN because of some data.table governance
-issues which seem to finally have been resolved
+issues (which are finally getting close to being resolved?)
 
 In any case, **with the main branch of rdatatable/data.table 
 [as of today](https://github.com/Rdatatable/data.table/tree/6b9d559606767562f7f7dd4c7842a9e4a9fb597c)**, 
