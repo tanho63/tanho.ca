@@ -3,9 +3,8 @@ title: "tidyr pivot trick: names_to -> .value"
 summary: |
   A tidyr tip for extracting data from column names that I've used and shared a 
   lot, now transcribed from Twitter
-date: 2024-01-31
+date: 2023-11-30
 url: /pivot-trick
-draft: true
 tags:
  - r
  - r-tips
