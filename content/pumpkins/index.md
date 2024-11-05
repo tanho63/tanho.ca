@@ -9,8 +9,17 @@ summary: |
 
 My favourite art medium is pumpkin carving - I look forward to it every year! I 
 typically like using linoleum cutters to remove skin, although one day I might 
-try using a dremel. Here’s a gallery of some past pumpkin carves.
+like to try using a dremel. This page has a gallery of some of my past carves 
+and also a [timelapse](#timelapse) recording.
 
-<hr>
+---
+
+## Gallery 
 
 {{< gallery images="gallery/*" >}}
+
+---
+
+## Timelapse
+
+{{< youtube u4TNr3zudJI >}}
