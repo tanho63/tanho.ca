@@ -57,6 +57,8 @@ and original [blogpost](https://mcfunley.com/choose-boring-technology)
   less time innovating on the core technologies (fancy database stuff, programming 
   paradigms etc), because fixing bleeding edge database stuff takes up "innovation
   tokens" that you want to spend doing other things.
+
+<!-- candidates: egoless programming, grug brained developer? -->
 	
 ## learning and teaching programming
 - [Greg Wilson: what everyone in tech should know about teaching and learning](https://www.youtube.com/watch?v=ewXvFQByRqY), YouTube video (41 min)
