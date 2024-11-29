@@ -20,8 +20,8 @@ tech-adjacent topics.
 Inspired by Derek Sivers's [book notes](https://sive.rs/book) and Vicki Boykis's 
 [favourite essays](https://vickiboykis.com/favorite_essays/).
 
-These are mostly not specific to R, I plan to eventually collect my current recs 
-for learning R and sports analytics but that'll be a different post.
+These are mostly not specific to R / sports analytics, I'd like to eventually collect 
+those recs in a different post.
 
 Organized loosely by topic (click to jump to section):
 
@@ -52,6 +52,18 @@ blog post (8 min read)
 	company to be data driven. Immediately relevant for people in small companies and also
 	for understanding the core needs for a data team (and seeing how that scales as you add
 	more people.)
+- [Alberto Savoia: The Way of Testivus](https://www.albertosavoia.com/uploads/1/4/0/9/14099067/thewayoftestivus.pdf),
+PDF blog post
+  - Advice on developer and unit testing, packaged up as pseudo-Confucian tenets worth
+  living by. 
+- [Dan McKinley: Boring Technology](https://boringtechnology.club/), talk/slides
+and original [blogpost](https://mcfunley.com/choose-boring-technology)
+  - Core idea: you get "innovation tokens" to spend as a (developer, team) and you 
+  really don't have that many even across a team. In order to keep those innovation
+  tokens spent on the team's core mission (e.g. solving soccer), you should spend 
+  less time innovating on the core technologies (fancy database stuff, programming 
+  paradigms etc), because fixing bleeding edge database stuff takes up "innovation
+  tokens" that you want to spend doing other things.
 	
 ## Learning and Teaching Programming
 - [Greg Wilson: what everyone in tech should know about teaching and learning](https://www.youtube.com/watch?v=ewXvFQByRqY), YouTube video (41 min)
@@ -71,6 +83,12 @@ YouTube video (61 min)
 	get silently stuck with, and that hurts your technical development and ultimately your 
 	career development.  Can disproportionately affect teams, especially women and/or
 	introverted/non-assertive personalities. 
+- [Julia Evans: Help, I Have A Manager!](https://jvns.ca/blog/2018/09/22/new-zine--help--i-have-a-manager/), 
+zine (~$12)
+    - Having a good relationship with my manager is probably the most important factor in 
+    my happiness at work. This zine is full of great advice on how to make that relationship
+    better - how to handle 1:1s, asking for feedback, figuring out what they're good at,
+    building a support system for areas they aren't as good, and more.
 - [Vasily Zubarev: How to hire sane engineers 2.0](https://vas3k.com/notes/hiring/index.html)
 	- A pragmatic Russian's take on hiring engineers in a "sane" and effective way. 
 
@@ -81,12 +99,6 @@ blog post with audio recording (4 min read/listen)
 	career from sports analytics or other hobbies. Advice I used early on, and then somewhat
     discarded by joining Zelus, but  it served me really well and arguably _got_ me the job at 
     Zelus. 
-- [Julia Evans: help, I have a manager!](https://jvns.ca/blog/2018/09/22/new-zine--help--i-have-a-manager/), 
-zine (~$12)
-    - Having a good relationship with my manager is probably the most important factor in 
-    my happiness at work. This zine is full of great advice on how to make that relationship
-    better - how to handle 1:1s, asking for feedback, figuring out what they're good at,
-    building a support system for areas they aren't as good, and more.
 - [Jacqueline Nolis & Emily Robinson: Build A Career In Data Science](https://www.manning.com/books/build-a-career-in-data-science), book (~$24) and [podcast series](https://podcast.bestbook.cool/) (~20 episodes each about 60min)
 	- A really good resource for finding a job in data science. Really like the definitions _of_ data
 	science as an industry and how programming, statistics, and domain knowledge fit together.
