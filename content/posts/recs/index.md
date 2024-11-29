@@ -92,7 +92,7 @@ blog post with audio recording (4 min read/listen)
 	career from sports analytics or other hobbies. Advice I used early on, and then somewhat
     discarded by joining Zelus, but  it served me really well and arguably _got_ me the job at 
     Zelus. 
-- [Austin Kleon: Show Your Work](https://austinkleon.com/show-your-work/), short book
+- [Austin Kleon: Show Your Work](https://austinkleon.com/show-your-work/), short book (~$15)
   - The book I share when people ask me how to build their public portfolio and
   personal networks: share something small every day without being human spam, teach
   what you know, and tell good stories. A lot of insights packed into a small and 
@@ -100,7 +100,8 @@ blog post with audio recording (4 min read/listen)
   [Steal Like An Artist](https://austinkleon.com/steal/) on how to be creative and
   [Keep Going](https://austinkleon.com/keepgoing/) on how to sustain the creative
   effort
-- [Jacqueline Nolis & Emily Robinson: Build A Career In Data Science](https://www.manning.com/books/build-a-career-in-data-science), book (~$24) and [podcast series](https://podcast.bestbook.cool/) (~20 episodes each about 60min)
+- [Jacqueline Nolis & Emily Robinson: Build A Career In Data Science](https://www.manning.com/books/build-a-career-in-data-science), 
+book (~$24) and [podcast series](https://podcast.bestbook.cool/) (~20 episodes each about 60min)
 	- A really good resource for finding a job in data science. Really like the definitions _of_ data
 	science as an industry and how programming, statistics, and domain knowledge fit together.
 	Book was available online for free at one point but now seems to be only paid - very worth it,
@@ -117,7 +118,8 @@ and [part two](https://haseebq.com/how-not-to-bomb-your-offer-negotiation/), blo
 	to do, and only your teacher is doing it." An impressively nontechnical and yet surprisingly
 	comprehensive overview of machine learning that I found really useful early on in my data 
 	science career. 
-- [Julia Evans: Hell Yes CSS](https://jvns.ca/blog/2020/11/22/new-zine--hell-yes--css-/), zine and [comics](https://jvns.ca/blog/2020/07/25/some-comics-about-css/)
+- [Julia Evans: Hell Yes CSS](https://jvns.ca/blog/2020/11/22/new-zine--hell-yes--css-/), 
+zine (~$12) and [comics](https://jvns.ca/blog/2020/07/25/some-comics-about-css/)
 	- I've always found CSS to be incredibly frustrating, but reading this zine was super helpful. 
 	Still refer back to the [CSS Selectors](https://wizardzines.com/comics/selectors/) comic to 
 	this day whenever I need to format something.
