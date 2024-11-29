@@ -86,14 +86,17 @@ zine (~$12)
     building a support system for areas they aren't as good, and more.
 - [Vasily Zubarev: How to hire sane engineers 2.0](https://vas3k.com/notes/hiring/index.html)
 	- A pragmatic Russian's take on hiring engineers in a "sane" and effective way. 
+	Would really like to implement this one day on bypassing some of the technical 
+	interview steps that are so common now.
 
 ## career advice
 - [Derek Sivers: How To Do What You Love And Make Good Money](https://sive.rs/balance), 
 blog post with audio recording (4 min read/listen)
 	- This is the advice I share when folks ask me about getting their dream job and making a 
 	career from sports analytics or other hobbies. Advice I used early on, and then somewhat
-    discarded by joining Zelus, but  it served me really well and arguably _got_ me the job at 
-    Zelus. 
+  discarded by joining Zelus, but it served me really well and arguably _got_ me the job at 
+  Zelus. Part of a larger book, [Hell Yeah or No](https://sive.rs/n), which is also
+  very worth reading (~$15).
 - [Austin Kleon: Show Your Work](https://austinkleon.com/show-your-work/), short book (~$15)
   - The book I share when people ask me how to build their public portfolio and
   personal networks: share something small every day without being human spam, teach
