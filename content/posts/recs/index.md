@@ -84,7 +84,7 @@ YouTube video (4 min)
   your happiness at work. This zine is full of great advice on how to make that relationship
   better - how to handle 1:1s, asking for feedback, figuring out what they're good at,
   building a support system for areas they aren't as good, and more.
-- [Vasily Zubarev: How to hire sane engineers 2.0](https://vas3k.com/notes/hiring/index.html)
+- [Vasily Zubarev: How to hire sane engineers 2.0](https://vas3k.com/notes/hiring/index.html) (~15 min read)
 	- A pragmatic Russian's take on hiring engineers in a "sane" and effective way. 
 	Would really like to implement this one day on bypassing some of the technical 
 	interview steps that are so common now.
