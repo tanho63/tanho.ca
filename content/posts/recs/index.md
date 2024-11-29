@@ -15,13 +15,11 @@ tags:
 This is a curated, non-exhaustive list of things I've read/watched, really enjoyed, and have 
 shared with friends and colleagues. Mostly general thoughts on life as a data 
 scientist, learning/teaching programming, technical leadership, career advice, and other 
-tech-adjacent topics. 
+tech-adjacent topics, and not specific to R or sports analytics (that's probably
+another post).
 
 Inspired by Derek Sivers's [book notes](https://sive.rs/book) and Vicki Boykis's 
 [favourite essays](https://vickiboykis.com/favorite_essays/).
-
-These are mostly not specific to R / sports analytics, I'd like to eventually collect 
-those recs in a different post.
 
 Organized loosely by topic (click to jump to section):
 
