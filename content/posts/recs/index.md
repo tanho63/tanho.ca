@@ -28,7 +28,6 @@ Organized loosely by topic (click to jump to section):
 - [technical leadership](#technical-leadership)
 - [career advice](#career-advice)
 - [technical topics](#technical-topics)
-- [mental health](#mental-health)
 
 ## Life as a Programmer & Data Scientist
 - [Michael Lynch: How to Do Code Reviews Like A Human](https://mtlynch.io/human-code-reviews-1/) 
