@@ -79,8 +79,8 @@ YouTube video (61 min)
 	introverted/non-assertive personalities. 
 - [Julia Evans: Help, I Have A Manager!](https://jvns.ca/blog/2018/09/22/new-zine--help--i-have-a-manager/), 
 zine (~$12)
-    - Having a good relationship with my manager is probably the most important factor in 
-    my happiness at work. This zine is full of great advice on how to make that relationship
+    - Having a good relationship with your manager is probably the most important factor in 
+    your happiness at work. This zine is full of great advice on how to make that relationship
     better - how to handle 1:1s, asking for feedback, figuring out what they're good at,
     building a support system for areas they aren't as good, and more.
 - [Vasily Zubarev: How to hire sane engineers 2.0](https://vas3k.com/notes/hiring/index.html)
