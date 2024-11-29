@@ -112,7 +112,8 @@ YouTube video (4 min)
 	Book was available online for free at one point but now seems to be only paid - very worth it,
 	but listening to each of the podcast episodes is a pretty good equivalent.
 - [Haseeb Qureshi: Rules for Negotiating a Job Offer](https://haseebq.com/my-ten-rules-for-negotiating-a-job-offer/)
-  and [part two](https://haseebq.com/how-not-to-bomb-your-offer-negotiation/), blog posts
+  and [part two](https://haseebq.com/how-not-to-bomb-your-offer-negotiation/), 
+  blog posts (24 and 34 minute reads)
   - More people should negotiate job offers and simply don't. This is good, not-too-kitschy 
   advice on how to approach negotiating.
 
