@@ -1,32 +1,31 @@
 ---
 title: "Things I Think You Should Read and Watch"
 summary: |
-  A curated, non-exhaustive list of things I've read/watched, really enjoyed, and have shared with friends and colleagues. Includes thoughts on life as a programmer, technical leadership, career advice, technical topics, and more. Updated periodically.
+  A curated, non-exhaustive list of content I've really enjoyed and shared with friends and colleagues. Includes thoughts on life as a programmer, technical leadership, career advice, technical topics, and more. Updated periodically.
 date: 2024-11-29
 url: /recs
 tags:
-  - recommendations
+  - tech
   - notes
 ---
 
-This is a curated, non-exhaustive list of things I've read/watched, really enjoyed, and have 
-shared with friends and colleagues. Mostly general thoughts on life as a data 
-scientist, learning/teaching programming, technical leadership, career advice, and other 
-tech-adjacent topics, and not specific to R or sports analytics (that's probably
-another post).
+This is a curated, non-exhaustive list of content I've really enjoyed and shared 
+with friends and colleagues. 
+
+Mostly general thoughts on life as a data scientist, learning/teaching programming, 
+technical leadership, career advice, and other tech-adjacent topics, and not specific 
+to R or sports analytics (will probably tackle that another time).
 
 Inspired by Derek Sivers's [book notes](https://sive.rs/book) and Vicki Boykis's 
-[favourite essays](https://vickiboykis.com/favorite_essays/).
-
-Organized loosely by topic (click to jump to section):
-
+[favourite essays](https://vickiboykis.com/favorite_essays/), and organized loosely
+by topic (click to jump to section):
 - [life as a programmer](#life-as-a-programmer--data-scientist)
 - [learning and teaching](#learning-and-teaching-programming)
 - [technical leadership](#technical-leadership)
 - [career advice](#career-advice)
 - [technical topics](#technical-topics)
 
-## Life as a Programmer & Data Scientist
+## life as a programmer & data scientist
 - [Michael Lynch: How to Do Code Reviews Like A Human](https://mtlynch.io/human-code-reviews-1/) 
 and [part two](https://mtlynch.io/human-code-reviews-2/), 
 blog posts (18 and 15 min reads, respectively)
@@ -59,7 +58,7 @@ and original [blogpost](https://mcfunley.com/choose-boring-technology)
   paradigms etc), because fixing bleeding edge database stuff takes up "innovation
   tokens" that you want to spend doing other things.
 	
-## Learning and Teaching Programming
+## learning and teaching programming
 - [Greg Wilson: what everyone in tech should know about teaching and learning](https://www.youtube.com/watch?v=ewXvFQByRqY), YouTube video (41 min)
 	- Massively useful! Especially the ideas right at the beginning about mental models and 
 	the differences between how beginners, competent users, and experts learn.  The whole
@@ -71,7 +70,7 @@ YouTube video (61 min)
     for explaining code to other programmers - instead, code is there to explain comments to 
     the computer! 
 
-## Technical Leadership
+## technical leadership
 - [Tanya Reilly: Being Glue](https://www.noidea.dog/glue), annotated talk slides and [YouTube video](https://www.youtube.com/watch?v=KClAPipnKqw) (28 min)
 	- A brutally honest talk about the non-promotable "glue" work that programmers can 
 	get silently stuck with, and that hurts your technical development and ultimately your 
@@ -86,13 +85,21 @@ zine (~$12)
 - [Vasily Zubarev: How to hire sane engineers 2.0](https://vas3k.com/notes/hiring/index.html)
 	- A pragmatic Russian's take on hiring engineers in a "sane" and effective way. 
 
-## Career Advice
+## career advice
 - [Derek Sivers: How To Do What You Love And Make Good Money](https://sive.rs/balance), 
 blog post with audio recording (4 min read/listen)
 	- This is the advice I share when folks ask me about getting their dream job and making a 
 	career from sports analytics or other hobbies. Advice I used early on, and then somewhat
     discarded by joining Zelus, but  it served me really well and arguably _got_ me the job at 
     Zelus. 
+- [Austin Kleon: Show Your Work](https://austinkleon.com/show-your-work/), short book
+  - The book I share when people ask me how to build their public portfolio and
+  personal networks: share something small every day without being human spam, teach
+  what you know, and tell good stories. A lot of insights packed into a small and 
+  easy to read format. Also great are the other books in the Steal trilogy, including
+  [Steal Like An Artist](https://austinkleon.com/steal/) on how to be creative and
+  [Keep Going](https://austinkleon.com/keepgoing/) on how to sustain the creative
+  effort
 - [Jacqueline Nolis & Emily Robinson: Build A Career In Data Science](https://www.manning.com/books/build-a-career-in-data-science), book (~$24) and [podcast series](https://podcast.bestbook.cool/) (~20 episodes each about 60min)
 	- A really good resource for finding a job in data science. Really like the definitions _of_ data
 	science as an industry and how programming, statistics, and domain knowledge fit together.
@@ -103,7 +110,7 @@ and [part two](https://haseebq.com/how-not-to-bomb-your-offer-negotiation/), blo
   - More people should negotiate job offers and simply don't. This is good, not-too-kitschy 
   advice on how to approach negotiating.
 
-## Technical Topics
+## technical topics
 - [Vasily Zubarev: Machine Learning For Everyone](https://vas3k.com/blog/machine_learning/index.html), 
 (long) blog post
 	- "Machine Learning is like sex in high school. Everyone is talking about it, a few know what
