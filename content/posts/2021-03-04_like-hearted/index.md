@@ -5,7 +5,7 @@ date:   2021-03-04
 tags: 
   - thoughts
 summary: "Curating your feed, finding your friend groups, and getting into online arguments."
-url: /like-hearted
+aliases: /like-hearted
 showHero: true
 ---
 *Curating your feed, finding your friend groups, and getting into online arguments*

@@ -4,7 +4,7 @@ date:   2022-02-04
 summary: "Some thoughts on blogdown, distill, and getting started with your first website in R"
 tags: 
   - r
-url: /personal-websites-with-r
+aliases: /personal-websites-with-r
 ---
 
 I've recently been [asked three times](https://twitter.com/drob/status/928447584712253440) 

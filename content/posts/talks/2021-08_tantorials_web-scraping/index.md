@@ -6,7 +6,7 @@ tags:
   - tutorials
   - videos
   - r
-url: /tantorial-webscraping
+aliases: /tantorial-webscraping
 ---
 
 ## Recording

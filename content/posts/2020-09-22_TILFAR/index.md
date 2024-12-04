@@ -5,7 +5,7 @@ summary: A non-exhaustive list of things I learned from each of the sections of 
 tags: 
   - r
   - r4ds-slack
-url: /tilfar
+aliases: /tilfar
 
 ---
 

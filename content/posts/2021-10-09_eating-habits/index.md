@@ -4,7 +4,7 @@ title:  "Eating Habits as Levers"
 summary: "Thoughts on 'dieting' from someone who has now lost over fifty pounds...twice."
 date:   2021-10-09
 tags: [thoughts]
-url: /eating-habits
+aliases: /eating-habits
 heroStyle: big
 ---
 

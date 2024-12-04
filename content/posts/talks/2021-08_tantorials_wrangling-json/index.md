@@ -6,7 +6,7 @@ tags:
   - tutorials
   - videos
   - r
-url: /tantorial-json
+aliases: /tantorial-json
 ---
 
 ## Recording

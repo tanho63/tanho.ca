@@ -6,7 +6,7 @@ summary: "Thoughts on httptest, not skipping CRAN where possible, GitHub Actions
 tags: 
   - r
   - r-pkg-dev
-url: /httptesting
+aliases: /httptesting
 ---
 
 > ***Embrace unit testing karma***

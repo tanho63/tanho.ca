@@ -8,7 +8,7 @@ tags:
   - videos
   - r
   - shiny
-url: /tantorial-shiny-server
+aliases: /tantorial-shiny-server
 ---
 
 ## Recording
