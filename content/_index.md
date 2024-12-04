@@ -21,4 +21,4 @@ out with my dog Jasper.
 
 - What [am I up to now](/now)? 
 - What [talks have I given recently](/talks)? 
-- What do I [recommend that you read/watch](/recs)? 
+- What tech content do I [recommend that you read/watch](/recs)? 
