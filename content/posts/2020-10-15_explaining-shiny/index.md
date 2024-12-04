@@ -2,7 +2,7 @@
 layout: single
 title: "Q & A: Explaining Shiny to Your IT Team"
 date:   2020-10-15
-url: /explainingshiny
+aliases: /explainingshiny
 summary: "Helping present the business architecture for Shiny in production to a relatively technical (but not R-based) crowd"
 published: true
 tags: 

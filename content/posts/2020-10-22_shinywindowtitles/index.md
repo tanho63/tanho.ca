@@ -7,7 +7,7 @@ tags:
   - r
   - shiny
   - r4ds-slack
-url: /shinywindowtitles
+aliases: /shinywindowtitles
 heroStyle: background
 ---
 

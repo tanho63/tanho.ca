@@ -5,7 +5,7 @@ date: 2019-05-29
 tags: 
  - rowing
 summary: "A short, dynamic warmup to fit into the hectic moments before a Rec Rowing practice."
-url: /rowing-warmup
+aliases: /rowing-warmup
 ---
 
 The few short minutes before ORC Rec practices are often hectic as everyone rushes over after work, gets coach boats and equipment ready, and then hops into a boat. That said, I'm hoping to add another wrench into the works this year - a short dynamic warmup to promote mobility and get ourselves ready for rowing.

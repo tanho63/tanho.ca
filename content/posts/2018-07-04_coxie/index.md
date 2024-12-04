@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "The ORC Rec Guide to Being a Coxswain on the Ottawa River"
-url: /rowing-coxie
+aliases: /rowing-coxie
 # hero: "/images/rowing/coxie.jpg"
 summary: "Congratulations, you're in charge. Your rowers expect you to be clear, prepared, and commanding - speak up!"
 date: 2018-07-04

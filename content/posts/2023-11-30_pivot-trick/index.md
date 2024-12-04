@@ -4,7 +4,7 @@ summary: |
   A tidyr tip for extracting data from column names that I've used and shared a 
   lot, now transcribed from Twitter
 date: 2023-11-30
-url: /pivot-trick
+aliases: /pivot-trick
 tags:
  - r
  - r-tips

@@ -3,7 +3,7 @@ title: "Things I Think You Should Read and Watch"
 summary: |
   A curated, non-exhaustive list of content I've really enjoyed and shared with friends and colleagues. Includes thoughts on life as a programmer, technical leadership, career advice, technical topics, and more. Updated periodically.
 date: 2024-11-29
-url: /recs
+aliases: /recs
 tags:
   - tech
   - notes
