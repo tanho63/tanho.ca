@@ -20,12 +20,10 @@ aims to set those ideas free - let me know if you take it on!
 
 ## Hot take: the ideal beginner data science programming book doesn't exist (yet)
 
-The vaunted [R for Data Science](https://r4ds.hadley.nz) is fantastic, I'm sure 
-Wes McKinney's [book](https://wesmckinney.com/book/) is also good if you want to learn
-Python, and yet I struggled immensely with learning from R4DS. I think it's 
-because I can only care so much about flower irises, penguins, and NYC taxis - I 
-quit halfway through the third chapter of R4DS on my first attempt in 2018ish ...
-because I got bored. 
+The vaunted [R for Data Science](https://r4ds.hadley.nz) is fantastic, and yet 
+I struggled immensely with learning from R4DS. I think it's because I can only 
+care so much about flower irises, penguins, and NYC taxis - I quit halfway through 
+the third chapter of R4DS on my first attempt in 2018ish ... because I got bored. 
 
 Since then, I've gotten treatment for ADHD (which probably explains a lot, tbh), 
 but I think what really helped the most with learning programming was that I 
