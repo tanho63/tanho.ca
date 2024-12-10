@@ -100,8 +100,8 @@ think it's a worthwhile idea and am writing this post mostly to set it
 free from the backlog and hope someone is inspired to pick it up! 
 
 A similar idea has come up since then - the [SCORE project](https://scorenetwork.org/about.html) 
-led by CMU's Stats and Data Science department project aims to provide case studies 
-across all sports for learning statistics and data science, and has a set of 
-modules already. I'm not sure if ~ learning to program in a given language is in 
-the scope of the project - it seems to be very statistics-focused - but it could
-be an interesting parallel project if not...
+led by CMU's Stats and Data Science department aims to provide case studies across 
+all sports for learning statistics and data science, and has a set of modules 
+already. I'm not sure if ~ learning to program in a given language is in the scope 
+of the project - it seems to be very statistics-focused - but it could otherwise 
+be an interesting parallel project?
