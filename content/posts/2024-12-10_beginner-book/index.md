@@ -1,9 +1,7 @@
 ---
 title: "The Beginner Data Science Programming Book That Doesn't Exist (Yet?)"
 summary: |
-  Free idea: the beginner book that doesn't exist yet (but should) is one that \
-  introduces programming via language-agnostic, domain-specific case studies \
-  that complement existing resources on learning programming.
+  Free idea: the beginner book that doesn't exist yet (but should) is one that introduces programming via language-agnostic, domain-specific case studies that complement existing resources on learning programming.
 date: 2024-12-10
 aliases: /beginner-book
 tags:
