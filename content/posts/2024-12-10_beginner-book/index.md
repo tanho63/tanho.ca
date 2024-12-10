@@ -10,6 +10,7 @@ tags:
  - thoughts
  - learning
  - free-ideas
+ - r
 heroStyle: card
 ---
 
