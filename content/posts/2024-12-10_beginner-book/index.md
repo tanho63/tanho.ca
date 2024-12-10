@@ -82,3 +82,12 @@ focus on a few goals:
       public research
   - suggest further research questions that can be tackled beyond the controlled
     sandbox of the book/repository
+
+I think something like this would be massively helpful for introducing people to 
+the relevant public research in a domain, and with putting technical topics into
+practical use for learners. It would be robust to existing languages evolving (could
+approach the same case study in e.g. tidyverse, data.table etc), easily extended 
+to new languages (e.g. Python, Julia, Rust), and even to new technologies (probably
+could do the whole thing in DuckDB one day). The format also would be easy to adopt
+in different sports (soccer, basketball, baseball, hockey?) and to other domains
+altogether. 
