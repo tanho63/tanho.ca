@@ -20,10 +20,11 @@ aims to set those ideas free - let me know if you take it on!
 
 ## Hot take: the ideal beginner data science programming book doesn't exist (yet)
 
-The vaunted [R for Data Science](https://r4ds.hadley.nz) is fantastic, and yet 
-I struggled immensely with learning from R4DS. I think it's because I can only 
-care so much about flower irises, penguins, and NYC taxis - I quit halfway through 
-the third chapter of R4DS on my first attempt in 2018ish ... because I got bored. 
+The beloved [R for Data Science](https://r4ds.hadley.nz) is a fantastic book, and 
+yet I struggled immensely with following along with it. I think it's because I 
+can only care so much about flower irises, penguins, and NYC taxis - I quit halfway 
+through the third chapter of R4DS on my first attempt in 2018ish ... because I 
+got bored. 
 
 Since then, I've gotten treatment for ADHD (which probably explains a lot, tbh), 
 but I think what really helped the most with learning programming was that I 
@@ -35,8 +36,8 @@ and how it fit into what I already knew, and then keep going. Reading R4DS cover
 to cover was utterly unhelpful until I knew how to fit each concept into a mental
 model that I knew how to use. 
 
-My love of all things R and data has since taken off, enough to have made a whole 
-career of it, and now I often get asked what books I'd recommend for learning 
+My love of all things R and data has since taken off (enough to have made a whole 
+career of it), and now I often get asked what books I'd recommend for learning 
 NFL/sports analytics, R, data science, programming etc. I supply the easy answer
 (you should read R4DS), but I'm a little uncomfortable with it because the book 
 I wish existed doesn't quite exist.
@@ -44,7 +45,7 @@ I wish existed doesn't quite exist.
 ## the ideal book for learning programming and NFL analytics
 
 There are a lot of introductory data science and programming books out there, and
-even ones that apply the context of NFL: both [Eric Eager](https://www.oreilly.com/library/view/football-analytics-with/9781492099611/), 
+even ones that apply the context of NFL: both [Eric Eager](https://www.oreilly.com/library/view/football-analytics-with/9781492099611/)
 and [Brad Congelio](https://bradcongelio.com/nfl-analytics-with-r-book/) have great
 iterations of this - and the latter is free online!
 
@@ -62,17 +63,16 @@ focus on a few goals:
 
   - create a series of case studies and exercises that challenge learners to write
     their own solutions based on domain-specific research questions
-    - provide starter data at the correct cleanliness where appropriate in a 
-    data repository
-  - organize and cover a full breadth of high-level data science / programming topics
-    - kind of like what R4DS covers, e.g. visualize, transform, import, program, communicate
+    - provide starter data of appropriate complexity/cleanliness in a data repository
+  - cover a full breadth of high-level data science / programming topics
+    - kind of like R4DS's visualize, transform, import, program, communicate sections
   - maintain up-to-date links to readings for each case study that help learners 
-    find best-practice guidance on a given topic in a given programming language
+    find best-practice guidance on a given topic in a supported programming language
     - each case study should provide links to "prerequisite reading" to solve it, 
       e.g. links to relevant R4DS chapters for R
-    - should be easily extended to other languages by linking to equivalent material
-      for the same overall concepts - pivoting data, group by summarize etc all
-      have equivalents in various languages
+    - should be easily extended to other languages by linking to equivalent 
+      material, e.g. pivoting data, group by + summarize are relational data 
+      concepts that have parallels in almost every language
   - introduce the essential background knowledge for the domain in question
     - for NFL this should include concepts like EPA, fourth downs, completion 
       probability, expected rushing yards etc - essentially covering the body of
