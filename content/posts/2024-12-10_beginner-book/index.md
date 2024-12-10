@@ -91,3 +91,17 @@ to new languages (e.g. Python, Julia, Rust), and even to new technologies (proba
 could do the whole thing in DuckDB one day). The format also would be easy to adopt
 in different sports (soccer, basketball, baseball, hockey?) and to other domains
 altogether. 
+
+Of course, I've been sitting on this idea for a while - I first started a 
+[repo](https://github.com/nflverse/nflbeginR) for this idea ~ three years ago, 
+and hooked my friend Sebastian Carl on it, but neither of us have made much 
+progress owing to just general lack of time/energy more than anything. I still 
+think it's a worthwhile idea and am writing this post mostly to set it 
+free from the backlog and hope someone is inspired to pick it up! 
+
+A similar idea has come up since then - the [SCORE project](https://scorenetwork.org/about.html) 
+led by CMU's Stats and Data Science department project aims to provide case studies 
+across all sports for learning statistics and data science, and has a set of 
+modules already. I'm not sure if ~ learning to program in a given language is in 
+the scope of the project - it seems to be very statistics-focused - but it could
+be an interesting parallel project if not...
