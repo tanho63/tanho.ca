@@ -5,8 +5,7 @@ summary: A non-exhaustive list of things I learned from each of the sections of 
 tags: 
   - r
   - r4ds-slack
-aliases: /tilfar
-
+aliases: /advr-learnings
 ---
 
 I set out reading this book hoping to understand the metaprogramming chapter, and ended up learning a bunch of other stuff along the way!
