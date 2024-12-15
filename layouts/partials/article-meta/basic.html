@@ -82,7 +82,7 @@
   {{ range $taxonomy, $terms := .Site.Taxonomies }}
   {{ if and (not (eq $taxonomy "authors")) (not (eq $taxonomy "series"))}}
   {{ if (gt (len ($context.GetTerms $taxonomy)) 0) }}
-  {{ range $context.GetTerms $taxonomy }}
+  {{ range first (.Params.maxTags | default (.Site.Params.article.maxTags | default 5)) ($context.GetTerms $taxonomy) }}
   <span style="margin-top:0.5rem" class="mr-2" onclick="window.open({{ .RelPermalink }},'_self');">
     {{ partial "badge.html" .LinkTitle }}
   </span>
