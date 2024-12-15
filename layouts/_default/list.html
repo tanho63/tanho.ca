@@ -78,7 +78,7 @@
 <!-- Get all tags and show only if in current context -->
   <section class="flex flex-wrap max-w-prose -mx-2 overflow-hidden">
     {{ range .Site.Taxonomies.tags.ByCount }}
-      {{ if in ($.Scratch.Get "tags" |uniq) .Name }}
+      {{ if in ($.Scratch.Get "tags" | uniq) .Name }}
         {{ partial "term-link/text.html" . }}
       {{ end }}
   {{ end }}

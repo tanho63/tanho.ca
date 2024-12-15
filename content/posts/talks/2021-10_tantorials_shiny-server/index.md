@@ -5,8 +5,8 @@ date: 2021-10-11
 tags:
   - tutorials
   - r-in-production
-  - r
   - shiny
+  - r
   - videos
 aliases: /tantorial-shiny-server
 ---

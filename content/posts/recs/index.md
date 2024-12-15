@@ -7,7 +7,9 @@ url: /recs
 aliases: /posts/recs
 tags:
   - reading
-  - learning
+  - life-in-tech
+  - learning-programming
+  - career-advice
 ---
 
 This is a curated, non-exhaustive list of tech-adjacent content I've really 

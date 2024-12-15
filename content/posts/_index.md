@@ -9,5 +9,4 @@ cascade:
   showHero: true
   heroStyle: basic
   showRelatedContent: true
-  relatedContentLimit: 3
 ---

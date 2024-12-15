@@ -11,9 +11,9 @@ html {
   font-size: 14 pt;
 }
 
-.prose a {
-  text-decoration: underline;
+.homepage-text a {
   font-weight: 700;
+  text-decoration: underline;
 }
 
 .prose {
