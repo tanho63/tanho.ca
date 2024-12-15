@@ -6,8 +6,9 @@ summary: |
 date: 2023-10-13
 tags: 
  - talks
- - videos
+ - r-in-production
  - shiny
+ - videos
  - r
 heroStyle: background
 ---
