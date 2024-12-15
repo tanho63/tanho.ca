@@ -1,10 +1,10 @@
 ---
 title: "Things I Learned From Advanced R"
 date: 2020-09-22
-summary: A non-exhaustive list of things I learned from each of the sections of Advanced R while participating in AdvRBookclub.
+summary: A non-exhaustive list of things I learned from each of the sections of Advanced R while participating in R4DS Slack's Advanced R Book Club.
 tags: 
   - r
-  - r4ds-slack
+  - dslc-slack
 aliases: /advr-learnings
 ---
 
