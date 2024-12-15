@@ -4,9 +4,9 @@ title: "Q & A: Changing Window Titles in Shiny"
 date:   2020-10-20
 summary: "Pairing a snippet of JavaScript with Shiny reactivity to dynamically change the window title"
 tags: 
-  - r
+  - dslc-slack
   - shiny
-  - r4ds-slack
+  - r
 aliases: /shinywindowtitles
 heroStyle: background
 ---

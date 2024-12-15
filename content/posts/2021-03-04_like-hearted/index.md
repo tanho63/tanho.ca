@@ -3,7 +3,7 @@ layout: single
 title:  "Like-Hearted"
 date:   2021-03-04
 tags: 
-  - thoughts
+  - reading
 summary: "Curating your feed, finding your friend groups, and getting into online arguments."
 aliases: /like-hearted
 showHero: true
