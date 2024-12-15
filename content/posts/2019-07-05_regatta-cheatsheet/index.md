@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "Regatta Cheatsheet"
-aliases: /regatta-guide
+aliases: /regatta-cheatsheet
 date: 2019-07-05
 tags: 
  - rowing
