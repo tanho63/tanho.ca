@@ -3,7 +3,7 @@ layout: single
 title:  "Reflections on 2023"
 summary: |
   A year of travelling, grind, growth, and loneliness.
-date:   2023-12-30
+date: 2023-12-30
 tags: 
   - reflections
 showComments: false

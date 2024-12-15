@@ -6,11 +6,9 @@ summary: |
 date: 2022-07-27
 tags: 
  - talks
+ - r-in-production
+ - github
  - videos
- - piggyback
- - "github actions"
- - r
-heroStyle: background
 ---
 
 ## Recording

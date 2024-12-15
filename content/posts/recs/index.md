@@ -6,8 +6,8 @@ date: 2024-11-29
 url: /recs
 aliases: /posts/recs
 tags:
-  - tech
-  - notes
+  - reading
+  - learning
 ---
 
 This is a curated, non-exhaustive list of content I've really enjoyed and shared 

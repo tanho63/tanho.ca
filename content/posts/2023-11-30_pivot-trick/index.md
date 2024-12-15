@@ -8,7 +8,6 @@ aliases: /pivot-trick
 tags:
  - r
  - r-tips
- - tweet-highlights
 heroStyle: card
 ---
 

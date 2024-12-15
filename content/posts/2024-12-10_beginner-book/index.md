@@ -5,9 +5,8 @@ summary: |
 date: 2024-12-10
 aliases: /beginner-book
 tags:
- - thoughts
- - learning
  - free-ideas
+ - learning-programming
  - r
 heroStyle: card
 ---
