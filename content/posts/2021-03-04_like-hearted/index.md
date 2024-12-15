@@ -8,7 +8,11 @@ summary: "Curating your feed, finding your friend groups, and getting into onlin
 aliases: /like-hearted
 showHero: true
 ---
-*Curating your feed, finding your friend groups, and getting into online arguments*
+{{< alert "circle-info" >}}
+*I immensely recommend Austin Kleon and the [Steal trilogy](https://austinkleon.com/books) to everyone, **especially** those looking to "make it" as a creator, programmer, or data analyst.*
+{{< /alert >}}
+
+### TLDR: Curating your feed, finding your friend groups, and getting into online arguments can be good
 
 Each year, I embark on a journey to re-read Austin Kleon's [Steal trilogy](https://austinkleon.com/books), and each time I read it, something new grabs my attention. I was struck today by this image from a chapter in Keep Going called "Like-Minded vs Like-Hearted":
 
@@ -41,7 +45,3 @@ This is a really valuable idea - and one that I feel like I need to strive for, 
 I've also lucked into a community in the TDM Discord where I feel comfortable making those online arguments and challenging opinions, because so many folks there feel like-hearted to me - they listen, they challenge me to be articulate my opinions, and when we disagree we can still respect each other's opinions. It's rare that I feel like I'm left angry or drained after spending time there. 
 
 The takeaway from the chapter, for me, is that I should continue to strive to surround myself with like-hearted people - on my Twitter feed, in my Discord/Slack communities, and in real in-person friend groups. I'm lucky to have the communities I'm in, and I'm very glad to be able to get drawn into debates amongst my like-hearted friends. 
-
-{{< alert >}}
-*I immensely recommend Austin Kleon and the [Steal trilogy](https://austinkleon.com/books) to everyone, **especially** those looking to "make it" as a creator, programmer, or data analyst.*
-{{< /alert >}}

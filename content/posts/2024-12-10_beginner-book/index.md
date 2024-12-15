@@ -33,7 +33,7 @@ I'd work on something for a while, get stuck on something I didn't know, Ctrl-F
 the R4DS book + dplyr/tidyr reference manuals, figure out what I needed to know
 and how it fit into what I already knew, and then keep going. Reading R4DS cover
 to cover was utterly unhelpful until I knew how to fit each concept into a mental
-model that I knew how to use. 
+model that I knew how to use.
 
 My love of all things R and data has since taken off (enough to have made a whole 
 career of it), and now I often get asked what books I'd recommend for learning 

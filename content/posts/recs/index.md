@@ -1,7 +1,7 @@
 ---
 title: "Things I Think You Should Read and Watch"
 summary: |
-  A curated, non-exhaustive list of content I've really enjoyed and shared with friends and colleagues. Includes thoughts on life as a programmer, technical leadership, career advice, technical topics, and more. Updated periodically.
+  A curated, non-exhaustive list of tech content I've really enjoyed and shared with friends and colleagues. Includes thoughts on life as a programmer, technical leadership, career advice, technical topics, and more. Updated periodically.
 date: 2024-11-29
 url: /recs
 aliases: /posts/recs
@@ -10,8 +10,8 @@ tags:
   - learning
 ---
 
-This is a curated, non-exhaustive list of content I've really enjoyed and shared 
-with friends and colleagues. 
+This is a curated, non-exhaustive list of tech-adjacent content I've really 
+enjoyed and shared with friends and colleagues. 
 
 Mostly general thoughts on life as a data scientist, learning/teaching programming, 
 technical leadership, career advice, and other tech-adjacent topics, and not specific 
@@ -120,7 +120,7 @@ YouTube video (4 min)
   - More people should negotiate job offers and simply don't. This is good, not-too-kitschy 
   advice on how to approach negotiating.
 
-## technical topics
+## specific technologies
 - [Vasily Zubarev: Machine Learning For Everyone](https://vas3k.com/blog/machine_learning/index.html), 
   blog post (~40 min read)
 	- "Machine Learning is like sex in high school. Everyone is talking about it, a few know what
