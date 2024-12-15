@@ -71,7 +71,6 @@ disableImageOptimization = false
   showTaxonomies = false
   showAuthorsBadges = false
   showWordCount = false
-  maxTags = 5
   # sharingLinks = [ "linkedin", "twitter", "reddit", "pinterest", "facebook", "email", "whatsapp", "telegram"]
 
 [list]
