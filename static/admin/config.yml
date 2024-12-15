@@ -1,6 +1,8 @@
+publish_mode: editorial_workflow
 backend:
   name: git-gateway
   branch: main # Branch to update (optional; defaults to master)
+  squash_merges: true
 media_folder: static/images
 public_folder: /public
 collections:
@@ -9,6 +11,7 @@ collections:
     folder: 'content/posts'
     create: true
     slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    path: '{{slug}/index.md'
     editor:
       preview: false
     fields:
