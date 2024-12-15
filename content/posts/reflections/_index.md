@@ -1,6 +1,6 @@
 ---
-title: "Now: Archives"
-description: "Past entries of /now"
+title: "Reflections"
+date: 2000-01-01
 cascade:
   showComments: false
   showReadingTime: true
@@ -8,6 +8,6 @@ cascade:
   showHero: true
   heroStyle: background
   showPagination: false
-  showRelatedContent: false
-  categories: now
+  showRelatedContent: true
+  categories: reflections
 ---
