@@ -8,6 +8,7 @@ published: true
 tags: 
   - dslc-slack
   - shiny
+  - r-in-production
   - r
 heroStyle: background
 ---

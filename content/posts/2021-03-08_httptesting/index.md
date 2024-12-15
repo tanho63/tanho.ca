@@ -4,8 +4,8 @@ title: "Adventures in HTTP Testing for R"
 date:   2021-03-08
 summary: "Thoughts on httptest, not skipping CRAN where possible, GitHub Actions, and dealing with large packages of mock data."
 tags: 
-  - r
   - r-pkg-dev
+  - r
 aliases: /httptesting
 ---
 
