@@ -1,10 +1,10 @@
 ---
-title: "Things I Learned From Advanced R"
+title: "DSLC Slack: Things I Learned From Advanced R Book Club"
 date: 2020-09-22
 summary: A non-exhaustive list of things I learned from each of the sections of Advanced R while participating in R4DS Slack's Advanced R Book Club.
 tags: 
-  - r
   - dslc-slack
+  - r
 aliases: /advr-learnings
 ---
 
@@ -25,9 +25,9 @@ Here's a non-exhaustive list of things I learned from each of the sections of Ad
 - I now understand what a function factory is, and what to do if a function somehow returns me a function instead (as opposed to panicking about it!)
 - I now know about a series of modifiers to help adjust function behaviours (memoise, quietly, safely, possibly) - although I use tryCatch as much as I do these.
 
-## III - OOP
+## III - Object Oriented Programming
 
-- I wrote a package that uses S3! It's cool to minimize the user interface for multiple platforms and the mental load accompanying. 
+- I wrote a [package](https://github.com/ffverse/ffscrapr) that uses S3! It's cool to minimize the user interface for multiple platforms and the mental load accompanying. 
 - I still lean to using the explicit "switch" function a lot instead of writing out a useMethod call. May be a habit/pattern worth breaking in the future.
 - I'm now comfortable USING an R6 package - I don't know that I'd reach for an R6 system now but the whole "function$method" thing doesn't scare me anymore
 - S4? wot that

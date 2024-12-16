@@ -1,23 +1,22 @@
 ---
 layout: single
-title: "Q & A: Changing Window Titles in Shiny"
+title: "DSLC Slack: Changing Window Titles in Shiny"
 date:   2020-10-20
 summary: "Pairing a snippet of JavaScript with Shiny reactivity to dynamically change the window title"
 tags: 
   - dslc-slack
   - shiny
   - r
-aliases: /shinywindowtitles
-heroStyle: background
+aliases: /shiny-window-titles
 ---
 
-I greatly enjoy the R4DS Slack Community (found at [r4ds.io/join](r4ds.io/join)!) - and spend a fair bit of time answering questions, especially about Shiny! This is another in a series of posts where I curate some of the more interesting questions and answers I've found (and sometimes answered).
+{{< dslc-qa >}}
 
-<hr>
-
-`Dhiraj` asks:
+## `Dhiraj` asks:
 
 > I have a shiny application which uses the navbarPage() layout. The app has multiple tabPanels with their own titles. Is it possible to have the windowTitle of the navbarPage dynamic to show the titles of the tabPanels ?
+
+## Answer
 
 Here's a minimal example of the Shiny and JS code you'll need:
 

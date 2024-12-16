@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "Q & A: Explaining Shiny to Your IT Team"
+title: "DSLC Slack: Explaining Shiny to Your IT Team"
 date:   2020-10-15
 aliases: /explaining-shiny
 summary: "Helping present the business architecture for Shiny in production to a relatively technical (but not R-based) crowd"
@@ -8,16 +8,10 @@ published: true
 tags: 
   - dslc-slack
   - shiny
-  - r-in-production
   - r
-heroStyle: background
 ---
 
-{{< alert "comment" >}}
-I greatly enjoy the DSLC Slack Community (found at [dslc.io/join](https://dslc.io/join)!), 
-and spend a fair bit of time answering questions! This post is part of a [series](/tags/dslc-slack)
-where I curate some interesting questions and/or answers that I've come across there. 
-{{</ alert >}}
+{{< dslc-qa >}}
 
 ## `Piranha` asks:
 
