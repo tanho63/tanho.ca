@@ -11,7 +11,7 @@ title = "TanHo.ca"
   logo = "img/main-logo.png"
   images = "img/main-logo.png"
   # secondaryLogo = "img/secondary-logo.png"
-  description = "Personal site of Tan Ho: r & shiny obsessive, pumpkin engineer, nfl nerd"
+  description = "Personal site of Tan Ho: r/shiny wizard, pumpkin engineer, nfl nerd"
   copyright = """ \
   © { year } Tan Ho. Unless otherwise specified, content is licensed with [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
   """
@@ -20,11 +20,11 @@ title = "TanHo.ca"
    name = "Tan Ho"
    image = "img/avatar.jpg"
    headline = [
-    "engineer @ zelus soccer",
+    "sr eng @ teamworks soccer",
     "pumpkin sculptor",
     "r & shiny obsessive",
-    "maintainer of nflverse and ffverse",
-    "mentor @ r4ds.io"
+    "maintainer of nflverse & ffverse",
+    "mentor @ dslc.io slack"
    ]
 #   bio = "A little bit about you"
    links = [
