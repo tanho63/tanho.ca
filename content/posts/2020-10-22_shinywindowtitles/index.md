@@ -5,6 +5,7 @@ date:   2020-10-20
 summary: "Pairing a snippet of JavaScript with Shiny reactivity to dynamically change the window title"
 tags: 
   - dslc-slack
+  - q-a
   - shiny
   - r
 aliases: /shiny-window-titles

@@ -2,17 +2,18 @@
 title: "DSLC Slack: Debugging Netlify Deploys"
 summary: |
   A quick example of reading through automated deploy logs, finding the relevant errors, and triaging a fix - transcribed from the DSLC Slack Community help channels
-date: 2024-12-11
+date: 2024-12-19
 aliases: /debugging-netlify-deploys
 tags:
  - dslc-slack
+ - q-a
  - r-in-production
  - r
 ---
 
 {{< dslc-qa >}}
 
-## Question (from MC Nanton)
+## Question
 
 > Hi all! I'm having a hard time understanding why netlify checks on a Pull Request 
 > with only a empty line added in the commit are failing for a blogdown website. 
@@ -21,8 +22,10 @@ tags:
 > and the site is published-rendered without problem if we commit directly to main.
 > 
 > I'm super puzzled by this, does anyone have any tips on how can I debug it? Thanks :pray:
+> 
+> \- MC Nanton
 
-## Answer (by me)
+## Answer
 
 Let's look through some of your Netlify deploy logs. I found these from your GitHub 
 repo automated checks:
