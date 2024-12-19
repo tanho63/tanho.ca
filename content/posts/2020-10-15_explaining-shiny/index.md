@@ -7,6 +7,7 @@ summary: "Helping present the business architecture for Shiny in production to a
 published: true
 tags: 
   - dslc-slack
+  - q-a
   - shiny
   - r
 ---
