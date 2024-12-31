@@ -6,6 +6,7 @@ date: 2024-12-23
 tags:
  - production
  - python
+ - r
  - docker
 url: /uv-python
 ---
@@ -13,7 +14,7 @@ url: /uv-python
 {{< alert "circle-info">}} 
 TLDR: Use [uv](https://docs.astral.sh/uv) to install everything Python: configuring 
 a virtual env for easy interactive development and a direct installation for Docker. 
-It's magically painless. Example repository here. LINK TBD
+It's magically painless. Example repository here. TODO LINK
 {{</alert>}}
 
 I was recently helping my colleague Javier use tensorflow in one of his R projects, 
@@ -22,8 +23,8 @@ and production Docker usage.
 
 My goals were:
 - ***painlessly*** install Python, required packages, and Linux dependencies, all
-with compatible and correct versions, *such that the reticulate, tensorflow, and 
-keras R packages all work out of the box*.
+with compatible and correct versions, **such that the reticulate, tensorflow, and 
+keras R packages all work out of the box**.
 - have extremely simple setup for local interactive development (so that Javier 
 spends time on the fancy spatiotemporal modelling he's world class at, not debugging 
 installation issues)
@@ -35,9 +36,7 @@ myself vaguely literate with Python, so feel free to let me know if I'm doing
 something dumb here.
 
 # part one: local workflows
-
 ## use uv
-
 If there is even _one_ takeaway here, it's that uv is the fucking best and 
 magically solves all Python installation-related problems. It's basically pak,
 if pak also encompassed installing R itself as well as managing renv environments.
@@ -53,7 +52,6 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
 ## initialize uv in the project
-
 uv (and all python projects, really) works best with virtual environments, which
 means that the python version and all package versions are installed to a 
 project-specific directory. Python installation and compatibility is much more
@@ -94,7 +92,7 @@ uv add tensorflow
 Running these commands creates a virtual environment folder (.venv) and a lockfile
 (uv.lock) of the packages that are computed and installed into that venv. 
 
-Notice earlier that it created a `.python-version` file? My system defaulted to
+Notice earlier that it created a `.python-version` file? uv defaulted to
 installing 3.10, which came installed on my Ubuntu 22.04 machine. We can experiment
 with finding the latest Python version compatible with our requirements by bumping
 the version marker in this file, deleting the venv folder, and running `uv sync`
@@ -143,8 +141,8 @@ Imports:
 Encoding: UTF-8
 ```
 
-We need [reticulate >= 1.40.0](https://github.com/rstudio/reticulate/pull/1678)
-in order to properly use uv venvs. 
+We [need reticulate >= 1.40.0](https://github.com/rstudio/reticulate/pull/1678)
+in order to properly use uv venvs.
 
 Then, with this DESCRIPTION, we can use pak to install the dependencies:
 ```r
@@ -214,7 +212,7 @@ At this point, I think I'm satisfied with the local interactive workflow:
 - `uv add` handles adding a dependency and installing it, making sure it is compatible
 with the other dependencies and current python versions. If it fails to install,
 it will warn loudly.
-- reticulate, tensorflow, and keras R packages all work fine locally.
+- reticulate, tensorflow, and keras R packages all work fine together locally.
 
 Let's move on to dockerizing the project.
 
@@ -223,7 +221,7 @@ Let's move on to dockerizing the project.
 First, let's add .venv to a .dockerignore file so that it's not included in the
 Docker context - this makes Docker builds much faster:
 ```sh
-echo ".venv"" >> .dockerignore
+echo ".venv" >> .dockerignore
 ```
 Our base images start with a rocker/r-ver image, e.g.
 ```Dockerfile
