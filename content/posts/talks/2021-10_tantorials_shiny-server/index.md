@@ -7,6 +7,7 @@ tags:
   - r-in-production
   - shiny
   - r
+  - production
   - videos
 aliases: /tantorial-shiny-server
 ---
