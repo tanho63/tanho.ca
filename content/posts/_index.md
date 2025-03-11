@@ -1,6 +1,6 @@
 ---
-title: "Posts"
-description: "Thoughts, takes, talks, tutorials...just tantastic topics!"
+title: "posts"
+description: "thoughts, takes, talks, tutorials...just tantastic topics!"
 date: 2000-01-01
 cascade:
   showComments: true
