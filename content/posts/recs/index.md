@@ -60,6 +60,11 @@ YouTube video (4 min)
   time innovating on the core technologies (fancy database stuff, programming
   paradigms etc), because fixing bleeding edge database stuff takes up "innovation
   tokens" that you want to spend doing other things.
+- [David Robinson: Unreasonable Effectiveness Of Public Work](https://www.youtube.com/watch?v=th79W4rv67g),
+  YouTube talk recording (40 min)
+  - Anything you put out into the world is going to be far better and far more useful
+  than anything that sits in your drafts folder waiting for some arbitrary threshold
+  of "good" before it gets published. Go out there and do things! 
 
 <!-- candidates: egoless programming, grug brained developer? -->
 	
@@ -96,10 +101,10 @@ YouTube video (4 min)
 - [Derek Sivers: How To Do What You Love And Make Good Money](https://sive.rs/balance), 
   blog post with audio recording (4 min read/listen)
 	- This is the advice I share when folks ask me about getting their dream job and making a 
-	career from sports analytics or other hobbies. Advice I used early on, and then somewhat
-  discarded by joining Zelus, but it served me super well and arguably _got_ me the job at 
-  Zelus. Part of a larger book, [Hell Yeah or No](https://sive.rs/n), which is also
-  very worth reading (~$15).
+	career from sports analytics or other hobbies - you don't need to force sports analytics to
+        be both your livelihood and your art! The dream job that does both may or may not come along,
+        but you can be happy in both career and art without it. Part of a larger book, [Hell Yeah or No](https://sive.rs/n),
+        which is also very worth reading (~$15).
 - [Austin Kleon: Show Your Work](https://austinkleon.com/show-your-work/), short book (~$15)
   - The book I share when people ask me how to build their public portfolio and
   personal networks: share something small every day without being human spam, teach
