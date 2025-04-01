@@ -5,7 +5,7 @@ description: "r & shiny wizard, pumpkin engineer, nfl nerd"
 
 I'm a self-taught programmer who loves R, Shiny, NFL, and [carving pumpkins](/pumpkins). 
 
-By day, I'm a Senior ML Engineer for [Teamworks Zelus](https://zelusanalytics.com) Soccer. 
+By day, I'm an Engineering Manager for [Teamworks Zelus](https://zelusanalytics.com) Soccer. 
 
 I started [DynastyProcess](https://dynastyprocess.com) and [ffverse](https://ffverse.com), 
 maintain [nflverse](https://github.com/nflverse), and mentor at [DSLC Slack Community](https://dslc.io). 
