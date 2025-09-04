@@ -2,7 +2,7 @@
 title: "Things I Think You Should Read and Watch"
 summary: |
   A curated, non-exhaustive list of tech content I've really enjoyed and shared with friends and colleagues. Includes thoughts on life as a programmer, technical leadership, career advice, technical topics, and more. Updated periodically.
-date: 2024-11-29
+date: 2025-09-04
 url: /recs
 aliases: /posts/recs
 tags:
@@ -27,6 +27,7 @@ by topic (click to jump to section):
 - [technical leadership](#technical-leadership)
 - [career advice](#career-advice)
 - [technical topics](#technical-topics)
+- [changelog](#changelog)
 
 ## life as a programmer & data scientist
 - [Michael Lynch: How to Do Code Reviews Like A Human](https://mtlynch.io/human-code-reviews-1/) 
@@ -139,3 +140,10 @@ YouTube video (4 min)
 	- I've always found CSS to be incredibly frustrating, but reading this zine was super helpful. 
 	Still refer back to the [CSS Selectors](https://wizardzines.com/comics/selectors/) comic to 
 	this day whenever I need to format something.
+- [OhShitGit.com](https://ohshitgit.com) (quick reference page)
+    - For the times I manage to fuck up using git, this page consistently saves me every single time.
+ 
+## changelog
+- 2025-09-04: added ohshitgit.com
+- 2025-03-17: added David Robinson's Unreasonable Effectiveness Of Public Work talk
+- 2024-11-29: first version
