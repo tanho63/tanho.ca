@@ -7,15 +7,11 @@ I'm a self-taught programmer who loves R, Shiny, NFL, and [carving pumpkins](/pu
 
 By day, I'm an Engineering Manager for [Teamworks Intelligence](https://teamworks.com/intelligence/) Soccer. 
 
-I started [DynastyProcess](https://dynastyprocess.com) and [ffverse](https://ffverse.com), 
-maintain [nflverse](https://github.com/nflverse), and mentor at [DSLC Slack Community](https://dslc.io). 
+I started [DynastyProcess](https://dynastyprocess.com), maintain [nflverse](https://github.com/nflverse) and [ffverse](https://ffverse.com), and mentor at [DSLC Slack Community](https://dslc.io). 
 
-In past lives, I have been a: residential property manager, construction data 
-analyst, fantasy football writer, live-coding streamer, marathon rower, adult 
-rowing coach, and more.
+In past lives, I have been a: residential property manager, construction data  analyst, fantasy football writer, live-coding streamer, marathon rower, adult  rowing coach, and more.
 
-Away from my keyboard, I enjoy lifting weights, skiing, cooking, and hanging 
-out with my dog Jasper.
+Away from my keyboard, I enjoy playing volleyball, lifting weights, skiing, cooking, and hanging out with my dog Jasper.
 
 ## useful pages
 
