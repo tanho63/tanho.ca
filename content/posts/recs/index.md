@@ -2,7 +2,7 @@
 title: "Things I Think You Should Read and Watch"
 summary: |
   A curated, non-exhaustive list of tech content I've really enjoyed and shared with friends and colleagues. Includes thoughts on life as a programmer, technical leadership, career advice, technical topics, and more. Updated periodically.
-date: 2025-09-04
+date: 2026-07-21
 url: /recs
 aliases: /posts/recs
 tags:
@@ -140,10 +140,14 @@ YouTube video (4 min)
 	- I've always found CSS to be incredibly frustrating, but reading this zine was super helpful. 
 	Still refer back to the [CSS Selectors](https://wizardzines.com/comics/selectors/) comic to 
 	this day whenever I need to format something.
-- [OhShitGit.com](https://ohshitgit.com) (quick reference page)
+- [OhShitGit.com](https://ohshitgit.com) (reference page)
     - For the times I manage to fuck up using git, this page consistently saves me every single time.
+- [data.table vs base vs dplyr](https://arelbundock.com/posts/dt_tb_df/index.html) (reference page)
+    - An awesome syntax lookup page to go between dplyr, base, and data.table in R - a worthy successor to the
+    original post by [atrebas](https://atrebas.github.io/post/2019-03-03-datatable-dplyr/)
  
 ## changelog
+- 2026-07-21: added data.table vs base vs dplyr reference page
 - 2025-09-04: added ohshitgit.com
 - 2025-03-17: added David Robinson's Unreasonable Effectiveness Of Public Work talk
 - 2024-11-29: first version
