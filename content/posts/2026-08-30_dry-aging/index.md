@@ -24,8 +24,8 @@ Code for this project lives on GitHub at [tanho63/dry-age-monitor](https://githu
 <img src="fridge-setup.jpg" alt="dry-aging fridge setup" style="max-height:400px">
 
 I got a [dedicated fridge](https://www.costco.ca/frigidaire-21-in.-6.0-cu-ft.-commercial-glass-display-refrigerator.product.4000409375.html)
-from Costco, around 6.0 cubic feet with a glass door and wire shelving, and on
-balance I think it worked really well - it held humidity pretty decently, was
+from Costco - around 6.0 cubic feet with a glass door and wire shelving - and on
+balance I think it worked really well: it held humidity pretty decently, was
 able to fit a good sized chunk of meat on a shelf, and the glass door let me
 look in on it whenever I wanted. The one downside is that it uses a mechanical
 thermostat for deciding when to kick on the compressor, and I ended up needing
@@ -34,7 +34,7 @@ control top-end and bottom-end temperature would probably be better, but honestl
 I'm very pleased with what I got for ~$350 CAD.
 
 The Raspberry Pi monitoring setup worked great for tracking temperature and
-humidity. I've mostly had experience with the Pi Zero 2 WH (with headers already
+humidity. I've mostly had experience with the Pi Zero 2 WH (i.e. with headers already
 soldered on), so went with that and paired it with a [BME690](https://www.pishop.ca/product/bme690-4-in-1-air-quality-breakout-gas-temperature-pressure-humidity/)
 air quality sensor that promised to monitor temperature, humidity, gas, and
 pressure. I could probably have cheaped out and gone with a simpler sensor like
@@ -61,7 +61,7 @@ wanted while not really changing the effective humidity much at all.
 
 Sealing off the cable gaps in the door gasket was very helpful in maintaining
 temperature. I duct-taped the cables down first to make sure it stayed put, then
-put foam tape over top to help reduce air leakage
+put foam tape over top to help reduce air leakage.
 
 I bought a [cheap thermohygrometer](https://temppro.com/products/tp50-digital-indoor-hygrometer-thermometer)
 as a backup in case the Pi ever went down. It worked fine as a sanity check but
@@ -81,8 +81,8 @@ have liked. I mostly wanted to get a roast I wouldn't be too upset about ruining
 if the experiment flopped.
 
 I didn't do a great job of documenting the "before" state: I forgot to log the
-total cost and size of the whole roast before trimming (so I can't do a really good
-cost estimate), but I did remember to portion off a steak so I could have a
+total cost and size of the whole roast before trimming, so I can't do a really good
+cost estimate, but I did remember to portion off a steak so I could have a
 before/after comparison tasting. I also trimmed it up so that it would fit
 horizontally on the shelf with some space for airflow around the sides.
 
@@ -191,7 +191,7 @@ yet - I think I'm saving that for when Mi Yen is home next.
 
 ## thoughts for next time
 
-- get a larger subprimal with bone + cap, something like a [107](https://www.chefs-resources.com/types-of-meat/beef/cuts-of-beef/prime-rib/)
+- get a larger subprimal with bone + meat to protect the main steak, something like a [107](https://www.chefs-resources.com/types-of-meat/beef/cuts-of-beef/prime-rib/)
 - try hanging vertically via meat hooks instead of being constrained by the shelf width
 - go for only a little bit more time (maybe 50 days?)
 - investigate inoculating fridge/meat with mold
