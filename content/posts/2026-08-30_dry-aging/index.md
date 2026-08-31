@@ -136,6 +136,8 @@ However, this didn't really change the set-point of the fridge's thermostat: the
 cooling happened faster since the cold air would circulate more quickly on the
 "down" part of the cycle, but the compressor didn't kick on any earlier.
 
+![I bent the fridge's thermostat sensor wire upwards to fool it into thinking the fridge was warmer](fridge-sensor.jpg)
+
 I ended up messing with the fridge's thermostat sensor itself: this is basically
 a wire that sat in a little housing on the back of the fridge, so I took the
 housing off and bent the wire upwards to move the end of the sensor into a
