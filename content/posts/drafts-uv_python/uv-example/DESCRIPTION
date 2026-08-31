@@ -1,0 +1,10 @@
+Package: uv.example
+Title: example repo for uv + r + python installs
+Version: 1.0.0
+Authors@R: person("Tan", "Ho", , "tan@tanho.ca", role = c("aut", "cre"))
+License: MIT + file LICENSE
+Imports: 
+    reticulate (>= 1.40.0),
+    tensorflow,
+    keras
+Encoding: UTF-8

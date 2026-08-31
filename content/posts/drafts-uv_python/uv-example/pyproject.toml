@@ -1,0 +1,20 @@
+[project]
+name = "uv-example"
+# refer to DESCRIPTION file for project version
+dynamic = ["version"]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "keras<3.0.0",
+    "tensorflow>=2.15.1",
+]
+
+# [tool.uv]
+# # this code is not a python package (i.e. not an installable one)
+# package = false
+# # force uv to manage python installs for you (it's fast anyway)
+# python-preference = "only-managed"
+#
+# [tool.setuptools.packages.find]
+# # don't let setuptools complain about repo folder structure
+# exclude = ["*"]
