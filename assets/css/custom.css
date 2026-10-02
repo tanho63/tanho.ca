@@ -54,7 +54,8 @@ html {
 .dark #bluesky-comments .bsky-card:hover {
     background-color: rgb(38 38 38);
 }
-#bluesky-comments .bsky-card p {
+#bluesky-comments .bsky-card p,
+.bsky-embed .bsky-card p {
     white-space: pre-wrap;
     overflow-wrap: break-word;
     margin: 0;
@@ -66,6 +67,52 @@ html {
     margin-left: 0.25rem;
     margin-right: 0.25rem;
 }
-#bluesky-comments .bsky-meta > span:not(:first-of-type) {
+#bluesky-comments .bsky-meta > span:not(:first-of-type),
+.bsky-embed .bsky-meta > span:not(:first-of-type) {
     margin-right: 0.25rem;
+}
+
+/* Embedded Bluesky posts (shortcode) */
+.bsky-embed {
+    margin: 1.5rem 0;
+    padding: 0.5rem;
+    border: 1px solid rgb(229 229 229);
+    border-radius: 0.5rem;
+}
+.dark .bsky-embed {
+    border-color: rgb(64 64 64);
+}
+.bsky-embed .bsky-card {
+    color: rgb(23 23 23) !important;
+    text-decoration: none;
+    font-weight: normal;
+}
+.bsky-embed .bsky-card:hover {
+    background-color: rgb(229 229 229);
+}
+.dark .bsky-embed .bsky-card {
+    color: rgb(245 245 245) !important;
+}
+.dark .bsky-embed .bsky-card:hover {
+    background-color: rgb(38 38 38);
+}
+/* Inner body link: inherit card text color, not the prose primary link color */
+.bsky-embed .bsky-card-link {
+    color: inherit !important;
+    text-decoration: none;
+    font-weight: normal;
+}
+#bluesky-comments .bsky-card-link {
+    color: inherit !important;
+    text-decoration: none;
+    font-weight: normal;
+}
+
+/* Quoted post nested inside a bsky embed/comment: same .bsky-card styling,
+   just with a border to mark the nesting */
+.bsky-quote-card {
+    border-color: rgb(212 212 212) !important;
+}
+.dark .bsky-quote-card {
+    border-color: rgb(64 64 64) !important;
 }
