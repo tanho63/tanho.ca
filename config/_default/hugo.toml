@@ -11,11 +11,14 @@ defaultContentLanguage = "en"
 # pluralizeListTitles = "true"
 
 enableRobotsTXT = true
-paginate = 10
+enableEmoji = true
 summaryLength = 0
 ignoreFiles = ["_archive"]
 buildDrafts = false
 buildFuture = false
+
+[pagination]
+  pagerSize = 10
 
 [imaging]
   anchor = 'Center'

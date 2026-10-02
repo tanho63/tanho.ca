@@ -4,7 +4,6 @@ title: "DSLC Slack: Explaining Shiny to Your IT Team"
 date:   2020-10-15
 aliases: /explaining-shiny
 summary: "Helping present the business architecture for Shiny in production to a relatively technical (but not R-based) crowd"
-published: true
 tags: 
   - dslc-slack
   - q-a

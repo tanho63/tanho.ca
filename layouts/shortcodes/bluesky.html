@@ -1,0 +1,166 @@
+{{/*
+  Embed a Bluesky post, styled like the comment cards in partials/comments.html.
+  Usage:
+    {{< bluesky "3lczr7qhdns2t" >}}
+    {{< bluesky "https://bsky.app/profile/tanho.ca/post/3lczr7qhdns2t" >}}
+    {{< bluesky id="3lczr7qhdns2t" >}}
+*/}}
+{{ $input := .Get 0 | default (.Get "id") }}
+{{ if not $input }}
+  {{ errorf "shortcode 'bluesky' requires a post ID or URL: %s" .Position }}
+{{ end }}
+
+{{ $handle := site.Params.blueskyHandle | default "tanho.ca" }}
+{{ $postId := $input }}
+{{ $urlMatch := findRESubmatch `bsky\.app/profile/([^/]+)/post/([^/?#]+)` $input }}
+{{ $atMatch := findRESubmatch `^at://([^/]+)/app\.bsky\.feed\.post/([^/?#]+)` $input }}
+{{ if $urlMatch }}
+  {{ $handle = index (index $urlMatch 0) 1 }}
+  {{ $postId = index (index $urlMatch 0) 2 }}
+{{ else if $atMatch }}
+  {{ $handle = index (index $atMatch 0) 1 }}
+  {{ $postId = index (index $atMatch 0) 2 }}
+{{ end }}
+
+<figure class="bsky-embed" data-bsky-handle="{{ $handle }}" data-bsky-post-id="{{ $postId }}">
+  <div class="bsky-embed-body">
+    <div class="flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-400">
+      <div class="h-4 w-4 animate-spin rounded-full border-2 border-neutral-300 border-t-neutral-500 dark:border-neutral-600 dark:border-t-neutral-400"></div>
+      <span>Loading post...</span>
+    </div>
+  </div>
+</figure>
+
+{{ if not (.Page.Scratch.Get "bsky-embed-script") }}
+{{ .Page.Scratch.Set "bsky-embed-script" true }}
+<script>
+(function () {
+  const embeds = document.querySelectorAll(".bsky-embed:not([data-bsky-loaded])");
+  if (!embeds.length) return;
+
+  function escapeHtml(s) {
+    const div = document.createElement("div");
+    div.textContent = s;
+    return div.innerHTML;
+  }
+
+  async function renderEmbed(figure) {
+    figure.dataset.bskyLoaded = "true";
+    const body = figure.querySelector(".bsky-embed-body");
+    const handle = figure.dataset.bskyHandle;
+    const postId = figure.dataset.bskyPostId;
+    const atUri = "at://" + handle + "/app.bsky.feed.post/" + postId;
+
+    const postUrl = "https://bsky.app/profile/" + handle + "/post/" + postId;
+    let post;
+    try {
+      // getPostThread handles handle-based at:// URIs; getPosts 500s on them
+      const res = await fetch(
+        "https://public.api.bsky.app/xrpc/app.bsky.feed.getPostThread?uri=" +
+          encodeURIComponent(atUri) + "&depth=0"
+      );
+      if (!res.ok) throw new Error("Failed to fetch post (" + res.status + ")");
+      const data = await res.json();
+      const thread = data.thread;
+      if (!thread || thread.$type !== "app.bsky.feed.defs#threadViewPost") {
+        throw new Error("Post unavailable");
+      }
+      post = thread.post;
+    } catch (err) {
+      // Degrade to a plain link for deleted/unavailable posts
+      body.innerHTML =
+        '<p class="text-sm m-0"><a href="' + escapeHtml(postUrl) + '" target="_blank" rel="noreferrer noopener">' +
+          escapeHtml(postUrl) + "</a></p>";
+      return;
+    }
+
+    const author = post.author;
+    const url = "https://bsky.app/profile/" + author.handle + "/post/" + post.uri.split("/").pop();
+    const text = (post.record && post.record.text) || "";
+    const date = post.record && post.record.createdAt ? new Date(post.record.createdAt) : null;
+
+    const avatar = author.avatar
+      ? '<img src="' + escapeHtml(author.avatar) + '" alt="' + escapeHtml(author.handle) + ' avatar" class="h-10 w-10 shrink-0 rounded-full" loading="lazy" />'
+      : '<div class="h-10 w-10 shrink-0 rounded-full bg-neutral-300 dark:bg-neutral-600"></div>';
+
+    // Quoted post (app.bsky.embed.record#view)
+    let quoteHtml = "";
+    const quoted = post.embed && post.embed.$type === "app.bsky.embed.record#view" && post.embed.record;
+    if (quoted && quoted.$type === "app.bsky.embed.record#viewRecord") {
+      const qAuthor = quoted.author || {};
+      const qId = (quoted.uri || "").split("/").pop();
+      const qUrl = qAuthor.handle && qId
+        ? "https://bsky.app/profile/" + qAuthor.handle + "/post/" + qId
+        : postUrl;
+      const qText = (quoted.value && quoted.value.text) || "";
+      const qDate = quoted.value && quoted.value.createdAt ? new Date(quoted.value.createdAt) : null;
+      const qAvatar = qAuthor.avatar
+        ? '<img src="' + escapeHtml(qAuthor.avatar) + '" alt="' + escapeHtml(qAuthor.handle) + ' avatar" class="h-10 w-10 shrink-0 rounded-full" loading="lazy" />'
+        : '<div class="h-10 w-10 shrink-0 rounded-full bg-neutral-300 dark:bg-neutral-600"></div>';
+      quoteHtml =
+        '<a href="' + escapeHtml(qUrl) + '" target="_blank" rel="noreferrer noopener" ' +
+          'class="bsky-card bsky-quote-card mt-2 flex min-w-0 gap-3 rounded-lg border p-2 transition-colors">' +
+          qAvatar +
+          '<div class="flex min-w-0 flex-col gap-1">' +
+            '<div class="flex flex-col items-baseline overflow-hidden text-sm md:flex-row">' +
+              '<span class="bsky-author-name max-w-full truncate font-semibold">' + escapeHtml(qAuthor.displayName || qAuthor.handle || "") + "</span>" +
+              '<span class="max-w-full truncate text-neutral-500 dark:text-neutral-400">@' + escapeHtml(qAuthor.handle || "") + "</span>" +
+            "</div>" +
+            '<p class="text-sm">' + escapeHtml(qText) + "</p>" +
+            (qDate
+              ? '<div class="bsky-meta flex flex-row flex-wrap items-center gap-x-1 text-sm text-neutral-500 dark:text-neutral-400">' +
+                  '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pb-0.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>' +
+                  "<span>" + (quoted.likeCount || 0) + "</span><span>·</span>" +
+                  "<span>" + escapeHtml(qDate.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })) + "</span><span>·</span>" +
+                  "<span>" + escapeHtml(qDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })) + "</span>" +
+                "</div>"
+              : "") +
+          "</div>" +
+        "</a>";
+    } else if (quoted && quoted.$type === "app.bsky.embed.record#viewNotFound") {
+      quoteHtml = '<p class="bsky-quote-card mt-2 rounded-lg border p-2 text-sm text-neutral-500 dark:text-neutral-400">Quoted post unavailable</p>';
+    } else if (quoted && quoted.$type === "app.bsky.embed.record#viewBlocked") {
+      quoteHtml = '<p class="bsky-quote-card mt-2 rounded-lg border p-2 text-sm text-neutral-500 dark:text-neutral-400">Quoted post blocked</p>';
+    }
+
+    body.innerHTML =
+      '<div class="bsky-card flex min-w-0 gap-3 rounded-lg p-2 transition-colors">' +
+        avatar +
+        '<div class="flex min-w-0 flex-col gap-1">' +
+          '<a href="' + escapeHtml(url) + '" target="_blank" rel="noreferrer noopener" class="bsky-card-link flex min-w-0 flex-col gap-1">' +
+            '<div class="flex flex-col items-baseline overflow-hidden text-sm md:flex-row">' +
+              '<span class="bsky-author-name max-w-full truncate font-semibold">' + escapeHtml(author.displayName || author.handle) + "</span>" +
+              '<span class="max-w-full truncate text-neutral-500 dark:text-neutral-400">@' + escapeHtml(author.handle) + "</span>" +
+            "</div>" +
+            '<p class="text-sm">' + escapeHtml(text) + "</p>" +
+            (date
+              ? '<div class="bsky-meta flex flex-row flex-wrap items-center gap-x-1 text-sm text-neutral-500 dark:text-neutral-400">' +
+                  '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pb-0.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>' +
+                  "<span>" + (post.likeCount || 0) + "</span><span>·</span>" +
+                  "<span>" + escapeHtml(date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })) + "</span><span>·</span>" +
+                  "<span>" + escapeHtml(date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })) + "</span>" +
+                "</div>"
+              : "") +
+          "</a>" +
+          quoteHtml +
+        "</div>" +
+      "</div>";
+  }
+
+  const io = "IntersectionObserver" in window
+    ? new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            io.unobserve(entry.target);
+            renderEmbed(entry.target);
+          }
+        });
+      }, { rootMargin: "300px" })
+    : null;
+
+  embeds.forEach(function (figure) {
+    if (io) { io.observe(figure); } else { renderEmbed(figure); }
+  });
+})();
+</script>
+{{ end }}

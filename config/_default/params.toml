@@ -25,7 +25,7 @@ disableImageOptimization = false
 # smartTOCHideUnfocusedChildren = true
 
 [header]
-  layout = "basic" # valid options: basic, fixed, fixed-fill, fixed-fill-blur
+  layout = "basic" # valid options: basic, fixed, fixed-fill, fixed-gradient, fixed-fill-blur, floating
 
 [footer]
   showMenu = true
@@ -35,8 +35,8 @@ disableImageOptimization = false
   showScrollToTop = true
 
 [homepage]
-  layout = "background" # valid options: page, profile, hero, card, background, custom
-  homepageImage = "img/rowing-background.jpg" # used in: hero, and card
+  layout = "background" # valid options: page, profile, hero, card, background, landing, custom
+  homepageImage = "img/rowing-background.jpg" # used in: hero, card and background
   showRecent = false
   showRecentItems = 5
   showMoreLink = false

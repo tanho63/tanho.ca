@@ -1,16 +1,238 @@
-<script src="https://giscus.app/client.js"
-        data-repo="tanho63/tanho.ca"
-        data-repo-id="MDEwOlJlcG9zaXRvcnkzMDU1NTY2Mjk="
-        data-category="General"
-        data-category-id="DIC_kwDOEjZslc4CaXMV"
-        data-mapping="url"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="preferred_color_scheme"
-        data-lang="en"
-        data-loading="lazy"
-        crossorigin="anonymous"
-        async>
+{{ if .Params.blueskyPostId }}
+{{/* blueskyPostId accepts a bare post ID, a bsky.app post URL, or an at:// URI */}}
+{{ $input := .Params.blueskyPostId }}
+{{ $bskyHandle := site.Params.blueskyHandle | default "tanho.ca" }}
+{{ $postId := $input }}
+{{ $urlMatch := findRESubmatch `bsky\.app/profile/([^/]+)/post/([^/?#]+)` $input }}
+{{ $atMatch := findRESubmatch `^at://([^/]+)/app\.bsky\.feed\.post/([^/?#]+)` $input }}
+{{ if $urlMatch }}
+  {{ $bskyHandle = index (index $urlMatch 0) 1 }}
+  {{ $postId = index (index $urlMatch 0) 2 }}
+{{ else if $atMatch }}
+  {{ $bskyHandle = index (index $atMatch 0) 1 }}
+  {{ $postId = index (index $atMatch 0) 2 }}
+{{ end }}
+{{ $postUrl := printf "https://bsky.app/profile/%s/post/%s" $bskyHandle $postId }}
+
+<div id="bluesky-comments" data-bsky-handle="{{ $bskyHandle }}" data-bsky-post-id="{{ $postId }}" data-post-url="{{ $postUrl }}">
+  <div class="flex flex-row items-center justify-between pb-4">
+    <h2 class="text-xl font-semibold">Comments</h2>
+    <div class="relative">
+      <button id="bsky-sort-btn" type="button" aria-label="Sort comments"
+        class="p-1 rounded text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line>
+          <line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line>
+          <line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line>
+          <line x1="17" y1="16" x2="23" y2="16"></line>
+        </svg>
+      </button>
+      <div id="bsky-sort-menu"
+        class="hidden absolute right-0 z-10 mt-1 w-52 rounded-md border border-neutral-200 bg-white py-3 px-4 shadow-md dark:border-neutral-700 dark:bg-neutral-900">
+        <div class="mb-2 text-sm font-medium text-neutral-700 dark:text-neutral-300">Sort by</div>
+        <div class="flex flex-col gap-2 text-sm text-neutral-600 dark:text-neutral-400">
+          <label class="flex cursor-pointer items-center gap-2">
+            <input type="radio" name="bsky-sort" value="top" checked class="accent-primary-600" />
+            Top comments first
+          </label>
+          <label class="flex cursor-pointer items-center gap-2">
+            <input type="radio" name="bsky-sort" value="newest" class="accent-primary-600" />
+            Newest comments first
+          </label>
+          <label class="flex cursor-pointer items-center gap-2">
+            <input type="radio" name="bsky-sort" value="oldest" class="accent-primary-600" />
+            Oldest comments first
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-4">
+    <a href="{{ $postUrl }}" target="_blank" rel="noreferrer noopener"
+      class="block rounded-lg bg-primary-100 p-4 transition-colors hover:bg-primary-200 dark:bg-primary-900 dark:hover:bg-primary-800">
+      <div class="flex items-center gap-3">
+        <div class="h-8 w-8 shrink-0 text-primary-600 dark:text-primary-400">
+          <svg viewBox="0 0 600 530" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="m135.72 44.03c66.496 49.921 138.02 151.14 164.28 205.46 26.262-54.316 97.782-155.54 164.28-205.46 47.98-36.021 125.72-63.892 125.72 24.795 0 17.712-10.155 148.79-16.111 170.07-20.703 73.984-96.144 92.854-163.25 81.433 117.3 19.964 147.14 86.092 82.697 152.22-122.39 125.59-175.91-31.511-189.63-71.766-2.514-7.3797-3.6904-10.832-3.7077-7.8964-0.0174-2.9357-1.1937 0.51669-3.7077 7.8964-13.714 40.255-67.233 197.36-189.63 71.766-64.444-66.128-34.605-132.26 82.697-152.22-67.108 11.421-142.55-7.4491-163.25-81.433-5.9562-21.282-16.111-152.36-16.111-170.07 0-88.687 77.742-60.816 125.72-24.795z"/>
+          </svg>
+        </div>
+        <span class="text-neutral-800 dark:text-neutral-300">
+          Join the conversation by replying on Bluesky...
+        </span>
+        <div class="h-5 w-5 shrink-0 text-neutral-600 dark:text-neutral-400">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </div>
+      </div>
+    </a>
+    <div id="bsky-comments-body">
+      <div class="flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-400">
+        <div class="h-4 w-4 animate-spin rounded-full border-2 border-neutral-300 border-t-neutral-500 dark:border-neutral-600 dark:border-t-neutral-400"></div>
+        <span>Loading comments...</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const container = document.getElementById("bluesky-comments");
+  const body = document.getElementById("bsky-comments-body");
+  // Build the AT URI in JS: Hugo's URL sanitizer strips the at: scheme from templates
+  const atUri = "at://" + container.dataset.bskyHandle + "/app.bsky.feed.post/" + container.dataset.bskyPostId;
+  const MAX_DEPTH = 5;
+  let replies = [];
+  let sort = "top";
+
+  function escapeHtml(s) {
+    const div = document.createElement("div");
+    div.textContent = s;
+    return div.innerHTML;
+  }
+
+  function formatDate(d) {
+    return d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) +
+      " · " +
+      d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  }
+
+  function sortReplies(list) {
+    const sorted = [...list];
+    if (sort === "top") {
+      sorted.sort((a, b) => (b.post.likeCount || 0) - (a.post.likeCount || 0));
+    } else if (sort === "newest") {
+      sorted.sort((a, b) => new Date(b.post.record.createdAt) - new Date(a.post.record.createdAt));
+    } else {
+      sorted.sort((a, b) => new Date(a.post.record.createdAt) - new Date(b.post.record.createdAt));
+    }
+    return sorted;
+  }
+
+  function renderComment(node, depth) {
+    const post = node.post;
+    const author = post.author;
+    const postId = post.uri.split("/").pop();
+    const url = "https://bsky.app/profile/" + author.handle + "/post/" + postId;
+    const text = (post.record && post.record.text) || "";
+    const date = post.record && post.record.createdAt ? new Date(post.record.createdAt) : null;
+    const likes = post.likeCount || 0;
+    const childReplies = (node.replies || []).filter(function (r) {
+      return r.$type === "app.bsky.feed.defs#threadViewPost";
+    });
+
+    const avatar = author.avatar
+      ? '<img src="' + escapeHtml(author.avatar) + '" alt="' + escapeHtml(author.handle) + ' avatar" class="h-10 w-10 shrink-0 rounded-full" loading="lazy" />'
+      : '<div class="h-10 w-10 shrink-0 rounded-full bg-neutral-300 dark:bg-neutral-600"></div>';
+
+    let html =
+      '<div class="flex min-w-0 flex-col gap-2">' +
+        '<a href="' + escapeHtml(url) + '" target="_blank" rel="noreferrer noopener" ' +
+          'class="bsky-card flex min-w-0 gap-3 rounded-lg p-2 transition-colors">' +
+          avatar +
+          '<div class="flex min-w-0 flex-col gap-1">' +
+            '<div class="flex flex-col items-baseline overflow-hidden text-sm md:flex-row">' +
+              '<span class="bsky-author-name max-w-full truncate font-semibold">' + escapeHtml(author.displayName || author.handle) + "</span>" +
+              '<span class="max-w-full truncate text-neutral-500 dark:text-neutral-400">@' + escapeHtml(author.handle) + "</span>" +
+            "</div>" +
+            '<p class="text-sm">' + escapeHtml(text) + "</p>" +
+            (date
+              ? '<div class="bsky-meta flex flex-row flex-wrap items-center gap-x-1 text-sm text-neutral-500 dark:text-neutral-400">' +
+                  '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pb-0.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>' +
+                  "<span>" + likes + "</span><span>·</span><span>" + escapeHtml(formatDate(date)) + "</span>" +
+                "</div>"
+              : "") +
+          "</div>" +
+        "</a>";
+
+    if (depth >= MAX_DEPTH && childReplies.length > 0) {
+      html += '<a class="pl-3 text-sm font-bold text-primary-600 dark:text-primary-400" href="' + escapeHtml(url) + '" target="_blank" rel="noreferrer noopener">View more replies...</a>';
+    } else if (childReplies.length > 0) {
+      html += '<div class="bsky-replies flex flex-col gap-2">';
+      for (const reply of childReplies) {
+        html += renderComment(reply, depth + 1);
+      }
+      html += "</div>";
+    }
+    html += "</div>";
+    return html;
+  }
+
+  function render() {
+    if (replies.length === 0) {
+      body.innerHTML = '<p class="text-neutral-700 dark:text-neutral-300">No comments yet.</p>';
+      return;
+    }
+    body.innerHTML =
+      '<div class="flex flex-col gap-4">' +
+      sortReplies(replies).map(function (r) { return renderComment(r, 0); }).join("") +
+      "</div>";
+  }
+
+  async function load() {
+    try {
+      const res = await fetch(
+        "https://public.api.bsky.app/xrpc/app.bsky.feed.getPostThread?uri=" +
+          encodeURIComponent(atUri) + "&depth=10"
+      );
+      if (!res.ok) throw new Error("Failed to fetch comments (" + res.status + ")");
+      const data = await res.json();
+      const thread = data.thread;
+      if (!thread || thread.$type !== "app.bsky.feed.defs#threadViewPost") {
+        throw new Error("Unexpected response");
+      }
+      const threadgate = thread.post.threadgate;
+      const hidden = new Set(
+        (threadgate && threadgate.record && threadgate.record.hiddenReplies) || []
+      );
+      replies = (thread.replies || []).filter(function (r) {
+        return r.$type === "app.bsky.feed.defs#threadViewPost" && !hidden.has(r.post.uri);
+      });
+      render();
+    } catch (err) {
+      body.innerHTML = '<p class="text-sm text-red-500">Error: ' + escapeHtml(err.message) + "</p>";
+    }
+  }
+
+  // Sort control
+  const sortBtn = document.getElementById("bsky-sort-btn");
+  const sortMenu = document.getElementById("bsky-sort-menu");
+  sortBtn.addEventListener("click", function (e) {
+    e.stopPropagation();
+    sortMenu.classList.toggle("hidden");
+  });
+  document.addEventListener("click", function (e) {
+    if (!sortMenu.contains(e.target) && e.target !== sortBtn) {
+      sortMenu.classList.add("hidden");
+    }
+  });
+  sortMenu.querySelectorAll('input[name="bsky-sort"]').forEach(function (input) {
+    input.addEventListener("change", function () {
+      sort = input.value;
+      render();
+      sortMenu.classList.add("hidden");
+    });
+  });
+
+  // Lazy-load when the section approaches the viewport
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      function (entries) {
+        if (entries[0].isIntersecting) {
+          observer.disconnect();
+          load();
+        }
+      },
+      { rootMargin: "300px" }
+    );
+    observer.observe(container);
+  } else {
+    load();
+  }
+})();
 </script>
+{{ end }}
