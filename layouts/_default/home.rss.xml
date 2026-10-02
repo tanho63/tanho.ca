@@ -17,26 +17,26 @@
     <link>{{ .Permalink }}</link>
     <description>Recent content {{ if ne  .Title  .Site.Title }}{{ with .Title }}in {{.}} {{ end }}{{ end }}on {{ .Site.Title }}</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>{{ site.LanguageCode }}</language>{{ with .Site.Author.email }}
-    <managingEditor>{{.}}{{ with $.Site.Author.name }} ({{.}}){{end}}</managingEditor>{{end}}{{ with .Site.Author.email }}
-    <webMaster>{{.}}{{ with $.Site.Author.name }} ({{.}}){{end}}</webMaster>{{end}}
+    <language>{{ site.Language.Locale }}</language>{{ with .Site.Params.Author.email }}
+    <managingEditor>{{.}}{{ with $.Site.Params.Author.name }} ({{.}}){{end}}</managingEditor>{{end}}{{ with .Site.Params.Author.email }}
+    <webMaster>{{.}}{{ with $.Site.Params.Author.name }} ({{.}}){{end}}</webMaster>{{end}}
     {{ if .Site.Params.footer.showCopyright | default true -}}
-    <copyright>{{ with replace .Site.Params.copyright "{ year }" now.Year }}{{.}}{{ else }}© {{ now.Format "2006" }} {{ .Site.Author.name }}{{- end }}</copyright>
+    <copyright>{{ with replace .Site.Params.copyright "{ year }" now.Year }}{{.}}{{ else }}© {{ now.Format "2006" }} {{ .Site.Params.Author.name }}{{- end }}</copyright>
     {{- end }}
-    {{ if not .Date.IsZero }}<lastBuildDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</lastBuildDate>{{ end }}
+    {{ if not .Date.IsZero }}<lastBuildDate>{{ (index $pages.ByLastmod.Reverse 0).Lastmod.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</lastBuildDate>{{ end }}
     {{- with .OutputFormats.Get "RSS" -}}
     {{ printf "<atom:link href=%q rel=\"self\" type=%q />" .Permalink .MediaType | safeHTML }}
     {{- end -}}
-    <!-- Tan: only allow RSS feed of content/posts/ and content/pumpkins folder, not now-archive -->
+    <!-- Tan: only include content/posts and content/pumpkins in the home RSS feed, not now-archive -->
     {{ range (where (where .Site.Pages ".Section" "like" "posts|pumpkins") "Kind" "page") }}
     <item>
       <title>{{ .Title }}</title>
       <link>{{ .Permalink }}</link>
       <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
-      {{ with .Site.Author.email }}<author>{{.}}{{ with $.Site.Author.name }} ({{.}}){{end}}</author>{{end}}
+      {{ with .Site.Params.Author.email }}<author>{{.}}{{ with $.Site.Params.Author.name }} ({{.}}){{end}}</author>{{end}}
       <guid>{{ .Permalink }}</guid>
-      <!-- Tan: use .Content instead of .Summary to allow RSS readers to consume full-text -->
-      <description>{{ .Content | html }}</description>
+      <!-- Tan: use .Content instead of .Summary to allow RSS readers to consume full text -->
+      <description>{{ .Content | transform.XMLEscape | safeHTML }}</description>
       {{ range ( where .Site.RegularPages ".RelPermalink" .RelPermalink | first 1 ) }}
         {{- $images := .Resources.ByType "image" -}}
         {{- $featured := $images.GetMatch "*feature*" -}}

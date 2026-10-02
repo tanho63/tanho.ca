@@ -179,7 +179,7 @@ going to lose.
 
 ## tasting notes
 
-{{< gallery images="{04_dry_age.jpg,03_dry_age_sliced.jpg,02_steaks.jpg}" >}}
+{{< gallery images="{04_dry_age.jpg,03_dry_age_sliced.jpg,02_steaks.jpg}" >}}{{< /gallery >}}
 
 - Starting weight: 14.2 lbs
 - Ending weight: 12.36 lbs (13% loss)

@@ -4,8 +4,8 @@
   "description": "",
   "scripts": {
     "server": "hugo server -b http://localhost -p 8000",
-    "dev": "NODE_ENV=development ./themes/blowfish/node_modules/tailwindcss/lib/cli.js -c ./themes/blowfish/tailwind.config.js -i ./assets/css/main.css -o ./assets/css/compiled/main.css --jit -w",
-    "build": "NODE_ENV=production ./themes/blowfish/node_modules/tailwindcss/lib/cli.js -c ./themes/blowfish/tailwind.config.js -i ./assets/css/main.css -o ./assets/css/compiled/main.css --jit"
+    "dev": "NODE_ENV=development npx @tailwindcss/cli -c ./tailwind.config.js -i ./themes/blowfish/assets/css/main.css -o ./assets/css/compiled/main.css --watch",
+    "build": "NODE_ENV=production npx @tailwindcss/cli -c ./tailwind.config.js -i ./themes/blowfish/assets/css/main.css -o ./assets/css/compiled/main.css"
   },
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2"

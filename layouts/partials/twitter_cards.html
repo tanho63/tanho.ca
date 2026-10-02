@@ -1,0 +1,28 @@
+{{- /* Minimal, Hugo-0.166-safe replacement for _internal/twitter_cards.html.
+     The internal template's get-page-images func errors on taxonomy terms
+     pages. This version avoids ranging over page-level images for non-Page
+     kinds. */ -}}
+{{- $title := .Title -}}
+{{- $description := "" -}}
+{{- with .Description }}{{ $description = . }}{{ else }}{{ if .IsPage }}{{ $description = .Summary }}{{ else }}{{ with .Site.Params.description }}{{ $description = . }}{{ end }}{{ end }}{{ end -}}
+
+{{- $img := "" -}}
+{{- if .IsPage -}}
+  {{- with $.Params.images -}}
+    {{- $img = index . 0 | absURL -}}
+  {{- else -}}
+    {{- $images := $.Resources.ByType "image" -}}
+    {{- $featured := $images.GetMatch "*feature*" -}}
+    {{- if not $featured }}{{ $featured = $images.GetMatch "{*cover*,*thumbnail*}" }}{{ end -}}
+    {{- with $featured }}{{ $img = .Permalink }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+{{- if and (not $img) .Site.Params.images -}}
+  {{- $img = index .Site.Params.images 0 | absURL -}}
+{{- end -}}
+
+<meta name="twitter:card" content="{{ if $img }}summary_large_image{{ else }}summary{{ end }}"/>
+<meta name="twitter:title" content="{{ $title }}"/>
+{{ with $description }}<meta name="twitter:description" content="{{ . }}"/>{{ end }}
+{{ with $img }}<meta name="twitter:image" content="{{ . }}"/>{{ end }}
+{{ with .Site.Params.social.twitter }}<meta name="twitter:site" content="{{ . }}"/>{{ end }}
