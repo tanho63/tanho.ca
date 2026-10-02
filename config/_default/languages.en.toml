@@ -16,7 +16,7 @@ title = "TanHo.ca"
   © { year } Tan Ho. Unless otherwise specified, content is licensed with [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
   """
 
-[author]
+[params.author]
    name = "Tan Ho"
    image = "img/avatar.jpg"
    headline = [
