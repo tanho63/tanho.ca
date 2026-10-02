@@ -88,7 +88,7 @@
               <script>
                 document.addEventListener("DOMContentLoaded", function () {
                   new TypeIt("#headline", {
-                    strings: {{ $headline | jsonify }},
+                    strings: {{ $headline | jsonify | safeJS }},
                     speed: 60,
                     lifeLike: true,
                     startDelay: 10,
