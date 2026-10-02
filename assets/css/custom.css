@@ -29,3 +29,43 @@ html {
         flex-direction: column;
     }
 }
+
+/* Bluesky comments: Blowfish ships precompiled Tailwind CSS, so classes absent
+   from the theme (border-l-2, pl-6, some dark: variants) never get generated.
+   These scoped styles cover the gaps and override prose link colors. */
+#bluesky-comments .bsky-replies {
+    border-left: 2px solid rgb(212 212 212);
+    padding-left: 1.25rem;
+}
+.dark #bluesky-comments .bsky-replies {
+    border-color: rgb(64 64 64);
+}
+#bluesky-comments .bsky-card {
+    color: rgb(23 23 23) !important;
+    text-decoration: none;
+    font-weight: normal;
+}
+#bluesky-comments .bsky-card:hover {
+    background-color: rgb(229 229 229);
+}
+.dark #bluesky-comments .bsky-card {
+    color: rgb(245 245 245) !important;
+}
+.dark #bluesky-comments .bsky-card:hover {
+    background-color: rgb(38 38 38);
+}
+#bluesky-comments .bsky-card p {
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    margin: 0;
+}
+#bluesky-comments .bsky-author-name {
+    margin-right: 0.5rem;
+}
+#bluesky-comments .bsky-meta > span:first-of-type {
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
+}
+#bluesky-comments .bsky-meta > span:not(:first-of-type) {
+    margin-right: 0.25rem;
+}

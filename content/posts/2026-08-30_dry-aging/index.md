@@ -8,6 +8,7 @@ aliases: /dry-aging-episode-1
 tags:
  - food-nerdery
  - homelab
+blueskyPostId: 3mu63ttnqn22r
 ---
 
 One of my deep nerd obsessions is food, especially food science, and I've long
