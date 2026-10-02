@@ -1,6 +1,17 @@
 {{ if .Params.blueskyPostId }}
+{{/* blueskyPostId accepts a bare post ID, a bsky.app post URL, or an at:// URI */}}
+{{ $input := .Params.blueskyPostId }}
 {{ $bskyHandle := site.Params.blueskyHandle | default "tanho.ca" }}
-{{ $postId := .Params.blueskyPostId }}
+{{ $postId := $input }}
+{{ $urlMatch := findRESubmatch `bsky\.app/profile/([^/]+)/post/([^/?#]+)` $input }}
+{{ $atMatch := findRESubmatch `^at://([^/]+)/app\.bsky\.feed\.post/([^/?#]+)` $input }}
+{{ if $urlMatch }}
+  {{ $bskyHandle = index (index $urlMatch 0) 1 }}
+  {{ $postId = index (index $urlMatch 0) 2 }}
+{{ else if $atMatch }}
+  {{ $bskyHandle = index (index $atMatch 0) 1 }}
+  {{ $postId = index (index $atMatch 0) 2 }}
+{{ end }}
 {{ $postUrl := printf "https://bsky.app/profile/%s/post/%s" $bskyHandle $postId }}
 
 <div id="bluesky-comments" data-bsky-handle="{{ $bskyHandle }}" data-bsky-post-id="{{ $postId }}" data-post-url="{{ $postUrl }}">
@@ -174,8 +185,9 @@
       if (!thread || thread.$type !== "app.bsky.feed.defs#threadViewPost") {
         throw new Error("Unexpected response");
       }
+      const threadgate = thread.post.threadgate;
       const hidden = new Set(
-        (thread.threadgate && thread.threadgate.record && thread.threadgate.record.hiddenReplies) || []
+        (threadgate && threadgate.record && threadgate.record.hiddenReplies) || []
       );
       replies = (thread.replies || []).filter(function (r) {
         return r.$type === "app.bsky.feed.defs#threadViewPost" && !hidden.has(r.post.uri);
