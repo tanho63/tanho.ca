@@ -118,7 +118,7 @@
             {{ else if (eq $taxonomy "tags") }}
               {{ if .Params.showTags | default (.Site.Params.article.showTags | default true) }}
                 <a class="relative mt-[0.5rem] me-2" href="{{ .RelPermalink }}">
-                  {{ partial "badge.html" .LinkTitle }}
+                  {{ partial "badge.html" (.LinkTitle | lower) }}
                 </a>
               {{ end }}
             {{ else }}
