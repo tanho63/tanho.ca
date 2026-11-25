@@ -1,0 +1,75 @@
+backend:
+  name: github
+  repo: tanho63/tanho.ca
+  branch: main
+  # Sveltia signs in directly with GitHub OAuth via its own authenticator,
+  # no Netlify Identity / Git Gateway setup required.
+  base_url: https://sveltia-cms-auth.pages.dev
+
+publish_mode: editorial_workflow
+
+media_folder: "" # store uploads in the entry's own bundle folder
+public_folder: ""
+
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: "-"
+
+collections:
+  - name: posts
+    label: Posts
+    folder: content/posts
+    create: true
+    # Page bundles: folder-per-post named YYYY-MM-DD_slug, content in index.md
+    path: "{{date}}_{{slug}}/index"
+    extension: md
+    format: yaml-frontmatter
+    editor:
+      preview: true
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Summary, name: summary, widget: text, required: false }
+      - {
+          label: Aliases,
+          name: aliases,
+          widget: string,
+          required: false,
+          hint: "Old URL to redirect from, e.g. /pivot-trick",
+        }
+      - { label: Date, name: date, widget: datetime, date_format: YYYY-MM-DD, time_format: false }
+      - {
+          label: Tags,
+          name: tags,
+          widget: list,
+          required: false,
+          minimize_collapsed: true,
+        }
+      - {
+          label: "Featured image",
+          name: featured,
+          widget: image,
+          required: false,
+          hint: "Saved into this post's bundle folder (e.g. featured.jpg)",
+        }
+      - {
+          label: "Hero style",
+          name: heroStyle,
+          widget: select,
+          options: [basic, card, background, thumbAndBackground],
+          required: false,
+        }
+      - {
+          label: "Bluesky post ID",
+          name: blueskyPostId,
+          widget: string,
+          required: false,
+          hint: "Used to embed Bluesky comments on the post",
+        }
+      - {
+          label: "Table of contents",
+          name: showTableOfContents,
+          widget: boolean,
+          required: false,
+        }
+      - { label: Body, name: body, widget: markdown }
