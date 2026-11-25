@@ -2,9 +2,8 @@ backend:
   name: github
   repo: tanho63/tanho.ca
   branch: main
-  # Sign in with your GitHub account via a self-hosted OAuth helper on Cloudflare Workers.
-  # Set base_url to your deployed worker URL (see sveltia-cms-auth setup steps).
-  base_url: https://sveltia-cms-auth.YOUR-SUBDOMAIN.workers.dev
+  # Sign in with GitHub via a self-hosted OAuth helper on Cloudflare Workers.
+  base_url: https://sveltia-cms-auth.dawn-moon-1ad2.workers.dev
 
 publish_mode: editorial_workflow
 
