@@ -133,4 +133,12 @@ collections:
           - { label: Title, name: title, widget: string }
           - { label: Date, name: date, widget: datetime, date_format: YYYY-MM-DD, time_format: false }
           - { label: Summary, name: summary, widget: text, required: false }
+          - {
+              label: "Gallery image",
+              name: gallery_upload,
+              widget: image,
+              required: false,
+              choose_url: false,
+              hint: "Upload a carve photo. Move it into gallery/ after upload (set the path to gallery/<name>.jpg); the gallery shortcode auto-picks up every file there. This field itself is not displayed on the site.",
+            }
           - { label: Body, name: body, widget: markdown }
