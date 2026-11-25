@@ -1,10 +1,7 @@
 backend:
-  name: github
-  repo: tanho63/tanho.ca
+  name: git-gateway
   branch: main
-  # Sveltia signs in directly with GitHub OAuth via its own authenticator,
-  # no Netlify Identity / Git Gateway setup required.
-  base_url: https://sveltia-cms-auth.pages.dev
+  # Auth via Netlify Identity + Git Gateway (own infra, no third-party outage risk)
 
 publish_mode: editorial_workflow
 
