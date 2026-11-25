@@ -16,7 +16,7 @@ and also a [timelapse](#timelapse) recording.
 
 ## Gallery
 
-{{< gallery images="gallery/*" >}}{{< /gallery >}}
+{{< gallery images="{*.jpg,*.jpeg,*.png}" >}}{{< /gallery >}}
 
 ---
 
