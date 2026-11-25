@@ -86,3 +86,51 @@ collections:
           required: false,
         }
       - { label: Body, name: body, widget: markdown }
+
+  - name: now
+    label: "Now archive"
+    folder: content/now-archive
+    create: true
+    # Single files, one per entry: YYYY-MM-DD-now.md
+    slug: "{{date}}-now"
+    extension: md
+    format: yaml-frontmatter
+    editor:
+      preview: true
+    fields:
+      - { label: Layout, name: layout, widget: hidden, default: now }
+      - { label: Title, name: title, widget: string }
+      - { label: Date, name: date, widget: datetime, date_format: YYYY-MM-DD, time_format: false }
+      - { label: Location, name: location, widget: string, required: false }
+      - {
+          label: Tags,
+          name: tags,
+          widget: list,
+          default: [now],
+          required: false,
+          minimize_collapsed: true,
+        }
+      - { label: Summary, name: summary, widget: text, required: false }
+      - { label: Body, name: body, widget: markdown }
+
+  - name: pages
+    label: Pages
+    editor:
+      preview: true
+    files:
+      - name: home
+        label: "Home page"
+        file: content/_index.md
+        fields:
+          - { label: Title, name: title, widget: string }
+          - { label: Description, name: description, widget: string, required: false }
+          - { label: Body, name: body, widget: markdown }
+      - name: pumpkins
+        label: "Pumpkins page"
+        file: content/pumpkins/index.md
+        fields:
+          - { label: Layout, name: layout, widget: hidden, default: simple }
+          - { label: Title, name: title, widget: string }
+          - { label: Date, name: date, widget: datetime, date_format: YYYY-MM-DD, time_format: false }
+          - { label: Summary, name: summary, widget: text, required: false }
+          - { label: Body, name: body, widget: markdown }
