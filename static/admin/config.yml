@@ -31,6 +31,20 @@ collections:
       - { label: Title, name: title, widget: string }
       - { label: Summary, name: summary, widget: text, required: false }
       - {
+          label: Layout,
+          name: layout,
+          widget: string,
+          required: false,
+          hint: 'Overrides the template, e.g. "single"',
+        }
+      - {
+          label: "Custom URL",
+          name: url,
+          widget: string,
+          required: false,
+          hint: "Overrides the post's URL path, e.g. /talks/my-talk",
+        }
+      - {
           label: Aliases,
           name: aliases,
           widget: string,
