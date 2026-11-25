@@ -139,6 +139,6 @@ collections:
               widget: image,
               required: false,
               choose_url: false,
-              hint: "Upload a carve photo. Move it into gallery/ after upload (set the path to gallery/<name>.jpg); the gallery shortcode auto-picks up every file there. This field itself is not displayed on the site.",
+              hint: "Upload a carve photo — it saves into this bundle and the gallery shortcode auto-picks up every image here. Name it YYYY[eN]_Description.jpg to match existing files. This field itself is not displayed on the site.",
             }
           - { label: Body, name: body, widget: markdown }
