@@ -1,7 +1,10 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: tanho63/tanho.ca
   branch: main
-  # Auth via Netlify Identity + Git Gateway (own infra, no third-party outage risk)
+  # Sign in with your GitHub account via a self-hosted OAuth helper on Cloudflare Workers.
+  # Set base_url to your deployed worker URL (see sveltia-cms-auth setup steps).
+  base_url: https://sveltia-cms-auth.YOUR-SUBDOMAIN.workers.dev
 
 publish_mode: editorial_workflow
 
